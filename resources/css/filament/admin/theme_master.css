@@ -1,0 +1,598 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+/* ==========================================================================
+   Mqwel+ design tokens (master panel)
+
+   The client's mockup does not define a visually distinct "master admin"
+   theme — it's the same product, so this file intentionally mirrors
+   theme.css (the company panel) rather than inventing a second design
+   language. The master panel's sidebar was already dark before this reskin,
+   so it lands closer to the target look with fewer changes than the
+   company panel did.
+   ========================================================================== */
+:root {
+    --mq-ink: #242B4A;
+    --mq-ink-2: #2E3763;
+    --mq-ink-3: #3A4585;
+    --mq-steel: #8891B5;
+    --mq-steel-2: #B9C0DA;
+    --mq-clay: #6E56CF;
+    --mq-clay-bg: #F0ECFB;
+    --mq-danger: #E5484D;
+    --mq-danger-bg: #FDECEC;
+    --mq-ok: #12A594;
+    --mq-ok-bg: #E3F6F2;
+    --mq-warn: #F5A524;
+    --mq-warn-bg: #FEF3E0;
+    --mq-info: #3E63DD;
+    --mq-info-bg: #EAEFFE;
+    --mq-bg: #F6F7FB;
+    --mq-card: #FFFFFF;
+    --mq-line: #E7E9F2;
+    --mq-line-2: #EEF0F7;
+    --mq-txt: #242B4A;
+    --mq-txt-2: #5A6285;
+    --mq-txt-3: #8891B5;
+    --mq-r-sm: 8px;
+    --mq-r: 12px;
+    --mq-r-lg: 16px;
+    --mq-shadow: 0 1px 2px rgba(36, 43, 74, .06);
+    --mq-shadow-lg: 0 14px 34px -8px rgba(36, 43, 74, .22);
+}
+
+html {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.fi-sidebar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .18) transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .18);
+    border-radius: 6px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, .3);
+}
+
+/* ==========================================================================
+   Page background
+   ========================================================================== */
+body.fi-body {
+    background: var(--mq-bg);
+}
+
+.fi-main,
+.fi-layout {
+    background: var(--mq-bg) !important;
+}
+
+main.fi-main {
+    @apply px-6;
+}
+
+/* ==========================================================================
+   Sidebar — same dark navy/indigo gradient shell as the company panel.
+   ========================================================================== */
+.fi-sidebar {
+    background: linear-gradient(178deg, #2A3060 0%, #1B1F3D 100%);
+    border-inline-start: 1px solid rgba(255, 255, 255, .06);
+    overflow: hidden;
+}
+
+.fi-sidebar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='%2322D3EE' fill-opacity='.06'%3E%3Cpath d='M24 24h72L24 96z'/%3E%3Cpath d='M236 236h-72l72-72z'/%3E%3Cpath d='M140 24h96v14h-80v80h-16z'/%3E%3C/g%3E%3Cg fill='%23A78BFA' fill-opacity='.08'%3E%3Cpath d='M24 236v-72l72 72z'/%3E%3Cpath d='M236 96l-72-72h72z'/%3E%3Cpath d='M120 236H24v-14h80v-80h16z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 260px 260px;
+}
+
+.fi-sidebar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 55% at 80% -8%, rgba(124, 108, 231, .22), transparent 60%),
+        linear-gradient(165deg, rgba(255, 255, 255, .06) 0%, rgba(255, 255, 255, .015) 32%, rgba(255, 255, 255, 0) 58%, rgba(34, 211, 238, .05) 100%);
+}
+
+.fi-sidebar > * {
+    position: relative;
+    z-index: 1;
+}
+
+.fi-sidebar header.fi-sidebar-header {
+    background: rgba(255, 255, 255, .025);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: none;
+    height: auto;
+    padding: 14px 16px;
+    justify-content: space-between;
+
+    & .fi-logo {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+    }
+}
+
+.mq-sidebar-toggle-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--mq-line);
+    border-radius: 10px;
+    color: var(--mq-txt-3);
+}
+
+.mq-sidebar-toggle-btn:hover {
+    background: var(--mq-bg);
+    color: var(--mq-txt);
+}
+
+.mq-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.mq-brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mq-brand-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 5px;
+}
+
+.mq-brand-txt {
+    overflow: hidden;
+    min-width: 0;
+    line-height: 1.3;
+}
+
+.mq-brand-txt b {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fi-sidebar .mq-brand-txt b {
+    color: #fff;
+}
+
+.mq-brand-rule {
+    display: none;
+    width: 100%;
+    height: 1px;
+    margin: 6px 0;
+    font-style: normal;
+}
+
+.fi-sidebar .mq-brand-rule {
+    display: block;
+    background: rgba(255, 255, 255, .12);
+}
+
+.mq-brand-txt span {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fi-sidebar .fi-sidebar-nav {
+    padding: 12px 12px 16px;
+
+    & .fi-sidebar-nav-groups {
+        @apply gap-y-2;
+    }
+
+    & .fi-sidebar-group-label {
+        color: #93A6B8;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .06em;
+    }
+
+    & .fi-sidebar-group-icon {
+        color: #93A6B8;
+    }
+
+    & li.fi-sidebar-item {
+        position: relative;
+
+        & .fi-sidebar-item-button {
+            border-radius: 9px;
+            border: 1px solid transparent;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+
+        & .fi-sidebar-item-label {
+            color: #C4CFD9;
+            font-weight: 500;
+        }
+
+        & .fi-sidebar-item-icon {
+            color: #C4CFD9;
+            opacity: .85;
+        }
+
+        &:hover .fi-sidebar-item-button {
+            background: rgba(255, 255, 255, .055);
+        }
+
+        &:hover .fi-sidebar-item-label,
+        &:hover .fi-sidebar-item-icon {
+            color: #fff;
+        }
+    }
+
+    & li.fi-sidebar-item.fi-active {
+        & .fi-sidebar-item-button {
+            background: rgba(255, 255, 255, .09) !important;
+            border-color: rgba(255, 255, 255, .12);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+        }
+
+        & .fi-sidebar-item-label,
+        & .fi-sidebar-item-icon {
+            color: #fff !important;
+            font-weight: 600;
+        }
+
+        & .fi-sidebar-item-button::after {
+            content: '';
+            position: absolute;
+            inset-inline-end: -2px;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--mq-clay);
+            border-radius: 3px;
+        }
+    }
+
+    & .fi-badge {
+        @apply bg-white/10 text-gray-100 ring-0;
+    }
+}
+
+.fi-sidebar-open-sidebar-btn,
+.fi-topbar-open-sidebar-btn {
+    @apply text-gray-500;
+}
+
+/* ==========================================================================
+   Topbar — sticky, translucent, blurred, matching `.topbar` in the mockup.
+   ========================================================================== */
+div.fi-topbar nav {
+    background: rgba(255, 255, 255, .86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--mq-line);
+    box-shadow: none;
+    height: 4rem;
+}
+
+/* ==========================================================================
+   Topbar — global search field + user menu chip, matching the mockup's
+   `.global-search` and `.user-chip`.
+   ========================================================================== */
+.mq-topbar-search {
+    max-width: 440px;
+}
+
+.fi-global-search,
+.fi-global-search > div.sm\:relative {
+    width: 100%;
+}
+
+.fi-global-search-field {
+    width: 100%;
+}
+
+.fi-global-search-field .fi-input-wrp {
+    background: var(--mq-bg);
+}
+
+.fi-global-search-field .fi-input-wrp:focus-within {
+    background: #fff;
+}
+
+.mq-user-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 6px 5px 12px;
+    border: 1px solid var(--mq-line);
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color .15s;
+}
+
+.mq-user-chip:hover {
+    border-color: var(--mq-steel);
+}
+
+.mq-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    flex-shrink: 0;
+    background: var(--mq-ink);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.mq-user-meta {
+    text-align: right;
+    line-height: 1.25;
+}
+
+.mq-user-meta b {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--mq-ink);
+}
+
+.mq-user-meta span {
+    font-size: 11px;
+    color: var(--mq-txt-3);
+}
+
+.mq-user-caret {
+    color: var(--mq-steel);
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .mq-user-meta {
+        display: none;
+    }
+
+    .mq-user-chip {
+        padding: 5px 6px;
+    }
+}
+
+/* ==========================================================================
+   User menu dropdown — header block + language item hint, matching the
+   mockup's `.ud-head` and `.ud-item .ud-hint`.
+   ========================================================================== */
+.fi-dropdown-panel {
+    border-radius: var(--mq-r) !important;
+    padding: 6px !important;
+}
+
+.mq-dropdown-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px 12px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--mq-line-2);
+}
+
+.mq-dropdown-head .mq-user-avatar {
+    width: 32px;
+    height: 32px;
+}
+
+.mq-dropdown-head .mq-user-meta b {
+    font-size: 13px;
+}
+
+.mq-menu-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.mq-menu-item-hint {
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--mq-txt-3);
+}
+
+/* ==========================================================================
+   Buttons — primary gets the purple gradient + soft shadow from `.btn-
+   primary`; everything else keeps Filament's own color system (already
+   purple, since the panel's `primary` color is set to --mq-clay).
+   ========================================================================== */
+.fi-btn {
+    border-radius: 10px !important;
+}
+
+.fi-btn.fi-color-primary:not(.fi-btn-outlined) {
+    background: linear-gradient(135deg, #5B4BD1, #6E56CF) !important;
+    box-shadow: 0 4px 14px -4px rgba(110, 86, 207, .5);
+}
+
+.fi-btn.fi-color-primary:not(.fi-btn-outlined):hover {
+    background: linear-gradient(135deg, #4F41BE, #6250C4) !important;
+    box-shadow: 0 6px 18px -4px rgba(110, 86, 207, .6);
+}
+
+.fi-icon-btn {
+    border-radius: 10px !important;
+}
+
+/* ==========================================================================
+   Cards / sections — `.fi-section` is Filament's card equivalent.
+   ========================================================================== */
+.fi-section {
+    border-radius: var(--mq-r-lg) !important;
+    border: 1px solid var(--mq-line) !important;
+    box-shadow: var(--mq-shadow) !important;
+}
+
+.fi-section-header {
+    border-color: var(--mq-line-2) !important;
+}
+
+/* ==========================================================================
+   Stats / KPI widgets — `.fi-wi-stats-overview-stat` maps to the mockup's
+   `.kpi` card.
+   ========================================================================== */
+.fi-wi-stats-overview-stat {
+    border-radius: var(--mq-r-lg) !important;
+    border: 1px solid var(--mq-line) !important;
+    box-shadow: var(--mq-shadow) !important;
+    transition: border-color .15s, transform .15s;
+}
+
+.fi-wi-stats-overview-stat:hover {
+    border-color: var(--mq-steel-2) !important;
+    transform: translateY(-1px);
+}
+
+.fi-wi-stats-overview-stat-value {
+    color: var(--mq-ink) !important;
+    font-weight: 700 !important;
+}
+
+.fi-wi-stats-overview-stat-label {
+    color: var(--mq-txt-2) !important;
+}
+
+/* ==========================================================================
+   Tables — header/cell colors + spacing to match `.dt` in the mockup.
+   ========================================================================== */
+.fi-ta-ctn {
+    border-radius: var(--mq-r-lg) !important;
+    border: 1px solid var(--mq-line) !important;
+    box-shadow: var(--mq-shadow) !important;
+}
+
+table.fi-ta-table {
+    & thead tr {
+        @apply bg-gray-100;
+        background: var(--mq-bg) !important;
+
+        & th span {
+            @apply text-black dark:text-white;
+            color: var(--mq-txt-2) !important;
+            font-weight: 600;
+        }
+
+        & th.fi-ta-cell div.px-3,
+        py-4 {
+            @apply py-3;
+        }
+
+        & th.fi-ta-header-cell {
+            @apply py-3;
+        }
+    }
+
+    & tbody tr {
+        transition: background .12s;
+
+        &:hover {
+            background: #FAFBFC;
+        }
+
+        & td.fi-ta-cell {
+            border-color: var(--mq-line-2) !important;
+
+            & div.px-3,
+            py-4 {
+                @apply py-[0.5rem];
+            }
+
+            & button {
+                @apply py-[0.5rem];
+            }
+        }
+    }
+}
+
+/* ==========================================================================
+   Badges / chips — pill-shaped, colored per semantic state, matching `.chip`.
+   ========================================================================== */
+.fi-badge {
+    border-radius: 20px !important;
+    min-height: 24px;
+    font-weight: 600 !important;
+}
+
+/* ==========================================================================
+   Modals — centered card with a footer band, matching `.modal`.
+   ========================================================================== */
+.fi-modal-window {
+    border-radius: var(--mq-r-lg) !important;
+    box-shadow: var(--mq-shadow-lg) !important;
+}
+
+.fi-modal-close-btn {
+    border-radius: 9px !important;
+}
+
+/* ==========================================================================
+   Form inputs — 42px tall, 10px radius, steel focus ring, matching `.input`.
+   ========================================================================== */
+.fi-input-wrp {
+    border-radius: 10px !important;
+    border-color: var(--mq-line) !important;
+    min-height: 42px;
+}
+
+.fi-input-wrp:focus-within {
+    border-color: var(--mq-steel) !important;
+    box-shadow: 0 0 0 3px rgba(140, 158, 176, .15) !important;
+}
+
+/* ==========================================================================
+   Pagination — active page pill filled dark, matching `.pg.on`.
+   ========================================================================== */
+.fi-pagination-items {
+    border-radius: 10px !important;
+}
+
+.fi-pagination-item.fi-active .fi-pagination-item-button {
+    background: var(--mq-ink) !important;
+}
+
+.fi-pagination-item.fi-active .fi-pagination-item-label {
+    color: #fff !important;
+}
+

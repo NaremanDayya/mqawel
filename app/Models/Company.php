@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Company extends Model
+{
+    use HasFactory;
+
+    protected $fillable= [
+        'picture',
+        'name',
+        'email',
+        'phone',
+        'website',
+        'business_number',
+        'tax_number',
+        'activity',
+        'about_to_expire_days',
+        'is_active',
+        'master_id',
+    ];
+
+    public function master() : BelongsTo {
+        return $this->belongsTo(Master::class, 'master_id');
+    }
+
+    public function workers() : HasMany {
+        return $this->hasMany(Worker::class, 'company_id');
+    }
+
+    public function projects() : HasMany {
+        return $this->hasMany(Project::class, 'company_id');
+    }
+
+    public function users() : HasMany {
+        return $this->hasMany(User::class, 'company_id');
+    }
+
+    public function subscriptions() : HasMany {
+        return $this->hasMany(Subscription::class, 'company_id');
+    }
+}

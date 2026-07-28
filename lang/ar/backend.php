@@ -1,0 +1,478 @@
+<?php
+
+return [
+    'app_name' => 'مقاول+',
+
+    'information' => 'المعلومات',
+    'role' => 'الدور',
+    'email' => 'البريد الالكتروني',
+    'phone' => 'رقم الهاتف',
+    'password' => 'كلمة المرور',
+    'picture' => 'الصورة',
+    'job_title' => 'اسم المهنة',
+    'job_description' => 'وصف المهنة',
+    'active' => 'نشط',
+
+    'name' => 'الاسم',
+    'company' => 'الشركة',
+    'ethnicity' => 'الجنسية',
+    'living_address' => 'عنوان السكن',
+
+    'storage' => 'المخزن',
+    'description' => 'الوصف',
+    'address' => 'العنوان',
+    'budget' => 'الميزانية',
+    'currency' => 'العملة',
+    'status' => 'الحالة',
+
+    'amount' => 'القيمة',
+    'category' => 'التصنيف',
+
+    'type' => 'النوع',
+    'fax' => 'الفاكس',
+    'website' => 'الموقع الالكتروني',
+    'registry_number' => 'رقم السجل',
+    'tax_number' => 'الرقم الضريبي',
+    'years_of_experience' => 'سنوات الخبرة',
+    'number_of_projects' => 'عدد المشاريع',
+    'areas' => 'المناطق',
+    'fields' => 'المجالات',
+
+    'inactive' => 'غير نشط',
+
+    'pending' => 'عالق',
+    'processing' => 'قيد الاجراء',
+    'completed' => 'مكتمل',
+    'cancelled' => 'ملغي',
+
+    'new' => 'جديد',
+    'used' => 'مستعمل',
+    'damaged' => 'تالف',
+
+    'experience' => 'الخبرة',
+    'projects' => 'المشاريع',
+
+    'project' => 'المشروع',
+    'item' => 'العنصر',
+    'from_to_address' => 'من/الى العنوان',
+    'quantity' => 'الكمية',
+    'previous_storage_quantity' => 'كمية المخزن السابقة',
+    'new_storage_quantity' => 'كمية المخزن الجديدة',
+    'movement_date' => 'تاريخ الحركة',
+    'notes' => 'الملاحظات',
+    'in' => 'دخول',
+    'out' => 'خروج',
+    'adjust' => 'اعادة ترتيب',
+
+    'expiry_date' => 'تاريخ الانتهاء',
+    'document' => 'المستند',
+    'download' => 'تحميل',
+    'file_not_found' => 'الملف غير موجود',
+
+    'title' => 'العنوان',
+    'payment_date' => 'تاريخ الدفع',
+    'payment_method' => 'أسلوب الدفع',
+    'worker' => 'العامل',
+    'date' => 'التاريخ',
+    'method' => 'الاسلوب',
+
+    'user' => 'المستخدم',
+
+    'damage_date' => 'تاريخ التلف',
+    'responsible' => 'المسؤول',
+
+    'payment_status' => 'حالة الدفع',
+    'paid' => 'مسدد',
+    'unpaid' => 'غير مسدد',
+
+    'select_language' => 'اختيار اللغة',
+
+    'business_number' => 'رقم العمل',
+    'activity' => 'النشاط',
+
+    'purpose' => 'الهدف',
+    'open' => 'مفتوح',
+
+    'registration' => 'التسجيل',
+    'consultation' => 'الاستشارة',
+    'training' => 'التدريب',
+    'other' => 'أخرى',
+
+    'period_in_months' => 'المدة بالشهور',
+    'price' => 'السعر',
+
+    'package' => 'الباقة',
+    'transaction_id' => 'معرف العملية',
+    'starting_date' => 'تاريخ البدء',
+
+    'payment' => 'السداد',
+
+    'period' => 'المدة',
+    'starting' => 'البدء من',
+    'ending' => 'الانتهاء في',
+
+    'users' => 'المستخدمين',
+
+    'admin' => 'المسؤول',
+    'staff' => 'موظف',
+    'viewer' => 'مراقب',
+    'worker' => 'عامل',
+
+    'workers' => 'العمال',
+
+    'storages' => 'المخازن',
+    'items' => 'العناصر',
+    'categories' => 'التصنيفات',
+    'movements' => 'الحركات',
+
+    'entities' => 'الجهات',
+    'contractors' => 'المقاولين',
+
+    'in_to_storage' => 'دخول الى المخزن',
+    'out_from_storage' => 'خروج من المخزن',
+    'adjust_storage' => 'اعادة ترتيب المخزن',
+
+    'files' => 'المستندات',
+    'file' => 'المستند',
+
+    'damages' => 'التلف',
+
+    'payments' => 'السداد',
+
+    'work_days' => 'أيام العمل',
+    'pause_dates' => 'تواريخ التوقف',
+    'day' => 'اليوم',
+
+    'expenses' => 'المصروفات',
+
+    'total_projects' => 'اجمالي عدد المشاريع',
+    'pending_projects' => 'المشاريع العالقة',
+    'processing_projects' => 'المشاريع قيد الاجراء',
+    'completed_projects' => 'المشاريع المكتملة',
+    'growth_indicator' => 'مؤشر النمو',
+
+    'growth_this_year' => 'النمو هذه السنة',
+    
+    'comparison_between_projects' => 'المقارنة بين المشاريع',
+
+    'jan' => 'يناير',
+    'feb' => 'فبراير',
+    'mar' => 'مارس',
+    'apr' => 'ابريل',
+    'may' => 'مايو',
+    'jun' => 'يونيو',
+    'jul' => 'يوليو',
+    'aug' => 'أغسطس',
+    'sep' => 'سبتمبر',
+    'oct' => 'أكتوبر',
+    'nov' => 'نوفمبر',
+    'dec' => 'ديسمبر',
+
+    'latest_projects' => 'آخر المشاريع',
+
+    'control' => 'التحكم',
+
+    'companies' => 'الشركات',
+
+    'subscriptions' => 'الاشتراكات',
+
+    'packages' => 'الباقات',
+
+    'contacts' => 'الاتصال',
+    'requests' => 'الطلبات',
+
+    'masters' => 'المتحكمين',
+
+    'reports' => 'التقارير',
+    'workers_report' => 'تقرير العمال',
+    'expired_files' => 'المستندات المنتهية',
+    'expired_files_report' => 'تقرير المستندات المنتهية',
+    'project_expenses' => 'مصروفات المشاريع',
+    'project_expenses_report' => 'تقرير مصروفات المشاريع',
+    'worker_payments' => 'مستحقات العمال',
+    'worker_payments_report' => 'تقرير مستحقات العمال',
+
+    'receipt' => 'الفاتورة',
+    'item_movement_success_message' => 'تم حفظ حركة العناصر تلقائيا',
+
+    'system_admin' => 'ادارة النظام',
+    'admins' => 'الادارة',
+
+    'alerts' => 'التنبيهات',
+    'files_about_to_expire' => 'مستندات على وشك الانتهاء',
+    'incomplete_files' => 'مستندات غير مكتملة',
+    'incomplete_workers' => 'عمال غير مكتملين',
+    'analytics' => 'التحليلات',
+
+    'requires_instant_review' => 'يتطلب معالجة فورية',
+    'requires_observation' => 'يتطلب المراقبة',
+    'requires_validation' => 'يتطلب التحقق',
+
+    'number_of_workers' => 'عدد العمال',
+    'number_of_ethnicities' => 'عدد الجنسيات',
+    'number_of_job_titles' => 'عدد أسماء العمل',
+    
+    'summary' => 'الملخص',
+
+    'number_of_due_workers' => 'عدد العمال المستحقين',
+    'number_of_procedures' => 'عدد المعاملات',
+    'total_amount_due' => 'اجمالي المبالغ المستحقة',
+
+    'number_of_projects_with_expenses' => 'عدد المشاريع ذات المصروفات',
+    'total_expenses' => 'اجمالي المصروفات',
+
+    'number_of_files' => 'اجمالي عدد المستندات',
+    'number_of_expired_files' => 'عدد المستندات المنتهية',
+    'number_of_files_about_to_expire' => 'عدد المستندات على وشك الانتهاء',
+
+    'section' => 'القسم',
+    'entity' => 'الجهة',
+
+    'month' => 'الشهر',
+    'year' => 'السنة',
+
+    'saturday' => 'السبت',
+    'sunday' => 'الأحد',
+    'monday' => 'الاثنين',
+    'tuesday' => 'الثلاثاء',
+    'wednesday' => 'الأربعاء',
+    'thursday' => 'الخميس',
+    'friday' => 'الجمعة',
+
+    'expired_subscriptions' => 'الاشتراكات المنتهية',
+    'expired_subscriptions_report' => 'تقرير الاشتراكات المنتهية',
+    'total_subscriptions' => 'اجمالي عدد الاشتراكات',
+    'number_of_expired_subscriptions' => 'الاشتراكات المنتهية',
+    'number_of_subscriptions_about_to_expire' => 'الاشتراكات على وشك الانتهاء',
+
+    'expired' => 'منتهي',
+    'valid' => 'ساري',
+
+    'alerts_message' => 'تنبيهات تحتاج معالجة',
+
+    'settings' => 'الاعدادات',
+
+    'address_1' => 'الموقع الأول',
+    'address_2' => 'الموقع الثاني',
+    'address_3' => 'الموقع الثالث',
+    'email_1' => 'البريد الأول',
+    'email_2' => 'البريد الثاني',
+    'email_3' => 'البريد الثالث',
+    'phone_1' => 'الهاتف الأول',
+    'phone_2' => 'الهاتف الثاني',
+    'phone_3' => 'الهاتف الثالث',
+    'whatsapp' => 'الواتساب',
+    'facebook' => 'فيسبوك',
+    'x' => 'اكس (تويتر)',
+    'linkedin' => 'لينكدان',
+    'snapchat' => 'سناب شات',
+    'instagram' => 'انستاغرام',
+    'telegram' => 'تيليغرام',
+    'privacy_policy' => 'سياسة الخصوصية',
+    'terms_and_conditions' => 'الشروط و الأحكام',
+
+    'policies' => 'السياسات',
+
+    'contact_info' => 'بيانات الاتصال',
+    'social_media_info' => 'التواصل الاجتماعي',
+
+    'policies' => 'السياسات',
+    
+    'roles' => 'الأدوار',
+    'read' => 'قراءة',
+    'write' => 'كتابة',
+    'edit' => 'تعديل',
+
+    'item_categories' => 'تصنيفات العناصر',
+    'item_movements' => 'حركة العناصر',
+    'worker_expenses_report' => 'تقرير مصروفات العامل',
+
+    'total_storages' => 'اجمالي عدد المخازن',
+    'total_items' => 'اجمالي عدد العناصر',
+    'total_workers' => 'اجمالي عدد العمال',
+    'total_users' => 'اجمالي عدد المستخدمين',
+
+    'total_companies' => 'اجمالي عدد الشركات',
+    'total_revenue' => 'الأرباح',
+    'subscription' => 'اشتراك',
+
+    'company_users' => 'مستخدمي الشركات',
+    'system_users' => 'مستخدمي النظام',
+
+    'about_to_expire_days_form_text' => 'اشعارك قبل كم يوم من تاريخ انتهاء المستندات؟',
+
+    'services' => 'الخدمات',
+
+    'webmail' => 'صندوق البريد',
+
+    'export_pdf' => 'تصدير PDF',
+    'export_excel' => 'تصدير اكسل',
+
+    'export_date' => 'تاريخ التصدير',
+    
+    'role_name' => 'اسم الدور',
+    'role_description' => 'وصف الدور',
+
+    'worker_documents' => 'مستندات العامل',
+
+    'mistakes' => 'الأخطاء',
+
+    'dues' => 'المستحقات',
+
+    'absence_days' => 'أيام التوقفات',
+
+    'project_name' => 'اسم المشروع',
+    'project_location' => 'موقع المشروع',
+    'project_level' => 'مرحلة المشروع',
+    'location' => 'الموقع',
+    'level' => 'المرحلة',
+
+    'create_worker' => 'اضافة عامل',
+
+    'create_storage' => 'اضافة مخزن',
+
+    'storage_items' => 'عناصر المخزن',
+
+    'view_details' => 'عرض التفاصيل',
+
+    'paid_due_amount' => 'مبالغ مستحقة مدفوعة',
+    'unpaid_due_amount' => 'مبالغ مستحقة غير مدفوعة',
+
+    'unavailable_to_use' => 'تم استخدامه مسبقا',
+
+    'profile' => 'البروفايل',
+
+    'company_name' => 'اسم الشركة',
+    'company_email' => 'البريد الالكتروني للشركة',
+    'company_phone' => 'رقم هاتف الشركة',
+    'company_website' => 'الموقع الالكتروني للشركة',
+    'company_business_number' => 'رقم العمل',
+    'company_tax_number' => 'الرقم الضريبي',
+    'company_activity' => 'نشاط الشركة',
+
+    'not_found' => 'لا يوجد',
+
+    'max_file_size_300_kb' => 'أقصى حجم مسموح للملف: 300 كيلوبايت',
+
+    'create_project' => 'اضافة مشروع',
+
+    'temporary' => 'مؤقت',
+    'primary' => 'أساسي',
+    'living_place' => 'مكان اقامة',
+
+    'omani_riyal_code' => 'ر.ع',
+
+    'days' => 'أيام',
+    'dates' => 'تواريخ',
+
+    'main_storage' => 'المخزن الرئيسي',
+
+    'my_area' => 'مساحتي',
+    'good_morning' => 'صباح الخير',
+    'good_evening' => 'مساء الخير',
+    'last_seen' => 'آخر ظهور:',
+    'my_area_subtitle' => ':name — ملخّص سريع لأهم مؤشرات شركتك.',
+    'attention_needed_title' => 'شركتك تحتاج انتباهك اليوم',
+    'pending_actions' => 'إجراءات للمتابعة',
+    'workers_under_management' => 'عامل تحت إدارتك',
+    'active_projects' => 'مشاريع نشطة',
+    'all_clear_message' => 'لا توجد إجراءات عاجلة حالياً — كل شيء تحت السيطرة.',
+    'suggested_actions' => 'إجراءات',
+    'suggested_actions_desc' => 'اقتراحات لإجراءات قد تحتاج تنفيذها',
+    'no_suggested_actions' => 'لا توجد اقتراحات حالياً',
+    'view_all_reports' => 'عرض كل التقارير',
+    'recent_activity' => 'آخر التحديثات',
+    'recent_activity_desc' => 'أحدث حركات المخزون في النظام',
+    'inventory_distribution' => 'توزيع المخزون',
+    'inventory_distribution_desc' => 'الكميات حسب المخزن',
+    'total_units' => 'إجمالي الوحدات',
+    'no_recent_activity' => 'لا توجد تحديثات حديثة',
+    'no_inventory_recorded' => 'لا يوجد مخزون مسجل',
+    'action_view' => 'عرض',
+    'action_complete' => 'إكمال',
+    'action_classify' => 'تصنيف',
+    'manage_projects' => 'إدارة المشاريع',
+    'refresh' => 'تحديث',
+    'recommendations' => 'توصيات',
+    'renew_document_suggestion' => 'مستند «:title» منتهٍ — يحتاج مراجعة وتجديد.',
+    'complete_worker_suggestion' => 'ملف العامل «:name» غير مكتمل — أضف بياناته لإكماله.',
+    'unassigned_inventory_suggestion' => 'هناك :count عنصر في المخزون غير مرتبط بأي مخزن مصنّف — راجعه.',
+    'unclassified' => 'غير مصنّف',
+    'brand_tagline' => 'منصة إدارة المقاولات',
+    'dashboard_brand_name' => 'مقاول بلس',
+    'completion_percentage' => 'نسبة الإنجاز',
+    'project_completion' => 'نسبة اكمال المشاريع',
+    'project_completion_desc' => 'نسبة الإنجاز التقديرية لكل مشروع',
+    'average' => 'متوسط',
+    'overall_average_completion' => 'متوسط الإنجاز العام',
+    'executed_by' => 'نفّذه',
+    'language' => 'اللغة',
+    'active_warnings' => 'التحذيرات النشطة',
+    'needs_attention' => 'تحتاج معالجة',
+    'workers_incomplete_count' => ':count غير مكتمل',
+    'vs_last_month' => 'عن الشهر الماضي',
+    'customize' => 'تخصيص',
+    'customize_dashboard' => 'تخصيص لوحة التحكم',
+    'customize_dashboard_desc' => 'اختر العناصر التي تريد عرضها فقط — لتبسيط اللوحة.',
+    'save_view' => 'حفظ العرض',
+    'cancel' => 'إلغاء',
+    'pref_attention' => 'شريط تنبيه اليوم',
+    'pref_kpis' => 'المؤشرات الأساسية (4 كروت)',
+    'pref_alerts' => 'التنبيهات',
+    'pref_actions' => 'الإجراءات (المساعد الذكي)',
+    'pref_progress' => 'نسبة اكمال المشاريع',
+    'pref_activity' => 'آخر التحديثات',
+    'pref_distribution' => 'توزيع المخزون',
+    'add_user' => 'إضافة مستخدم',
+    'add_user_description' => 'أنشئ حساباً جديداً وحدّد دوره وصلاحياته.',
+    'role_hint' => 'يمكنك كتابة دور مخصّص أو الاختيار من الاقتراحات.',
+    'generated_password_hint' => 'كلمة مرور مبدئية تم توليدها تلقائياً، يمكنك تعديلها أو توليد كلمة جديدة، وشاركها مع المستخدم.',
+    'list_view' => 'عرض قائمة',
+    'card_view' => 'عرض بطاقات',
+    'permissions' => 'الصلاحيات',
+    'view' => 'الرؤية',
+    'view_hint' => 'الاطلاع على البيانات والتقارير',
+    'manage' => 'التعديل',
+    'manage_hint' => 'إضافة وتعديل وحذف السجلات',
+    'view_only' => 'رؤية فقط',
+    'add_worker' => 'اضافة عامل',
+    'add_worker_description' => 'سجّل عاملاً جديداً مع بيانات وظيفته ومستنداته.',
+    'linked_project' => 'المشاريع المرتبطة',
+    'nationality_indian' => 'هندي',
+    'nationality_pakistani' => 'باكستاني',
+    'nationality_bangladeshi' => 'بنغلاديشي',
+    'nationality_omani' => 'عماني',
+    'add_document' => 'إضافة مستند',
+    'add_document_description' => 'ارفع مستنداً وحدّد قسمه وتاريخ انتهائه.',
+    'document_section' => 'القسم',
+    'related_entity' => 'الجهة المرتبطة',
+    'company_documents_section' => 'مستندات الشركة',
+    'project_documents_section' => 'مستندات المشاريع',
+    'worker_documents_section' => 'مستندات العمال',
+    'max_file_size_10_mb' => 'الحد الأقصى لحجم الملف: 10 ميجابايت — للحفاظ على مساحة التخزين.',
+    'expired_since_days' => 'منتهي منذ :days يوم',
+    'document_creator' => 'منشئ المستندات',
+    'document_creator_description' => 'أنشئ العقود والعروض والخطابات والمراسلات من نماذج جاهزة.',
+    'my_documents' => 'مستنداتي',
+    'documents_category_contracts' => 'العقود',
+    'documents_category_quotes' => 'عروض أسعار',
+    'documents_category_letters' => 'خطابات',
+    'documents_category_correspondence' => 'مراسلات',
+    'documents_category_minutes' => 'محاضر',
+    'document_type' => 'نوع المستند',
+    'link_project' => 'ربط المشروع',
+    'party' => 'الجهة',
+    'additional_details' => 'تفاصيل إضافية',
+    'general' => 'عام',
+    'value' => 'القيمة',
+    'document_status_draft' => 'جديد',
+    'document_status_in_review' => 'قيد المراجعة',
+    'document_status_sent' => 'مُرسَل',
+    'document_status_signed' => 'موقّع',
+    'document_status_completed' => 'مكتمل',
+    'templates_library' => 'مكتبة النماذج',
+    'last_used' => 'آخر استخدام',
+    'create' => 'إنشاء',
+    'new_document' => 'مستند جديد',
+    'no_documents_yet' => 'لا توجد مستندات بعد',
+];

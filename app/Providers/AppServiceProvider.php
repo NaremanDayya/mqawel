@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Providers;
+
+use App\Http\Responses\Auth\PanelScopedLoginResponse;
+use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->app->bind(LoginResponse::class, PanelScopedLoginResponse::class);
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}

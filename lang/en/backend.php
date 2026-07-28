@@ -1,0 +1,478 @@
+<?php
+
+return [
+    'app_name' => 'Muqawil+',
+
+    'information' => 'Information',
+    'role' => 'Role',
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'password' => 'Password',
+    'picture' => 'Picture',
+    'job_title' => 'Job title',
+    'job_description' => 'Job description',
+    'active' => 'Active',
+
+    'name' => 'Name',
+    'company' => 'Company',
+    'ethnicity' => 'Ethnicity',
+    'living_address' => 'Living address',
+
+    'storage' => 'Storage',
+    'description' => 'Description',
+    'address' => 'Address',
+    'budget' => 'Budget',
+    'currency' => 'Currency',
+    'status' => 'Status',
+
+    'amount' => 'Amount',
+    'category' => 'Category',
+
+    'type' => 'Type',
+    'fax' => 'Fax',
+    'website' => 'Website',
+    'registry_number' => 'Registry number',
+    'tax_number' => 'Tax no.',
+    'years_of_experience' => 'Years of experience',
+    'number_of_projects' => 'Number of projects',
+    'areas' => 'Areas',
+    'fields' => 'Fields',
+
+    'inactive' => 'Inactive',
+
+    'pending' => 'Pending',
+    'processing' => 'Processing',
+    'completed' => 'Completed',
+    'cancelled' => 'Cancelled',
+
+    'new' => 'New',
+    'used' => 'Used',
+    'damaged' => 'Damaged',
+
+    'experience' => 'Experience',
+    'projects' => 'Projects',
+
+    'project' => 'Project',
+    'item' => 'Item',
+    'from_to_address' => 'From/To Address',
+    'quantity' => 'Quantity',
+    'previous_storage_quantity' => 'Previous storage quantity',
+    'new_storage_quantity' => 'New storage quantity',
+    'movement_date' => 'Movement date',
+    'notes' => 'Notes',
+    'in' => 'In',
+    'out' => 'Out',
+    'adjust' => 'Adjust',
+
+    'expiry_date' => 'Expiry date',
+    'document' => 'Document',
+    'download' => 'Download',
+    'file_not_found' => 'File not found',
+
+    'title' => 'Title',
+    'payment_date' => 'Payment date',
+    'payment_method' => 'Payment method',
+    'worker' => 'Worker',
+    'date' => 'Date',
+    'method' => 'Method',
+
+    'user' => 'User',
+
+    'damage_date' => 'Damage date',
+    'responsible' => 'Responsible',
+
+    'payment_status' => 'Payment status',
+    'paid' => 'Paid',
+    'unpaid' => 'Unpaid',
+
+    'select_language' => 'Select language',
+
+    'business_number' => 'Business no.',
+    'activity' => 'Activity',
+
+    'purpose' => 'Purpose',
+    'open' => 'Open',
+
+    'registration' => 'Registration',
+    'consultation' => 'Consultation',
+    'training' => 'Training',
+    'other' => 'Other',
+
+    'period_in_months' => 'Period in months',
+    'price' => 'Price',
+
+    'package' => 'Package',
+    'transaction_id' => 'Transaction id',
+    'starting_date' => 'Starting date',
+
+    'payment' => 'Payment',
+
+    'period' => 'Period',
+    'starting' => 'Starting',
+    'ending' => 'Ending',
+
+    'users' => 'Users',
+
+    'admin' => 'Admin',
+    'staff' => 'Staff',
+    'viewer' => 'Viewer',
+    'worker' => 'Worker',
+
+    'workers' => 'Workers',
+
+    'storages' => 'Storages',
+    'items' => 'Items',
+    'categories' => 'Categories',
+    'movements' => 'Movements',
+
+    'entities' => 'Entities',
+    'contractors' => 'Contractors',
+
+    'in_to_storage' => 'In to storage',
+    'out_from_storage' => 'Out from storage',
+    'adjust_storage' => 'Adjusting storage',
+
+    'files' => 'Files',
+    'file' => 'File',
+
+    'damages' => 'Damages',
+
+    'payments' => 'Payments',
+
+    'work_days' => 'Work days',
+    'pause_dates' => 'Pause dates',
+    'day' => 'Day',
+
+    'expenses' => 'Expenses',
+
+    'total_projects' => 'Total projects',
+    'pending_projects' => 'Pending projects',
+    'processing_projects' => 'Processing projects',
+    'completed_projects' => 'Completed projects',
+    'growth_indicator' => 'Growth indicator',
+
+    'growth_this_year' => 'Growth this year',
+    
+    'comparison_between_projects' => 'Comparison between projects',
+
+    'jan' => 'Jan',
+    'feb' => 'Feb',
+    'mar' => 'Mar',
+    'apr' => 'Apr',
+    'may' => 'May',
+    'jun' => 'Jun',
+    'jul' => 'Jul',
+    'aug' => 'Aug',
+    'sep' => 'Sep',
+    'oct' => 'Oct',
+    'nov' => 'Nov',
+    'dec' => 'Dec',
+
+    'latest_projects' => 'Latest projects',
+
+    'control' => 'Control',
+
+    'companies' => 'Companies',
+
+    'subscriptions' => 'Subscriptions',
+
+    'packages' => 'Packages',
+
+    'contacts' => 'Contacts',
+    'requests' => 'Requests',
+
+    'masters' => 'Masters',
+
+    'reports' => 'Reports',
+    'workers_report' => 'Workers report',
+    'expired_files' => 'Expired files',
+    'expired_files_report' => 'Expired files report',
+    'project_expenses' => 'Project expenses',
+    'project_expenses_report' => 'Project expenses report',
+    'worker_payments' => 'Worker payments',
+    'worker_payments_report' => 'Worker payments report',
+
+    'receipt' => 'Receipt',
+    'item_movement_success_message' => 'Items movement saved automatically',
+
+    'system_admin' => 'System admin',
+    'admins' => 'Admins',
+
+    'alerts' => 'Alerts',
+    'files_about_to_expire' => 'Files about to expire',
+    'incomplete_files' => 'Incomplete files',
+    'incomplete_workers' => 'Incomplete workers',
+    'analytics' => 'Analytics',
+
+    'requires_instant_review' => 'Requires instant review',
+    'requires_observation' => 'Requires observation',
+    'requires_validation' => 'Requires validation',
+
+    'number_of_workers' => 'Number of workers',
+    'number_of_ethnicities' => 'Number of ethnicities',
+    'number_of_job_titles' => 'Number of job titles',
+    
+    'summary' => 'Summary',
+
+    'number_of_due_workers' => 'Number of due workers',
+    'number_of_procedures' => 'Number of procedures',
+    'total_amount_due' => 'Total amount due',
+
+    'number_of_projects_with_expenses' => 'Number of projects with expenses',
+    'total_expenses' => 'Total expenses',
+
+    'number_of_files' => 'Number of files',
+    'number_of_expired_files' => 'Number of expired files',
+    'number_of_files_about_to_expire' => 'Number of files about to expire',
+
+    'section' => 'Section',
+    'entity' => 'Entity',
+
+    'month' => 'Month',
+    'year' => 'Year',
+
+    'saturday' => 'Saturday',
+    'sunday' => 'Sunday',
+    'monday' => 'Monday',
+    'tuesday' => 'Tuesday',
+    'wednesday' => 'Wednesday',
+    'thursday' => 'Thursday',
+    'friday' => 'Friday',
+
+    'expired_subscriptions' => 'Expired subscriptions',
+    'expired_subscriptions_report' => 'Expired subscriptions report',
+    'total_subscriptions' => 'Total subscriptions',
+    'number_of_expired_subscriptions' => 'Expired subscriptions',
+    'number_of_subscriptions_about_to_expire' => 'Subscriptions about to expire',
+
+    'expired' => 'Expired',
+    'valid' => 'Valid',
+
+    'alerts_message' => 'Alerts that require processing show up here',
+
+    'settings' => 'Settings',
+
+    'address_1' => 'Address - 1',
+    'address_2' => 'Address - 2',
+    'address_3' => 'Address - 3',
+    'email_1' => 'Email - 1',
+    'email_2' => 'Email - 2',
+    'email_3' => 'Email - 3',
+    'phone_1' => 'Phone - 1',
+    'phone_2' => 'Phone - 2',
+    'phone_3' => 'Phone - 3',
+    'whatsapp' => 'Whatsapp',
+    'facebook' => 'Facebook',
+    'x' => 'X (Twitter)',
+    'linkedin' => 'Linkedin',
+    'snapchat' => 'Snapchat',
+    'instagram' => 'Instagram',
+    'telegram' => 'Telegram',
+    'privacy_policy' => 'Privacy policy',
+    'terms_and_conditions' => 'Terms and conditions',
+
+    'policies' => 'Policies',
+
+    'contact_info' => 'Contact info',
+    'social_media_info' => 'Social media',
+
+    'policies' => 'Policies',
+
+    'roles' => 'Roles',
+    'read' => 'Read',
+    'write' => 'Write',
+    'edit' => 'Edit',
+
+    'item_categories' => 'Item categories',
+    'item_movements' => 'Item movements',
+    'worker_expenses_report' => 'Worker expenses report',
+
+    'total_storages' => 'Total storages',
+    'total_items' => 'Total items',
+    'total_workers' => 'Total workers',
+    'total_users' => 'Total users',
+
+    'total_companies' => 'Total companies',
+    'total_revenue' => 'Total revenue',
+    'subscription' => 'Subscription',
+
+    'company_users' => 'Company users',
+    'system_users' => 'System users',
+
+    'about_to_expire_days_form_text' => 'How many days before notifying for files about to expire',
+
+    'services' => 'Services',
+
+    'webmail' => 'Webmail',
+
+    'export_pdf' => 'Export PDF',
+    'export_excel' => 'Export Excel',
+
+    'export_date' => 'Export date',
+    
+    'role_name' => 'Role name',
+    'role_description' => 'Role description',
+
+    'worker_documents' => 'Worker documents',
+
+    'mistakes' => 'Mistakes',
+
+    'dues' => 'Dues',
+
+    'absence_days' => 'Absence days',
+
+    'project_name' => 'Project name',
+    'project_location' => 'Project location',
+    'project_level' => 'Level',
+    'location' => 'Location',
+    'level' => 'Level',
+
+    'create_worker' => 'Create worker',
+
+    'create_storage' => 'Create storage',
+
+    'storage_items' => 'Storage items',
+
+    'view_details' => 'View details',
+
+    'paid_due_amount' => 'Paid due amount',
+    'unpaid_due_amount' => 'Unpaid due amount',
+
+    'unavailable_to_use' => 'Unavailable to use',
+
+    'profile' => 'Profile',
+
+    'company_name' => 'Company name',
+    'company_email' => 'Company email',
+    'company_phone' => 'Company phone',
+    'company_website' => 'Company website',
+    'company_business_number' => 'Business number',
+    'company_tax_number' => 'Tax number',
+    'company_activity' => 'Company activity',
+
+    'not_found' => 'Not found',
+
+    'max_file_size_300_kb' => 'Max file size: 300KB',
+
+    'create_project' => 'Create project',
+
+    'temporary' => 'Temporary',
+    'primary' => 'Primary',
+    'living_place' => 'Living place',
+
+    'omani_riyal_code' => 'OMR',
+
+    'days' => 'Days',
+    'dates' => 'Dates',
+
+    'main_storage' => 'Main storage',
+
+    'my_area' => 'My Area',
+    'good_morning' => 'Good morning',
+    'good_evening' => 'Good evening',
+    'last_seen' => 'Last seen:',
+    'my_area_subtitle' => ':name — a quick summary of your company\'s key indicators.',
+    'attention_needed_title' => 'Your company needs your attention today',
+    'pending_actions' => 'Actions to follow up',
+    'workers_under_management' => 'workers under your management',
+    'active_projects' => 'active projects',
+    'all_clear_message' => 'No urgent actions right now — everything is under control.',
+    'suggested_actions' => 'Suggested actions',
+    'suggested_actions_desc' => 'Suggestions for actions that may need attention',
+    'no_suggested_actions' => 'No suggestions right now',
+    'view_all_reports' => 'View all reports',
+    'recent_activity' => 'Recent activity',
+    'recent_activity_desc' => 'Latest inventory movements in the system',
+    'inventory_distribution' => 'Inventory distribution',
+    'inventory_distribution_desc' => 'Quantities by storage',
+    'total_units' => 'Total units',
+    'no_recent_activity' => 'No recent activity',
+    'no_inventory_recorded' => 'No inventory recorded',
+    'action_view' => 'View',
+    'action_complete' => 'Complete',
+    'action_classify' => 'Classify',
+    'manage_projects' => 'Manage projects',
+    'refresh' => 'Refresh',
+    'recommendations' => 'Recommendations',
+    'renew_document_suggestion' => 'Document ":title" has expired — needs review and renewal.',
+    'complete_worker_suggestion' => 'Worker ":name"\'s file is incomplete — add their details to complete it.',
+    'unassigned_inventory_suggestion' => 'There are :count inventory item(s) not linked to a classified storage — review them.',
+    'unclassified' => 'Unclassified',
+    'brand_tagline' => 'Contracting management platform',
+    'dashboard_brand_name' => 'Muqawil Plus',
+    'completion_percentage' => 'Completion %',
+    'project_completion' => 'Project completion',
+    'project_completion_desc' => 'Estimated completion percentage per project',
+    'average' => 'Average',
+    'overall_average_completion' => 'Overall average completion',
+    'executed_by' => 'Executed by',
+    'language' => 'Language',
+    'active_warnings' => 'Active warnings',
+    'needs_attention' => 'Needs attention',
+    'workers_incomplete_count' => ':count incomplete',
+    'vs_last_month' => 'vs. last month',
+    'customize' => 'Customize',
+    'customize_dashboard' => 'Customize dashboard',
+    'customize_dashboard_desc' => 'Choose only the sections you want to show — to simplify the dashboard.',
+    'save_view' => 'Save view',
+    'cancel' => 'Cancel',
+    'pref_attention' => 'Today\'s attention banner',
+    'pref_kpis' => 'Main indicators (4 cards)',
+    'pref_alerts' => 'Alerts',
+    'pref_actions' => 'Actions (smart assistant)',
+    'pref_progress' => 'Project completion percentage',
+    'pref_activity' => 'Recent activity',
+    'pref_distribution' => 'Inventory distribution',
+    'add_user' => 'Add user',
+    'add_user_description' => 'Create a new account and set their role and permissions.',
+    'role_hint' => 'You can type a custom role or pick from the suggestions.',
+    'generated_password_hint' => 'An initial password generated automatically. You can edit it or regenerate a new one, then share it with the user.',
+    'list_view' => 'List view',
+    'card_view' => 'Card view',
+    'permissions' => 'Permissions',
+    'view' => 'View',
+    'view_hint' => 'View data and reports',
+    'manage' => 'Edit',
+    'manage_hint' => 'Add, edit, and delete records',
+    'view_only' => 'View only',
+    'add_worker' => 'Add worker',
+    'add_worker_description' => 'Register a new worker with their job details and documents.',
+    'linked_project' => 'Linked projects',
+    'nationality_indian' => 'Indian',
+    'nationality_pakistani' => 'Pakistani',
+    'nationality_bangladeshi' => 'Bangladeshi',
+    'nationality_omani' => 'Omani',
+    'add_document' => 'Add document',
+    'add_document_description' => 'Upload a document and set its section and expiry date.',
+    'document_section' => 'Section',
+    'related_entity' => 'Related to',
+    'company_documents_section' => 'Company documents',
+    'project_documents_section' => 'Project documents',
+    'worker_documents_section' => 'Worker documents',
+    'max_file_size_10_mb' => 'Maximum file size: 10 MB — to keep storage usage reasonable.',
+    'expired_since_days' => 'Expired :days days ago',
+    'document_creator' => 'Document creator',
+    'document_creator_description' => 'Create contracts, quotes, letters, and correspondence from ready templates.',
+    'my_documents' => 'My documents',
+    'documents_category_contracts' => 'Contracts',
+    'documents_category_quotes' => 'Quotes',
+    'documents_category_letters' => 'Letters',
+    'documents_category_correspondence' => 'Correspondence',
+    'documents_category_minutes' => 'Minutes',
+    'document_type' => 'Document type',
+    'link_project' => 'Link project',
+    'party' => 'Party',
+    'additional_details' => 'Additional details',
+    'general' => 'General',
+    'value' => 'Value',
+    'document_status_draft' => 'Draft',
+    'document_status_in_review' => 'In review',
+    'document_status_sent' => 'Sent',
+    'document_status_signed' => 'Signed',
+    'document_status_completed' => 'Completed',
+    'templates_library' => 'Templates library',
+    'last_used' => 'Last used',
+    'create' => 'Create',
+    'new_document' => 'New document',
+    'no_documents_yet' => 'No documents yet',
+];
