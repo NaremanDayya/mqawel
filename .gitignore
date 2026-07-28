@@ -17,3 +17,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Local tooling state (not part of the app)
+/.claude
