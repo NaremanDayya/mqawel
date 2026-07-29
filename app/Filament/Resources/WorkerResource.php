@@ -113,7 +113,7 @@ class WorkerResource extends Resource
             ->columns([
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
-                TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.job_title')),
+                TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.position')),
                 TextColumn::make('phone')->searchable()->sortable()->label(__('backend.phone')),
                 TextColumn::make('ethnicity')->searchable()->sortable()->label(__('backend.ethnicity')),
                 TextColumn::make('projects.project.name')->listWithLineBreaks()->limitList(2)->label(__('backend.projects')),
@@ -122,24 +122,27 @@ class WorkerResource extends Resource
                     'temporary' => __('backend.temporary'),
                     'primary' => __('backend.primary'),
                 })->badge()->searchable()->sortable()->label(__('backend.living_place')),
-                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.active')),
+                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.status')),
             ])
+            ->actionsColumnLabel(__('backend.actions'))
             ->filters([
                 //SelectFilter::make('company')->relationship('company', 'name')->label('Company'),
                 TernaryFilter::make('is_active')->boolean()->trueLabel(__('backend.active'))->falseLabel(__('backend.inactive'))->native(false)->label(__('backend.active')),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()->iconButton(),
+                Tables\Actions\EditAction::make()->iconButton(),
                 Tables\Actions\Action::make('documents')
                     ->label(__('backend.worker_documents'))
+                    ->tooltip(__('backend.worker_documents'))
                     ->icon('heroicon-o-folder-open')
+                    ->iconButton()
                     ->color('gray')
                     ->url(fn (Worker $record): string => static::getUrl('edit', [
                         'record' => $record,
                         'activeRelationManager' => array_search(FilesRelationManager::class, static::getRelations()),
                     ])),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -106,6 +106,12 @@ return [
 
     'months' => 'months',
 
+    'monthly_price' => 'Monthly price',
+    'months_singular' => 'month',
+    'select_months_count' => 'Number of months to pay for',
+    'total_amount' => 'Total amount',
+    'proceed_to_payment' => 'Proceed to payment',
+
     'most_popular' => 'Most popular',
     'pricing_note' => 'Duration and price vary by the selected package, no hidden fees',
 ];

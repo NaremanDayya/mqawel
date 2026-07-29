@@ -106,6 +106,12 @@ return [
 
     'months' => 'أشهر',
 
+    'monthly_price' => 'السعر الشهري',
+    'months_singular' => 'شهر',
+    'select_months_count' => 'عدد الأشهر التي تريد الدفع مقابلها',
+    'total_amount' => 'المبلغ الإجمالي',
+    'proceed_to_payment' => 'المتابعة إلى الدفع',
+
     'most_popular' => 'الأكثر طلباً',
     'pricing_note' => 'المدة والسعر يختلفان حسب الباقة المختارة، ولا توجد أي رسوم خفية',
 ];

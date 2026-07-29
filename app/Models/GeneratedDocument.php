@@ -18,6 +18,7 @@ class GeneratedDocument extends Model
         'category',
         'related_party',
         'details',
+        'content',
         'status',
         'value',
         'created_by',

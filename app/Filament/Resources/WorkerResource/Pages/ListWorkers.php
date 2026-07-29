@@ -2,11 +2,15 @@
 
 namespace App\Filament\Resources\WorkerResource\Pages;
 
+use App\Filament\Concerns\HasMockupPageHeader;
 use App\Filament\Concerns\TogglesRecordsView;
+use App\Filament\Pages\WorkersReport;
 use App\Filament\Resources\WorkerResource;
 use App\Models\Project;
 use App\Models\ProjectWorker;
 use App\Models\Worker;
+use App\Services\Ai\AiRequestException;
+use App\Services\Ai\DocumentExtractionService;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -22,12 +26,19 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ListWorkers extends ListRecords
 {
+    use HasMockupPageHeader;
     use TogglesRecordsView;
 
     protected static string $resource = WorkerResource::class;
+
+    protected function pageSubtitle(): ?string
+    {
+        return __('backend.workers_page_subtitle');
+    }
 
     public function table(Table $table): Table
     {
@@ -73,11 +84,55 @@ class ListWorkers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('workersReport')
+                ->label(__('backend.workers_report'))
+                ->icon('heroicon-o-chart-bar')
+                ->color('gray')
+                ->url(WorkersReport::getUrl()),
+
+            Actions\Action::make('aiScanWorker')
+                ->label(__('backend.ai_scan'))
+                ->icon('heroicon-o-viewfinder-circle')
+                ->color('primary')
+                ->modalHeading(__('backend.ai_scan'))
+                ->modalDescription(__('backend.ai_scan_new_worker_description'))
+                ->modalSubmitActionLabel(__('backend.ai_scan_action'))
+                ->form([
+                    FileUpload::make('scan')
+                        ->label(__('backend.ai_scan_upload_label'))
+                        ->image()
+                        ->directory('form-attachments')
+                        ->maxSize(10240)
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $path = $data['scan'];
+                    $absolutePath = Storage::disk('public')->path($path);
+                    $mime = Storage::disk('public')->mimeType($path) ?: 'image/jpeg';
+
+                    try {
+                        $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
+                    } catch (AiRequestException $e) {
+                        Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
+                        $this->mountAction('create', ['picture' => $path]);
+
+                        return;
+                    }
+
+                    $this->mountAction('create', [
+                        'picture' => $path,
+                        'name' => $extracted['full_name'],
+                        'ethnicity' => $this->matchNationality($extracted['nationality']),
+                    ]);
+                }),
+
             Actions\CreateAction::make()
                 ->label(__('backend.add_worker'))
+                ->icon('heroicon-o-plus')
                 ->modalHeading(__('backend.add_worker'))
                 ->modalDescription(__('backend.add_worker_description'))
                 ->modalSubmitActionLabel(__('backend.add_worker'))
+                ->fillForm(fn (array $arguments): array => $arguments)
                 ->form([
                     FileUpload::make('picture')
                         ->label(__('backend.picture'))
@@ -161,5 +216,37 @@ class ListWorkers extends ListRecords
                     }
                 }),
         ];
+    }
+
+    protected function matchNationality(?string $extracted): ?string
+    {
+        if (blank($extracted)) {
+            return null;
+        }
+
+        $needle = mb_strtolower(trim($extracted));
+
+        $map = [
+            'indian' => __('backend.nationality_indian'),
+            'india' => __('backend.nationality_indian'),
+            __('backend.nationality_indian') => __('backend.nationality_indian'),
+            'pakistani' => __('backend.nationality_pakistani'),
+            'pakistan' => __('backend.nationality_pakistani'),
+            __('backend.nationality_pakistani') => __('backend.nationality_pakistani'),
+            'bangladeshi' => __('backend.nationality_bangladeshi'),
+            'bangladesh' => __('backend.nationality_bangladeshi'),
+            __('backend.nationality_bangladeshi') => __('backend.nationality_bangladeshi'),
+            'omani' => __('backend.nationality_omani'),
+            'oman' => __('backend.nationality_omani'),
+            __('backend.nationality_omani') => __('backend.nationality_omani'),
+        ];
+
+        foreach ($map as $key => $value) {
+            if (str_contains($needle, mb_strtolower($key))) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 }

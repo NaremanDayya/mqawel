@@ -998,7 +998,7 @@
     transition: background 0.22s;
     overflow: hidden;
   }
-  
+
   .why-icon img {
     width: 34px; height: 34px;
     object-fit: contain;
@@ -1095,7 +1095,7 @@
   }
 
   .pricing-eyebrow {
-    font-size: 18px;
+    font-size: 38px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -1666,7 +1666,7 @@
 
 /* ==== RTL fixes (head <style> block 2) ==== */
   /* ───── RTL FIXES ───── */
-  
+
   /* Hero background shape: move from right to left */
   .hero-bg-shape {
     right: auto;

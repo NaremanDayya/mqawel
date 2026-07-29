@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\ItemMovement;
 use App\Models\Project;
 use App\Models\Worker;
+use App\Services\CompanyInsights;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Pages\Dashboard as BaseDashboard;
@@ -111,19 +112,9 @@ class MyArea extends BaseDashboard
 
     protected function getAlertCounts(): array
     {
-        $companyId = $this->companyId();
         $expiryDays = Auth::user()->company->about_to_expire_days ?? 30;
 
-        return [
-            'expired_files' => File::where('company_id', $companyId)->where('expiry_date', '<', date('Y-m-d'))->count(),
-            'about_to_expire' => File::where('company_id', $companyId)->where('expiry_date', '<=', Carbon::now()->addDays($expiryDays))->where('expiry_date', '>', Carbon::now())->count(),
-            'incomplete_files' => File::where('company_id', $companyId)->where(function ($q) {
-                $q->whereNull('name')->orWhereNull('file')->orWhereNull('expiry_date');
-            })->count(),
-            'incomplete_workers' => Worker::where('company_id', $companyId)->where(function ($q) {
-                $q->whereNull('picture')->orWhereNull('name')->orWhereNull('phone')->orWhereNull('ethnicity')->orWhereNull('living_address')->orWhereNull('job_title');
-            })->count(),
-        ];
+        return app(CompanyInsights::class)->alertCounts($this->companyId(), $expiryDays);
     }
 
     public function getKpis(): array

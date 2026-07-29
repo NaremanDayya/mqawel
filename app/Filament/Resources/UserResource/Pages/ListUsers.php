@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use App\Filament\Concerns\HasMockupPageHeader;
 use App\Filament\Resources\UserResource;
 use App\Models\CompanyRole;
 use App\Models\User;
@@ -20,13 +21,21 @@ use Illuminate\Support\Str;
 
 class ListUsers extends ListRecords
 {
+    use HasMockupPageHeader;
+
     protected static string $resource = UserResource::class;
+
+    protected function pageSubtitle(): ?string
+    {
+        return __('backend.users_page_subtitle');
+    }
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
                 ->label(__('backend.add_user'))
+                ->icon('heroicon-o-plus')
                 ->modalHeading(__('backend.add_user'))
                 ->modalDescription(__('backend.add_user_description'))
                 ->modalSubmitActionLabel(__('backend.add_user'))

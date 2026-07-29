@@ -98,6 +98,10 @@ class GeneratedDocumentResource extends Resource
                 Textarea::make('details')
                     ->label(__('backend.additional_details'))
                     ->columnSpanFull(),
+
+                Forms\Components\MarkdownEditor::make('content')
+                    ->label(__('backend.document_content'))
+                    ->columnSpanFull(),
             ]);
     }
 

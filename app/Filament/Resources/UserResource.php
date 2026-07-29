@@ -128,8 +128,9 @@ class UserResource extends Resource
                         default => 'gray',
                     }),
                 TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.role_name'))->toggleable(isToggledHiddenByDefault: true),
-                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.active')),
+                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.status')),
             ])
+            ->actionsColumnLabel(__('backend.actions'))
             ->filters([
                 TernaryFilter::make('is_active')->boolean()->trueLabel(__('backend.active'))->falseLabel(__('backend.inactive'))->native(false)->label(__('backend.active')),
                 SelectFilter::make('role')->relationship('role', 'name', function (Builder $query) {
@@ -138,9 +139,9 @@ class UserResource extends Resource
                 })->label(__('backend.role')),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()->iconButton(),
+                Tables\Actions\EditAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

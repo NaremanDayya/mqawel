@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\WorkerResource\RelationManagers;
 
+use App\Services\Ai\AiRequestException;
+use App\Services\Ai\DocumentExtractionService;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -12,6 +14,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -79,7 +82,54 @@ class FilesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\Action::make('aiScan')
+                    ->label(__('backend.ai_scan_document'))
+                    ->icon('heroicon-o-sparkles')
+                    ->color('primary')
+                    ->modalHeading(__('backend.ai_scan_document'))
+                    ->modalDescription(__('backend.ai_scan_description'))
+                    ->modalSubmitActionLabel(__('backend.ai_scan_action'))
+                    ->form([
+                        FileUpload::make('scan')
+                            ->label(__('backend.ai_scan_upload_label'))
+                            ->image()
+                            ->directory('documents')
+                            ->maxSize(10240)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        $path = $data['scan'];
+                        $absolutePath = Storage::disk('public')->path($path);
+                        $mime = Storage::disk('public')->mimeType($path) ?: 'image/jpeg';
+
+                        try {
+                            $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
+                        } catch (AiRequestException $e) {
+                            Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
+                            $this->mountAction('create', ['file' => $path]);
+
+                            return;
+                        }
+
+                        $typeLabel = match ($extracted['document_type']) {
+                            'national_id' => __('backend.document_type_national_id'),
+                            'passport' => __('backend.document_type_passport'),
+                            default => __('backend.document_type_other'),
+                        };
+
+                        $this->mountAction('create', [
+                            'name' => $typeLabel,
+                            'description' => __('backend.extracted_data_summary', [
+                                'name' => $extracted['full_name'] ?? '—',
+                                'id_number' => $extracted['id_number'] ?? '—',
+                                'nationality' => $extracted['nationality'] ?? '—',
+                            ]),
+                            'expiry_date' => $extracted['expiry_date'],
+                            'file' => $path,
+                        ]);
+                    }),
+                Tables\Actions\CreateAction::make()
+                    ->fillForm(fn (array $arguments): array => $arguments),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

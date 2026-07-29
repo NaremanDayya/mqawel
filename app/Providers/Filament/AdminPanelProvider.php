@@ -72,6 +72,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER, fn(): View => view('filament.hooks.profile'),)
+            ->renderHook(PanelsRenderHook::BODY_END, fn(): View => view('filament.hooks.ai-assistant-widget'),)
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             //->databaseNotifications()

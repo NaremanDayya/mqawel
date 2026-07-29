@@ -102,7 +102,7 @@
                 @foreach ($Packages as $Package)
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card pricing-card h-100" style="border: 1px solid #eee;">
-                            <a href="{{ route('payment', ['package_id' => $Package->id, 'payment_name' => $Package->title, 'payment_quantity' => 1, 'payment_amount' => $Package->price]) }}"
+                            <a href="{{ route('subscribe.checkout', ['package_id' => $Package->id]) }}"
                                 class="card-body d-flex flex-column">
                                 <h3 class="plan-title" style="font-size: 17px;">{{ $Package->title }}</h3>
                                 <div class="d-flex align-items-baseline mt-2 mb-0">
