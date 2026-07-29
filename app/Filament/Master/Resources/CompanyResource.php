@@ -71,6 +71,7 @@ class CompanyResource extends Resource
                     ])->columns(2),
                     Section::make()->schema([
                         Toggle::make('is_active')->default(true)->label(__('backend.active')),
+                        Toggle::make('is_verified')->label(__('backend.verified')),
                     ])
                 ])
             ]);
@@ -88,6 +89,7 @@ class CompanyResource extends Resource
                 TextColumn::make('tax_number')->label(__('backend.tax_number'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('activity')->label(__('backend.activity'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),
+                IconColumn::make('is_verified')->boolean()->label(__('backend.verified')),
             ])
             ->filters([
                 TernaryFilter::make('is_active')->trueLabel(__('backend.active'))->falseLabel(__('backend.inactive'))->label(__('backend.active')),

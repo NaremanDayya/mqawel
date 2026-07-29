@@ -21,11 +21,25 @@ trait HasMockupPageHeader
 
     public function getBreadcrumbs(): array
     {
-        $group = static::getResource()::getNavigationGroup();
+        // Resource pages (Users, Workers, Documents lists, …) expose the group
+        // via their resource; plain pages (Company Profile, …) expose it on
+        // themselves. Support both.
+        $group = method_exists(static::class, 'getResource')
+            ? static::getResource()::getNavigationGroup()
+            : static::getNavigationGroup();
+
+        $breadcrumbs = parent::getBreadcrumbs();
+
+        if (empty($breadcrumbs)) {
+            // Plain (non-resource) pages don't build their own breadcrumb
+            // trail the way resource pages do — add the page's own title as
+            // the final segment ourselves.
+            $breadcrumbs = [static::getNavigationLabel()];
+        }
 
         return [
             ...(filled($group) ? [$group] : []),
-            ...parent::getBreadcrumbs(),
+            ...$breadcrumbs,
         ];
     }
 }

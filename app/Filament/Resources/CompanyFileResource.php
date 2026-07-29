@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CompanyFileResource\Pages;
 use App\Filament\Resources\CompanyFileResource\RelationManagers;
-use App\Models\CompanyFile;
 use App\Models\File;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -60,6 +59,15 @@ class CompanyFileResource extends Resource
                             'unique' => __('backend.unavailable_to_use'),
                         ])->required()->label(__('backend.name')),
                         DatePicker::make('expiry_date')->required()->label(__('backend.expiry_date')),
+                        Forms\Components\Select::make('category')
+                            ->label(__('backend.file_category'))
+                            ->options([
+                                'certificate' => __('backend.file_category_certificate'),
+                                'work_photo' => __('backend.file_category_work_photo'),
+                                'general' => __('backend.file_category_general'),
+                            ])
+                            ->default('general')
+                            ->required(),
                         MarkdownEditor::make('description')->columnSpanFull()->label(__('backend.description')),
                     ])->columns(2),
                 ]),

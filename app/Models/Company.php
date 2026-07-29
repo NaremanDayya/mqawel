@@ -20,18 +20,29 @@ class Company extends Model
         'business_number',
         'tax_number',
         'activity',
+        'description',
+        'founded_year',
+        'address',
+        'services',
         'about_to_expire_days',
         'notification_settings',
         'is_active',
+        'is_verified',
         'master_id',
     ];
 
     protected $casts = [
         'notification_settings' => 'array',
+        'services' => 'array',
+        'is_verified' => 'boolean',
     ];
 
     public function master() : BelongsTo {
         return $this->belongsTo(Master::class, 'master_id');
+    }
+
+    public function activityLogs() : HasMany {
+        return $this->hasMany(CompanyActivityLog::class);
     }
 
     public function workers() : HasMany {

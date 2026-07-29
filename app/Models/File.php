@@ -18,6 +18,7 @@ class File extends Model
         'description',
         'file',
         'expiry_date',
+        'category',
         'is_active',
         'created_by',
         'master_id',

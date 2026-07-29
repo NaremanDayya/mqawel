@@ -150,6 +150,16 @@ class ListCompanyFiles extends ListRecords
                         ->label(__('backend.expiry_date'))
                         ->required(),
 
+                    Select::make('category')
+                        ->label(__('backend.file_category'))
+                        ->options([
+                            'certificate' => __('backend.file_category_certificate'),
+                            'work_photo' => __('backend.file_category_work_photo'),
+                            'general' => __('backend.file_category_general'),
+                        ])
+                        ->default('general')
+                        ->required(),
+
                     FileUpload::make('file')
                         ->label(__('backend.document'))
                         ->directory('documents')
@@ -167,6 +177,7 @@ class ListCompanyFiles extends ListRecords
                         'parent_id' => $data['section'] === 'companies' ? $companyId : $data['parent_id'],
                         'name' => $data['name'],
                         'expiry_date' => $data['expiry_date'],
+                        'category' => $data['category'] ?? 'general',
                         'file' => $data['file'] ?? null,
                         'is_active' => true,
                     ]);
