@@ -18,7 +18,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -116,7 +115,6 @@ class CompanyFileResource extends Resource
                     })
                     ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
                     ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y')),
-                IconColumn::make('is_active')->boolean()->label(__('backend.active')),
             ])
             ->actionsColumnLabel(__('backend.actions'))
             ->filters([

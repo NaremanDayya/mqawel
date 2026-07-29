@@ -661,3 +661,18 @@ table.fi-ta-table {
     color: #fff !important;
 }
 
+/* ==========================================================================
+   Table toolbar — Filament's `justify-between` + DOM order puts the
+   search/filter group on the left under RTL; row-reverse flips the two
+   groups so search stays on the right, matching the design mockup.
+   ========================================================================== */
+.fi-ta-header-toolbar {
+    flex-direction: row-reverse !important;
+}
+
+/* Actions column header defaults to start-alignment while the row action
+   buttons themselves default to end-alignment — misaligned. Match them. */
+.fi-ta thead th:last-child > span.justify-start {
+    justify-content: flex-end !important;
+}
+
