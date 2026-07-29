@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CompanyFileResource\Pages;
 
 use App\Filament\Concerns\HasMockupPageHeader;
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Resources\CompanyFileResource;
 use App\Models\File;
 use App\Models\Project;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 class ListCompanyFiles extends ListRecords
 {
     use HasMockupPageHeader;
+    use HasSectionNotificationSettings;
 
     protected static string $resource = CompanyFileResource::class;
 
@@ -169,6 +171,8 @@ class ListCompanyFiles extends ListRecords
                         'is_active' => true,
                     ]);
                 }),
+
+            $this->notificationSettingsAction('documents', __('backend.company_documents_section')),
         ];
     }
 }

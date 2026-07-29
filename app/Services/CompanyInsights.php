@@ -16,11 +16,15 @@ class CompanyInsights
     /**
      * @return array{expired_files: int, about_to_expire: int, incomplete_files: int, incomplete_workers: int}
      */
-    public function alertCounts(int $companyId, int $expiryDays = 30): array
+    public function alertCounts(int $companyId, int $expiryDays = 30, bool $documentAlertsEnabled = true, bool $expiryAlertEnabled = true): array
     {
         return [
-            'expired_files' => File::where('company_id', $companyId)->where('expiry_date', '<', date('Y-m-d'))->count(),
-            'about_to_expire' => File::where('company_id', $companyId)->where('expiry_date', '<=', Carbon::now()->addDays($expiryDays))->where('expiry_date', '>', Carbon::now())->count(),
+            'expired_files' => $documentAlertsEnabled
+                ? File::where('company_id', $companyId)->where('expiry_date', '<', date('Y-m-d'))->count()
+                : 0,
+            'about_to_expire' => ($documentAlertsEnabled && $expiryAlertEnabled)
+                ? File::where('company_id', $companyId)->where('expiry_date', '<=', Carbon::now()->addDays($expiryDays))->where('expiry_date', '>', Carbon::now())->count()
+                : 0,
             'incomplete_files' => File::where('company_id', $companyId)->where(function ($q) {
                 $q->whereNull('name')->orWhereNull('file')->orWhereNull('expiry_date');
             })->count(),

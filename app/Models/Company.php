@@ -21,8 +21,13 @@ class Company extends Model
         'tax_number',
         'activity',
         'about_to_expire_days',
+        'notification_settings',
         'is_active',
         'master_id',
+    ];
+
+    protected $casts = [
+        'notification_settings' => 'array',
     ];
 
     public function master() : BelongsTo {

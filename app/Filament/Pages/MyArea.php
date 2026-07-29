@@ -30,10 +30,13 @@ class MyArea extends BaseDashboard
             return null;
         }
 
-        $companyId = Auth::user()->company_id;
-        $expiryDays = Auth::user()->company->about_to_expire_days ?? 30;
+        $company = Auth::user()->company;
+        $documentSettings = $company->notification_settings['documents'] ?? [];
+        $expiryDays = $documentSettings['lead_time_days'] ?? ($company->about_to_expire_days ?? 30);
+        $enabled = $documentSettings['enabled'] ?? true;
+        $expiryAlert = $documentSettings['expiry_alert'] ?? true;
 
-        $total = array_sum(app(CompanyInsights::class)->alertCounts($companyId, $expiryDays));
+        $total = array_sum(app(CompanyInsights::class)->alertCounts(Auth::user()->company_id, $expiryDays, $enabled, $expiryAlert));
 
         return $total > 0 ? (string) $total : null;
     }
@@ -131,9 +134,13 @@ class MyArea extends BaseDashboard
 
     protected function getAlertCounts(): array
     {
-        $expiryDays = Auth::user()->company->about_to_expire_days ?? 30;
+        $company = Auth::user()->company;
+        $documentSettings = $company->notification_settings['documents'] ?? [];
+        $expiryDays = $documentSettings['lead_time_days'] ?? ($company->about_to_expire_days ?? 30);
+        $enabled = $documentSettings['enabled'] ?? true;
+        $expiryAlert = $documentSettings['expiry_alert'] ?? true;
 
-        return app(CompanyInsights::class)->alertCounts($this->companyId(), $expiryDays);
+        return app(CompanyInsights::class)->alertCounts($this->companyId(), $expiryDays, $enabled, $expiryAlert);
     }
 
     public function getKpis(): array
