@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -27,6 +28,10 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Event::listen(Login::class, function (Login $event) {
+            if (! $event->user instanceof User) {
+                return;
+            }
+
             session(['previous_login_at' => $event->user->last_login_at]);
             $event->user->forceFill(['last_login_at' => now()])->saveQuietly();
         });

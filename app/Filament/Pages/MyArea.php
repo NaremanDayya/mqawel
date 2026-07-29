@@ -24,6 +24,25 @@ class MyArea extends BaseDashboard
         return __('backend.my_area');
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        if (! Auth::check()) {
+            return null;
+        }
+
+        $companyId = Auth::user()->company_id;
+        $expiryDays = Auth::user()->company->about_to_expire_days ?? 30;
+
+        $total = array_sum(app(CompanyInsights::class)->alertCounts($companyId, $expiryDays));
+
+        return $total > 0 ? (string) $total : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
     public function getTitle(): string|Htmlable
     {
         return __('backend.my_area');
