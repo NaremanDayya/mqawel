@@ -83,6 +83,7 @@ class CompanyFileResource extends Resource
             ->modifyQueryUsing(function($query){
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
+            ->description('⚠️ '.__('backend.max_file_size_10_mb'))
             ->columns([
                 TextColumn::make('name')
                     ->searchable()

@@ -642,3 +642,22 @@ table.fi-ta-table {
     box-shadow: none !important;
 }
 
+/* ==========================================================================
+   Sidebar nav badges — solid filled pill instead of Filament's default
+   pale/light badge, matching the design mockup (e.g. the alert count next
+   to "مساحقي").
+   ========================================================================== */
+.fi-sidebar-item .fi-badge {
+    box-shadow: none !important;
+    border-radius: 9999px !important;
+    min-width: 1.25rem !important;
+    height: 1.25rem !important;
+    padding-inline: 0.4rem !important;
+    font-weight: 700 !important;
+}
+
+.fi-sidebar-item .fi-badge.fi-color-danger {
+    background: var(--mq-danger) !important;
+    color: #fff !important;
+}
+
