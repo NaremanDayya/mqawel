@@ -84,9 +84,14 @@ class CompanyFileResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
-                TextColumn::make('name')->searchable()->label(__('backend.name')),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->label(__('backend.name'))
+                    ->description(fn (File $record): ?string => $record->file
+                        ? strtoupper(pathinfo($record->file, PATHINFO_EXTENSION)) ?: null
+                        : null),
                 TextColumn::make('related_entity')
-                    ->label(__('backend.related_entity'))
+                    ->label(__('backend.party'))
                     ->state(fn (File $record): ?string => match ($record->parent_table) {
                         'companies' => $record->parentCompany?->name,
                         'projects' => $record->parentProject?->name,
@@ -108,18 +113,22 @@ class CompanyFileResource extends Resource
                             ? __('backend.expired_since_days', ['days' => abs((int) $daysUntilExpiry)])
                             : __('backend.valid');
                     })
-                    ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success'),
+                    ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
+                    ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y')),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),
             ])
+            ->actionsColumnLabel(__('backend.actions'))
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()->iconButton(),
+                Tables\Actions\EditAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton(),
                 Tables\Actions\Action::make('download_file')
                     ->icon('heroicon-o-arrow-down-tray')
+                    ->tooltip(__('backend.download'))
+                    ->iconButton()
                     ->color('success')
                     ->action(function(array $data, $record) : StreamedResponse {
                         $filePath= 'public/'.$record->file;

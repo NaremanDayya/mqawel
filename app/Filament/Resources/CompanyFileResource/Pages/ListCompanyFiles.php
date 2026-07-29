@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\CompanyFileResource\Pages;
 
+use App\Filament\Concerns\HasMockupPageHeader;
 use App\Filament\Resources\CompanyFileResource;
 use App\Models\File;
 use App\Models\Project;
 use App\Models\Worker;
+use App\Services\Ai\AiRequestException;
+use App\Services\Ai\DocumentExtractionService;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -14,14 +17,23 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ListCompanyFiles extends ListRecords
 {
+    use HasMockupPageHeader;
+
     protected static string $resource = CompanyFileResource::class;
+
+    protected function pageSubtitle(): ?string
+    {
+        return __('backend.documents_page_subtitle');
+    }
 
     public function getTabs(): array
     {
@@ -49,11 +61,55 @@ class ListCompanyFiles extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('aiScanDocument')
+                ->label(__('backend.ai_scan'))
+                ->icon('heroicon-o-viewfinder-circle')
+                ->color('primary')
+                ->modalHeading(__('backend.ai_scan'))
+                ->modalDescription(__('backend.ai_scan_description'))
+                ->modalSubmitActionLabel(__('backend.ai_scan_action'))
+                ->form([
+                    FileUpload::make('scan')
+                        ->label(__('backend.ai_scan_upload_label'))
+                        ->image()
+                        ->directory('documents')
+                        ->maxSize(10240)
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $path = $data['scan'];
+                    $absolutePath = Storage::disk('public')->path($path);
+                    $mime = Storage::disk('public')->mimeType($path) ?: 'image/jpeg';
+
+                    try {
+                        $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
+                    } catch (AiRequestException $e) {
+                        Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
+                        $this->mountAction('create', ['file' => $path]);
+
+                        return;
+                    }
+
+                    $typeLabel = match ($extracted['document_type']) {
+                        'national_id' => __('backend.document_type_national_id'),
+                        'passport' => __('backend.document_type_passport'),
+                        default => __('backend.document_type_other'),
+                    };
+
+                    $this->mountAction('create', [
+                        'name' => $typeLabel,
+                        'expiry_date' => $extracted['expiry_date'],
+                        'file' => $path,
+                    ]);
+                }),
+
             Actions\CreateAction::make()
                 ->label(__('backend.add_document'))
+                ->icon('heroicon-o-plus')
                 ->modalHeading(__('backend.add_document'))
                 ->modalDescription(__('backend.add_document_description'))
                 ->modalSubmitActionLabel(__('backend.add_document'))
+                ->fillForm(fn (array $arguments): array => $arguments)
                 ->form([
                     TextInput::make('name')
                         ->label(__('backend.name'))

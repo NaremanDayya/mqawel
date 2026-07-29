@@ -464,6 +464,7 @@ return [
     'document_section' => 'Section',
     'related_entity' => 'Related to',
     'company_documents_section' => 'Company documents',
+    'documents_page_subtitle' => 'Company, project, and worker documents — organized, with expiry alerts.',
     'project_documents_section' => 'Project documents',
     'worker_documents_section' => 'Worker documents',
     'max_file_size_10_mb' => 'Maximum file size: 10 MB — to keep storage usage reasonable.',

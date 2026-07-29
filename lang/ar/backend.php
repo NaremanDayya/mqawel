@@ -464,6 +464,7 @@ return [
     'document_section' => 'القسم',
     'related_entity' => 'الجهة المرتبطة',
     'company_documents_section' => 'مستندات الشركة',
+    'documents_page_subtitle' => 'مستندات الشركة والمشاريع والعمال — مقسّمة، مع تنبيهات قبل الانتهاء.',
     'project_documents_section' => 'مستندات المشاريع',
     'worker_documents_section' => 'مستندات العمال',
     'max_file_size_10_mb' => 'الحد الأقصى لحجم الملف: 10 ميجابايت — للحفاظ على مساحة التخزين.',
