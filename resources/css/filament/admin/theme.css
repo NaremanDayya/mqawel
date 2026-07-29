@@ -598,3 +598,47 @@ table.fi-ta-table {
     color: #fff !important;
 }
 
+/* ==========================================================================
+   Resource list tabs — underlined nav style instead of the centered pill
+   bar, matching the design mockup. Leaves "contained" tabs (used inside
+   relation managers/modals) untouched.
+   ========================================================================== */
+.fi-tabs:not(.fi-contained) {
+    margin-inline: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-bottom: 1px solid var(--mq-line) !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    gap: 1.75rem !important;
+}
+
+.fi-tabs:not(.fi-contained) .fi-tabs-item {
+    border-radius: 0 !important;
+    padding-inline: 0.125rem !important;
+    padding-block: 0.85rem !important;
+    position: relative;
+}
+
+.fi-tabs:not(.fi-contained) .fi-tabs-item:hover,
+.fi-tabs:not(.fi-contained) .fi-tabs-item:focus-visible {
+    background: transparent !important;
+}
+
+.fi-tabs:not(.fi-contained) .fi-tabs-item.fi-active::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--mq-clay);
+}
+
+.fi-tabs:not(.fi-contained) .fi-tabs-item.fi-active .fi-badge {
+    background: var(--mq-clay) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
