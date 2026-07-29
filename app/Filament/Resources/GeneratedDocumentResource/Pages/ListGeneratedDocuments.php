@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\GeneratedDocumentResource\Pages;
 
+use App\Filament\Concerns\HasMockupPageHeader;
 use App\Filament\Resources\DocumentTemplateResource;
 use App\Filament\Resources\GeneratedDocumentResource;
 use App\Models\DocumentTemplate;
 use App\Models\GeneratedDocument;
 use App\Models\Project;
 use Filament\Actions;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +17,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +26,28 @@ use Illuminate\Support\Facades\Auth;
 
 class ListGeneratedDocuments extends ListRecords
 {
+    use HasMockupPageHeader;
+
     protected static string $resource = GeneratedDocumentResource::class;
+
+    protected function pageSubtitle(): ?string
+    {
+        return __('backend.document_generator_subtitle');
+    }
+
+    /**
+     * table() branches on $activeTab to swap in a completely different table
+     * config for the "templates" tab (content grid instead of a plain list).
+     * Filament's tab click just does $set('activeTab', ...), which updates
+     * the property during hydrate — but the cached table on $this->table was
+     * already built during boot on a previous request and won't rebuild on
+     * its own. Livewire's updated{Property}() hook forces that rebuild.
+     */
+    public function updatedActiveTab(): void
+    {
+        parent::updatedActiveTab();
+        $this->resetTable();
+    }
 
     public function getTabs(): array
     {
@@ -72,18 +97,25 @@ class ListGeneratedDocuments extends ListRecords
                 ->query(DocumentTemplate::query()->where(fn (Builder $q) => $q->where('company_id', $companyId)->orWhereNull('company_id')))
                 ->contentGrid(['default' => 1, 'md' => 2, 'xl' => 3])
                 ->columns([
-                    TextColumn::make('name')
-                        ->weight('bold')
-                        ->icon('heroicon-o-document-text')
-                        ->label(__('backend.document_type')),
-                    TextColumn::make('category')
-                        ->badge()
-                        ->formatStateUsing(fn (string $state): string => GeneratedDocumentResource::categoryOptions()[$state] ?? $state)
-                        ->label(__('backend.document_section')),
-                    TextColumn::make('last_used_at')
-                        ->date()
-                        ->placeholder('—')
-                        ->label(__('backend.last_used')),
+                    Split::make([
+                        TextColumn::make('name')
+                            ->weight('bold')
+                            ->icon('heroicon-o-document-text')
+                            ->iconColor('primary')
+                            ->label(__('backend.document_type')),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('category')
+                            ->badge()
+                            ->formatStateUsing(fn (string $state): string => GeneratedDocumentResource::categoryOptions()[$state] ?? $state)
+                            ->label(__('backend.document_section')),
+                        TextColumn::make('last_used_at')
+                            ->date()
+                            ->placeholder('—')
+                            ->size('sm')
+                            ->color('gray')
+                            ->label(__('backend.last_used')),
+                    ])->space(2),
                 ])
                 ->actions([
                     Tables\Actions\Action::make('use_template')
@@ -155,6 +187,43 @@ class ListGeneratedDocuments extends ListRecords
                         'details' => $data['details'] ?? null,
                         'status' => 'draft',
                     ]);
+                }),
+
+            Actions\Action::make('importDocument')
+                ->label(__('backend.import'))
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('gray')
+                ->modalHeading(__('backend.import'))
+                ->modalDescription(__('backend.import_description'))
+                ->modalSubmitActionLabel(__('backend.import'))
+                ->form([
+                    TextInput::make('name')
+                        ->label(__('backend.document_type'))
+                        ->required(),
+
+                    Select::make('category')
+                        ->label(__('backend.document_section'))
+                        ->options(GeneratedDocumentResource::categoryOptions())
+                        ->required(),
+
+                    FileUpload::make('file')
+                        ->label(__('backend.document'))
+                        ->directory('documents')
+                        ->maxSize(10240)
+                        ->helperText(__('backend.max_file_size_10_mb'))
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    GeneratedDocument::create([
+                        'company_id' => Auth::user()->company_id,
+                        'created_by' => Auth::user()->id,
+                        'name' => $data['name'],
+                        'category' => $data['category'],
+                        'file' => $data['file'],
+                        'status' => 'draft',
+                    ]);
+
+                    \Filament\Notifications\Notification::make()->title(__('backend.settings_saved'))->success()->send();
                 }),
         ];
     }
