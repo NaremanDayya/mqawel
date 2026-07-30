@@ -23,10 +23,11 @@ class StatsExpiredFiles extends BaseWidget
 
         $stats= [];
 
-        $stats[]= Stat::make(__('backend.about_to_expire'), $number_of_files_about_to_expire)
-            ->icon('heroicon-o-bell-alert')
-            ->description(__('backend.within_alert_period'))
-            ->color('gray');
+        $stats[]= Stat::make(__('backend.number_of_files'), $number_of_files)
+            ->icon('heroicon-o-document-text')
+            ->description(__('backend.across_company_and_projects'))
+            ->color('primary')
+            ->extraAttributes(['class' => 'mq-stat-highlight']);
 
         $stats[]= Stat::make(__('backend.expired_files'), $number_of_expired_files)
             ->icon('heroicon-o-document-minus')
@@ -34,11 +35,10 @@ class StatsExpiredFiles extends BaseWidget
             ->descriptionIcon('heroicon-m-arrow-trending-down')
             ->color('danger');
 
-        $stats[]= Stat::make(__('backend.number_of_files'), $number_of_files)
-            ->icon('heroicon-o-document-text')
-            ->description(__('backend.across_company_and_projects'))
-            ->color('primary')
-            ->extraAttributes(['class' => 'mq-stat-highlight']);
+        $stats[]= Stat::make(__('backend.about_to_expire'), $number_of_files_about_to_expire)
+            ->icon('heroicon-o-bell-alert')
+            ->description(__('backend.within_alert_period'))
+            ->color('gray');
 
         return $stats;
     }
