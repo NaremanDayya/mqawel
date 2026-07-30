@@ -296,6 +296,11 @@ return [
     'number_of_files' => 'اجمالي عدد المستندات',
     'number_of_expired_files' => 'عدد المستندات المنتهية',
     'number_of_files_about_to_expire' => 'عدد المستندات على وشك الانتهاء',
+    'about_to_expire' => 'على وشك الانتهاء',
+    'within_alert_period' => 'خلال مدة التنبيه',
+    'requires_immediate_renewal' => 'يتطلب تجديد فوري',
+    'across_company_and_projects' => 'عبر الشركة والمشاريع',
+    'search_files_placeholder' => 'بحث باسم المستند أو الجهة...',
 
     'section' => 'القسم',
     'entity' => 'الجهة',

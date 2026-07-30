@@ -125,15 +125,6 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                     'items' => __('backend.items'),
                     'companies' => __('backend.companies'),
                 })->badge()->searchable()->sortable()->label(__('backend.section')),
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable()
-                    ->description(fn (File $record): string => match ($record->category ?? 'general') {
-                        'certificate' => __('backend.file_category_certificate'),
-                        'work_photo' => __('backend.file_category_work_photo'),
-                        default => __('backend.file_category_general'),
-                    })
-                    ->label(__('backend.name')),
                 TextColumn::make('parent_id')->getStateUsing(function(Model $record): ?string {
                     $value= '';
 
@@ -170,6 +161,15 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
 
                     return $value;
                 })->searchable()->sortable()->label(__('backend.party')),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->description(fn (File $record): string => match ($record->category ?? 'general') {
+                        'certificate' => __('backend.file_category_certificate'),
+                        'work_photo' => __('backend.file_category_work_photo'),
+                        default => __('backend.file_category_general'),
+                    })
+                    ->label(__('backend.name')),
                 TextColumn::make('expiry_date')
                     ->sortable()
                     ->badge()
@@ -185,10 +185,11 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                             : __('backend.valid');
                     })
                     ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
-                    ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y'))
+                    ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y'), 'above')
                     ->label(__('backend.expiry_date')),
             ])
             ->actionsColumnLabel(__('backend.actions'))
+            ->searchPlaceholder(__('backend.search_files_placeholder'))
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.files'))
             ->actions([
                 Tables\Actions\ViewAction::make()->form([

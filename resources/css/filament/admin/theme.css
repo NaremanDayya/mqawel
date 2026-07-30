@@ -496,6 +496,44 @@ div.fi-topbar nav {
     color: var(--mq-txt-2) !important;
 }
 
+.fi-wi-stats-overview-stat-description.fi-color-danger,
+.fi-wi-stats-overview-stat-description.fi-color-warning,
+.fi-wi-stats-overview-stat-description.fi-color-success {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    background: var(--mq-danger-bg);
+}
+
+.fi-wi-stats-overview-stat-description.fi-color-danger .fi-wi-stats-overview-stat-description-icon {
+    height: 14px !important;
+    width: 14px !important;
+}
+
+/* Highlighted stat card — solid brand-purple fill, used for the single
+   "total" KPI to match the mockup's emphasized card. */
+.fi-wi-stats-overview-stat.mq-stat-highlight {
+    background: var(--mq-clay) !important;
+    border-color: var(--mq-clay) !important;
+}
+
+.mq-stat-highlight .fi-wi-stats-overview-stat-label,
+.mq-stat-highlight .fi-wi-stats-overview-stat-value,
+.mq-stat-highlight .fi-wi-stats-overview-stat-description {
+    color: #fff !important;
+}
+
+.mq-stat-highlight .fi-wi-stats-overview-stat-icon {
+    color: #fff !important;
+}
+
+.mq-stat-highlight .fi-wi-stats-overview-stat-description {
+    background: rgba(255, 255, 255, .18) !important;
+}
+
 /* ==========================================================================
    Tables — header/cell colors + spacing to match `.dt` in the mockup.
    ========================================================================== */

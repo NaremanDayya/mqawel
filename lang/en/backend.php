@@ -296,6 +296,11 @@ return [
     'number_of_files' => 'Number of files',
     'number_of_expired_files' => 'Number of expired files',
     'number_of_files_about_to_expire' => 'Number of files about to expire',
+    'about_to_expire' => 'About to expire',
+    'within_alert_period' => 'Within the alert period',
+    'requires_immediate_renewal' => 'Requires immediate renewal',
+    'across_company_and_projects' => 'Across the company and projects',
+    'search_files_placeholder' => 'Search by document name or party...',
 
     'section' => 'Section',
     'entity' => 'Entity',
