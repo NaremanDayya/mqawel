@@ -129,8 +129,6 @@ class MasterResource extends Resource
     {
         return [
             'index' => Pages\ListMasters::route('/'),
-            'create' => Pages\CreateMaster::route('/create'),
-            'edit' => Pages\EditMaster::route('/{record}/edit'),
         ];
     }
 

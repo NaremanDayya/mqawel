@@ -4,6 +4,7 @@ namespace App\Filament\Master\Resources;
 
 use App\Filament\Master\Resources\SubscriptionResource\Pages;
 use App\Models\Subscription;
+use App\Models\SubscriptionPackage;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
@@ -92,7 +93,17 @@ class SubscriptionResource extends Resource
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make()->after(function ($record): void {
+                        $Package= SubscriptionPackage::find($record->package_id);
+
+                        if($Package){
+                            $record->period= $Package->period;
+                            $record->ending_date= date('Y-m-d', strtotime('+ '.$Package->period.' month', strtotime($record->starting_date)));
+                            $record->price= $Package->price;
+                            $record->currency= $Package->currency;
+                            $record->save();
+                        }
+                    }),
                     Tables\Actions\DeleteAction::make(),
                 ])
             ])
@@ -114,8 +125,6 @@ class SubscriptionResource extends Resource
     {
         return [
             'index' => Pages\ListSubscriptions::route('/'),
-            'create' => Pages\CreateSubscription::route('/create'),
-            'edit' => Pages\EditSubscription::route('/{record}/edit'),
         ];
     }
 

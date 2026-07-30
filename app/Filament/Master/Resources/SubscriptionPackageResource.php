@@ -115,8 +115,6 @@ class SubscriptionPackageResource extends Resource
     {
         return [
             'index' => Pages\ListSubscriptionPackages::route('/'),
-            'create' => Pages\CreateSubscriptionPackage::route('/create'),
-            'edit' => Pages\EditSubscriptionPackage::route('/{record}/edit'),
         ];
     }
 
