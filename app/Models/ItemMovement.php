@@ -14,6 +14,7 @@ class ItemMovement extends Model
         'company_id',
         'storage_id',
         'project_id',
+        'to_project_id',
         'item_id',
         'type',
         'quantity',
@@ -35,6 +36,10 @@ class ItemMovement extends Model
 
     public function project() : BelongsTo {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function toProject() : BelongsTo {
+        return $this->belongsTo(Project::class, 'to_project_id');
     }
 
     public function item() : BelongsTo {

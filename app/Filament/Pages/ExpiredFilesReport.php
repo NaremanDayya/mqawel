@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\ExpiredFilesReportExport;
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Pages\Widgets\StatsExpiredFiles;
 use App\Models\Company;
 use App\Models\Contractor;
@@ -24,7 +26,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -36,13 +37,63 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExpiredFilesReport extends Page implements HasTable, HasForms
 {
     use InteractsWithTable;
     use InteractsWithForms;
+    use HasSectionNotificationSettings;
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return __('backend.expired_files_report_subtitle');
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            \Filament\Actions\Action::make('exportExcel')
+                ->label(__('backend.export_excel'))
+                ->color('gray')
+                ->icon('heroicon-o-table-cells')
+                ->action(fn () => Excel::download(new ExpiredFilesReportExport, __('backend.expired_files_report').'-'.date('Y-m-d H:i').'.xlsx')),
+
+            \Filament\Actions\Action::make('exportPdf')
+                ->label(__('backend.export_pdf'))
+                ->color('gray')
+                ->icon('heroicon-o-document-text')
+                ->action(function () {
+                    $files = File::where('company_id', Auth::user()->company_id)->where('expiry_date', '<', date('Y-m-d'))->get();
+                    $html = Blade::render('exports.expired_files_report', ['files' => $files]);
+
+                    $mpdf = new Mpdf([
+                        'mode' => 'utf-8',
+                        'format' => 'A4',
+                        'autoScriptToLang' => true,
+                        'autoLangToFont' => true,
+                        'tempDir' => storage_path('app/mpdf/tmp'),
+                    ]);
+
+                    if (session('current_lang') == 'ar') {
+                        $mpdf->SetDirectionality('rtl');
+                    }
+
+                    $mpdf->WriteHTML($html);
+
+                    return response()->streamDownload(function () use ($mpdf) {
+                        echo $mpdf->Output('', Destination::STRING_RETURN);
+                    }, __('backend.expired_files_report').'-'.date('Y-m-d H:i').'.pdf');
+                }),
+
+            $this->notificationSettingsAction('expired_files', __('backend.files')),
+        ];
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-pie';
 
@@ -74,6 +125,15 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                     'items' => __('backend.items'),
                     'companies' => __('backend.companies'),
                 })->badge()->searchable()->sortable()->label(__('backend.section')),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->description(fn (File $record): string => match ($record->category ?? 'general') {
+                        'certificate' => __('backend.file_category_certificate'),
+                        'work_photo' => __('backend.file_category_work_photo'),
+                        default => __('backend.file_category_general'),
+                    })
+                    ->label(__('backend.name')),
                 TextColumn::make('parent_id')->getStateUsing(function(Model $record): ?string {
                     $value= '';
 
@@ -109,11 +169,26 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                     }
 
                     return $value;
-                })->searchable()->sortable()->label(__('backend.entity')),
-                TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
-                TextColumn::make('expiry_date')->searchable()->sortable()->label(__('backend.expiry_date')),
-                IconColumn::make('is_active')->searchable()->sortable()->boolean()->label(__('backend.active')),
+                })->searchable()->sortable()->label(__('backend.party')),
+                TextColumn::make('expiry_date')
+                    ->sortable()
+                    ->badge()
+                    ->formatStateUsing(function (File $record): string {
+                        if (! $record->expiry_date) {
+                            return '';
+                        }
+
+                        $daysUntilExpiry = now()->diffInDays($record->expiry_date, false);
+
+                        return $daysUntilExpiry < 0
+                            ? __('backend.expired_since_days', ['days' => abs((int) $daysUntilExpiry)])
+                            : __('backend.valid');
+                    })
+                    ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
+                    ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y'))
+                    ->label(__('backend.expiry_date')),
             ])
+            ->actionsColumnLabel(__('backend.actions'))
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.files'))
             ->actions([
                 Tables\Actions\ViewAction::make()->form([
@@ -134,7 +209,7 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                             Toggle::make('is_active')->default(true)->label(__('backend.active')),
                         ]),
                     ]),
-                ])->icon('heroicon-o-eye')->recordTitle(__('backend.file')),
+                ])->icon('heroicon-o-eye')->iconButton()->recordTitle(__('backend.file')),
 
                 Tables\Actions\EditAction::make()->form([
                     Group::make()->schema([
@@ -154,10 +229,12 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                             Toggle::make('is_active')->default(true)->label(__('backend.active')),
                         ]),
                     ]),
-                ])->recordTitle(__('backend.file')),
+                ])->iconButton()->recordTitle(__('backend.file')),
 
                 Tables\Actions\Action::make('download_file')
                     ->icon('heroicon-o-arrow-down-tray')
+                    ->tooltip(__('backend.download'))
+                    ->iconButton()
                     ->color('success')
                     ->action(function(array $data, $record) : StreamedResponse {
                         $filePath= 'public/'.$record->file;

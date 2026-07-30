@@ -23,14 +23,17 @@ class StatsExpiredFiles extends BaseWidget
 
         $stats= [];
 
-        $stats[]= Stat::make(__('backend.number_of_files'), $number_of_files)
-            ->icon('heroicon-o-document-text');
+        $stats[]= Stat::make(__('backend.number_of_files_about_to_expire'), $number_of_files_about_to_expire)
+            ->icon('heroicon-o-bell-alert')
+            ->color('gray');
 
         $stats[]= Stat::make(__('backend.number_of_expired_files'), $number_of_expired_files)
-            ->icon('heroicon-o-document-minus');
+            ->icon('heroicon-o-document-minus')
+            ->color('danger');
 
-        $stats[]= Stat::make(__('backend.number_of_files_about_to_expire'), $number_of_files_about_to_expire)
-            ->icon('heroicon-o-document-arrow-down');
+        $stats[]= Stat::make(__('backend.number_of_files'), $number_of_files)
+            ->icon('heroicon-o-document-text')
+            ->color('primary');
 
         return $stats;
     }
