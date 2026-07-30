@@ -125,6 +125,7 @@ class ItemResource extends Resource
                 })->badge()->sortable()->searchable()->label(__('backend.status')),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),
             ])
+            ->actionsColumnLabel(__('backend.actions'))
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.items'))
             ->filters([
                 SelectFilter::make('category')->relationship('category', 'name')->label(__('backend.category')),
@@ -137,11 +138,9 @@ class ItemResource extends Resource
                 TernaryFilter::make('is_active')->boolean()->trueLabel(__('backend.active'))->falseLabel(__('backend.inactive'))->native(false)->label(__('backend.active')),
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                ])
+                Tables\Actions\ViewAction::make()->iconButton(),
+                Tables\Actions\EditAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -425,6 +425,8 @@ return [
     'dates' => 'Dates',
 
     'main_storage' => 'Main storage',
+    'main_storage_subtitle' => 'Collects all temporary storage items (each project = a temporary storage) and records rented item details.',
+    'add_item' => 'Add item',
 
     'my_area' => 'My Area',
     'good_morning' => 'Good morning',
