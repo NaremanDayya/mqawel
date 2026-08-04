@@ -63,6 +63,7 @@ class AssistantService
     protected function runTool(int $companyId, string $name, array $input): array
     {
         return match ($name) {
+            'get_company_overview' => $this->insights->companyOverview($companyId),
             'get_projects_summary' => $this->insights->projectsSummary($companyId),
             'get_project_details' => $this->insights->projectDetails($companyId, $input['query'] ?? '') ?? ['error' => 'not_found'],
             'get_worker_alerts' => $this->insights->alertCounts($companyId),
@@ -75,6 +76,7 @@ class AssistantService
     {
         return 'You are the in-app assistant for Mqawel+, a construction-company management platform. '
             .'Answer only using data returned by the provided tools — never invent numbers or project details. '
+            .'For general headcount/inventory questions (how many workers, users, storages, items, or contractors the company has), always use get_company_overview instead of declining — it is the general-purpose tool for exactly those questions. '
             .'Respond in the same language the user writes in (Arabic or English). Be concise and actionable.';
     }
 
@@ -84,6 +86,11 @@ class AssistantService
     protected function tools(): array
     {
         return [
+            [
+                'name' => 'get_company_overview',
+                'description' => 'Get a general headcount/inventory snapshot of the company: total and active counts of workers, users (company accounts), storages, items, and contractors. Use this for any general "how many X does the company have" question.',
+                'input_schema' => ['type' => 'object', 'properties' => new \stdClass, 'required' => []],
+            ],
             [
                 'name' => 'get_projects_summary',
                 'description' => 'Get a summary of the company\'s projects: total count, counts grouped by status, and the names of currently active (pending/processing) projects.',

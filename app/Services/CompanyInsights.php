@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Contractor;
 use App\Models\File;
+use App\Models\Item;
 use App\Models\Project;
+use App\Models\Storage;
+use App\Models\User;
 use App\Models\Worker;
 use Illuminate\Support\Carbon;
 
@@ -31,6 +35,28 @@ class CompanyInsights
             'incomplete_workers' => Worker::where('company_id', $companyId)->where(function ($q) {
                 $q->whereNull('picture')->orWhereNull('name')->orWhereNull('phone')->orWhereNull('ethnicity')->orWhereNull('living_address')->orWhereNull('job_title');
             })->count(),
+        ];
+    }
+
+    /**
+     * General headcount/inventory snapshot of the company — how many workers,
+     * users, storages, items, and contractors it has, active vs total.
+     *
+     * @return array<string, array{total: int, active: int}>
+     */
+    public function companyOverview(int $companyId): array
+    {
+        $count = fn (string $model) => [
+            'total' => $model::where('company_id', $companyId)->count(),
+            'active' => $model::where('company_id', $companyId)->where('is_active', true)->count(),
+        ];
+
+        return [
+            'workers' => $count(Worker::class),
+            'users' => $count(User::class),
+            'storages' => $count(Storage::class),
+            'items' => $count(Item::class),
+            'contractors' => $count(Contractor::class),
         ];
     }
 
