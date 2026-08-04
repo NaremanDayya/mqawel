@@ -590,4 +590,11 @@ return [
     'create' => 'إنشاء',
     'new_document' => 'مستند جديد',
     'no_documents_yet' => 'لا توجد مستندات بعد',
+
+    'wizard_step_validate_template' => 'التحقق من النماذج',
+    'wizard_step_generate' => 'توليد المستند',
+    'wizard_step_review' => 'المراجعة',
+    'wizard_step_final_output' => 'الإخراج النهائي',
+    'wizard_generate_description' => 'سيقوم المساعد الذكي بتوليد محتوى المستند بناءً على البيانات المدخلة. اضغط "التالي" لبدء التوليد.',
+    'wizard_final_output_description' => 'راجع الحالة النهائية للمستند قبل الحفظ.',
 ];

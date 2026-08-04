@@ -590,4 +590,11 @@ return [
     'create' => 'Create',
     'new_document' => 'New document',
     'no_documents_yet' => 'No documents yet',
+
+    'wizard_step_validate_template' => 'Template check',
+    'wizard_step_generate' => 'Generate document',
+    'wizard_step_review' => 'Review',
+    'wizard_step_final_output' => 'Final output',
+    'wizard_generate_description' => 'The AI assistant will generate the document content based on the details you entered. Click "Next" to start generating.',
+    'wizard_final_output_description' => 'Review the document\'s final status before saving.',
 ];

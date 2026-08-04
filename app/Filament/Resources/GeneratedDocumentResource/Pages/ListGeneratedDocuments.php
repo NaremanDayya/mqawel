@@ -8,14 +8,24 @@ use App\Filament\Resources\GeneratedDocumentResource;
 use App\Models\DocumentTemplate;
 use App\Models\GeneratedDocument;
 use App\Models\Project;
+use App\Services\Ai\AiRequestException;
+use App\Services\Ai\DocumentDraftingService;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Exceptions\Halt;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
@@ -141,40 +151,137 @@ class ListGeneratedDocuments extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make()
+        $importAction = Actions\Action::make('importDocument')
+            ->label(__('backend.import'))
+            ->icon('heroicon-o-arrow-down-tray')
+            ->color('gray')
+            ->modalHeading(__('backend.import'))
+            ->modalDescription(__('backend.import_description'))
+            ->modalSubmitActionLabel(__('backend.import'))
+            ->form([
+                TextInput::make('name')
+                    ->label(__('backend.document_type'))
+                    ->required(),
+
+                Select::make('category')
+                    ->label(__('backend.document_section'))
+                    ->options(GeneratedDocumentResource::categoryOptions())
+                    ->required(),
+
+                FileUpload::make('file')
+                    ->label(__('backend.document'))
+                    ->directory('documents')
+                    ->maxSize(10240)
+                    ->helperText(__('backend.max_file_size_10_mb'))
+                    ->required(),
+            ])
+            ->action(function (array $data) {
+                GeneratedDocument::create([
+                    'company_id' => Auth::user()->company_id,
+                    'created_by' => Auth::user()->id,
+                    'name' => $data['name'],
+                    'category' => $data['category'],
+                    'file' => $data['file'],
+                    'status' => 'draft',
+                ]);
+
+                Notification::make()->title(__('backend.settings_saved'))->success()->send();
+            });
+
+        $createAction = Actions\CreateAction::make()
                 ->label(__('backend.new_document'))
-                ->modalHeading(__('backend.new_document'))
+                ->modalHeading(fn (): string => __('backend.new_document').' — AI')
                 ->modalDescription(__('backend.document_creator_description'))
                 ->modalSubmitActionLabel(__('backend.create'))
                 ->fillForm(fn (array $arguments): array => [
                     'name' => $arguments['name'] ?? null,
                     'category' => $arguments['category'] ?? null,
                 ])
-                ->form([
-                    TextInput::make('name')
-                        ->label(__('backend.document_type'))
-                        ->required()
-                        ->datalist(fn () => DocumentTemplate::query()->pluck('name')->all()),
+                ->steps([
+                    Step::make('validate')
+                        ->label(__('backend.wizard_step_validate_template'))
+                        ->icon('heroicon-o-clipboard-document-check')
+                        ->schema([
+                            TextInput::make('name')
+                                ->label(__('backend.document_type'))
+                                ->required()
+                                ->datalist(fn () => DocumentTemplate::query()->pluck('name')->all()),
 
-                    Select::make('category')
-                        ->label(__('backend.document_section'))
-                        ->options(GeneratedDocumentResource::categoryOptions())
-                        ->required(),
+                            Grid::make(2)->schema([
+                                Select::make('project_id')
+                                    ->label(__('backend.link_project'))
+                                    ->options(fn () => Project::query()
+                                        ->where('company_id', Auth::user()->company_id)
+                                        ->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->placeholder(__('backend.general')),
 
-                    Select::make('project_id')
-                        ->label(__('backend.link_project'))
-                        ->options(fn () => Project::query()
-                            ->where('company_id', Auth::user()->company_id)
-                            ->pluck('name', 'id'))
-                        ->searchable()
-                        ->placeholder(__('backend.general')),
+                                TextInput::make('related_party')
+                                    ->label(__('backend.party')),
+                            ]),
 
-                    TextInput::make('related_party')
-                        ->label(__('backend.party')),
+                            Select::make('category')
+                                ->label(__('backend.document_section'))
+                                ->options(GeneratedDocumentResource::categoryOptions())
+                                ->required(),
 
-                    Textarea::make('details')
-                        ->label(__('backend.additional_details')),
+                            Textarea::make('details')
+                                ->label(__('backend.additional_details')),
+                        ]),
+
+                    Step::make('generate')
+                        ->label(__('backend.wizard_step_generate'))
+                        ->icon('heroicon-o-sparkles')
+                        ->schema([
+                            Placeholder::make('generate_notice')
+                                ->label('')
+                                ->content(__('backend.wizard_generate_description')),
+                        ])
+                        ->afterValidation(function (Get $get, Set $set) {
+                            $document = new GeneratedDocument([
+                                'name' => $get('name'),
+                                'category' => $get('category'),
+                                'project_id' => $get('project_id'),
+                                'related_party' => $get('related_party'),
+                                'details' => $get('details'),
+                            ]);
+
+                            try {
+                                $draft = app(DocumentDraftingService::class)->draft($document);
+                            } catch (AiRequestException $e) {
+                                Notification::make()->title(__('backend.draft_generation_failed'))->danger()->send();
+
+                                throw new Halt;
+                            }
+
+                            $set('content', $draft);
+
+                            Notification::make()->title(__('backend.draft_generated_notification'))->success()->send();
+                        }),
+
+                    Step::make('review')
+                        ->label(__('backend.wizard_step_review'))
+                        ->icon('heroicon-o-pencil-square')
+                        ->schema([
+                            MarkdownEditor::make('content')
+                                ->label(__('backend.document_content'))
+                                ->required(),
+                        ]),
+
+                    Step::make('final')
+                        ->label(__('backend.wizard_step_final_output'))
+                        ->icon('heroicon-o-check-circle')
+                        ->schema([
+                            Placeholder::make('final_notice')
+                                ->label('')
+                                ->content(__('backend.wizard_final_output_description')),
+
+                            Select::make('status')
+                                ->label(__('backend.status'))
+                                ->options(GeneratedDocumentResource::statusOptions())
+                                ->default('draft')
+                                ->required(),
+                        ]),
                 ])
                 ->using(function (array $data): GeneratedDocument {
                     return GeneratedDocument::create([
@@ -185,46 +292,14 @@ class ListGeneratedDocuments extends ListRecords
                         'project_id' => $data['project_id'] ?? null,
                         'related_party' => $data['related_party'] ?? null,
                         'details' => $data['details'] ?? null,
-                        'status' => 'draft',
+                        'content' => $data['content'] ?? null,
+                        'status' => $data['status'] ?? 'draft',
                     ]);
-                }),
+                });
 
-            Actions\Action::make('importDocument')
-                ->label(__('backend.import'))
-                ->icon('heroicon-o-arrow-down-tray')
-                ->color('gray')
-                ->modalHeading(__('backend.import'))
-                ->modalDescription(__('backend.import_description'))
-                ->modalSubmitActionLabel(__('backend.import'))
-                ->form([
-                    TextInput::make('name')
-                        ->label(__('backend.document_type'))
-                        ->required(),
-
-                    Select::make('category')
-                        ->label(__('backend.document_section'))
-                        ->options(GeneratedDocumentResource::categoryOptions())
-                        ->required(),
-
-                    FileUpload::make('file')
-                        ->label(__('backend.document'))
-                        ->directory('documents')
-                        ->maxSize(10240)
-                        ->helperText(__('backend.max_file_size_10_mb'))
-                        ->required(),
-                ])
-                ->action(function (array $data) {
-                    GeneratedDocument::create([
-                        'company_id' => Auth::user()->company_id,
-                        'created_by' => Auth::user()->id,
-                        'name' => $data['name'],
-                        'category' => $data['category'],
-                        'file' => $data['file'],
-                        'status' => 'draft',
-                    ]);
-
-                    \Filament\Notifications\Notification::make()->title(__('backend.settings_saved'))->success()->send();
-                }),
+        return [
+            $importAction,
+            $createAction,
         ];
     }
 }
