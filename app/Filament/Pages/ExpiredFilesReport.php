@@ -185,7 +185,7 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                             : __('backend.valid');
                     })
                     ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
-                    ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y'), 'above')
+                    ->description(fn (File $record): ?string => $record->expiry_date ? \Carbon\Carbon::parse($record->expiry_date)->format('d-m-Y') : null, 'above')
                     ->label(__('backend.expiry_date')),
             ])
             ->actionsColumnLabel(__('backend.actions'))

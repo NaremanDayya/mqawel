@@ -122,7 +122,7 @@ class CompanyFileResource extends Resource
                             : __('backend.valid');
                     })
                     ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
-                    ->description(fn (File $record): ?string => optional($record->expiry_date)->format('d-m-Y')),
+                    ->description(fn (File $record): ?string => $record->expiry_date ? \Carbon\Carbon::parse($record->expiry_date)->format('d-m-Y') : null),
             ])
             ->actionsColumnLabel(__('backend.actions'))
             ->filters([

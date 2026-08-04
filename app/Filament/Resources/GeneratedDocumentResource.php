@@ -6,6 +6,7 @@ use App\Filament\Resources\GeneratedDocumentResource\Pages;
 use App\Models\GeneratedDocument;
 use App\Models\Project;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -99,7 +100,7 @@ class GeneratedDocumentResource extends Resource
                     ->label(__('backend.additional_details'))
                     ->columnSpanFull(),
 
-                Forms\Components\MarkdownEditor::make('content')
+                MarkdownEditor::make('content')
                     ->label(__('backend.document_content'))
                     ->columnSpanFull(),
             ]);

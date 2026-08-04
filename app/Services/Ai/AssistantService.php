@@ -33,7 +33,15 @@ class AssistantService
                 return $this->client->textFrom($response) ?? '';
             }
 
-            $messages[] = ['role' => 'assistant', 'content' => $response['content']];
+            $assistantContent = array_map(function (array $block) {
+                if (($block['type'] ?? null) === 'tool_use' && is_array($block['input'] ?? null) && empty($block['input'])) {
+                    $block['input'] = new \stdClass;
+                }
+
+                return $block;
+            }, $response['content']);
+
+            $messages[] = ['role' => 'assistant', 'content' => $assistantContent];
 
             $messages[] = [
                 'role' => 'user',

@@ -32,7 +32,7 @@ class ExpiredFilesReportExport implements FromCollection, WithHeadings, WithMapp
                 default => $row->parent_table,
             },
             $row->name,
-            optional($row->expiry_date)->format('Y-m-d'),
+            $row->expiry_date,
         ];
     }
 

@@ -93,7 +93,7 @@ class CompanyInsights
             ->get(['name', 'expiry_date', 'parent_table'])
             ->map(fn (File $file) => [
                 'name' => $file->name,
-                'expiry_date' => optional($file->expiry_date)->format('Y-m-d'),
+                'expiry_date' => $file->expiry_date,
                 'type' => $file->parent_table,
             ])
             ->all();
