@@ -121,4 +121,11 @@ return [
     'billing_cycle' => 'دورة الفوترة',
     'renews_every_30_days' => 'يُجدَّد كل 30 يوماً',
     'paid_upfront' => 'تدفع دفعة واحدة',
+
+    'unlimited_projects' => 'مشاريع غير محدودة',
+    'one_project' => 'مشروع واحد',
+    'up_to_projects' => 'حتى :count مشاريع',
+    'unlimited_workers' => 'عمال غير محدودين',
+    'one_worker' => 'عامل واحد',
+    'up_to_workers' => 'حتى :count عامل',
 ];

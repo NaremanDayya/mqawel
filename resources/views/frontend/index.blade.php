@@ -225,6 +225,22 @@
 
               <div class="pricing-divider"></div>
               <ul class="pricing-features">
+                @php
+                  $projectsLabel = empty($Package->max_projects)
+                    ? __('frontend.unlimited_projects')
+                    : ($Package->max_projects == 1 ? __('frontend.one_project') : __('frontend.up_to_projects', ['count' => $Package->max_projects]));
+                  $workersLabel = empty($Package->max_workers)
+                    ? __('frontend.unlimited_workers')
+                    : ($Package->max_workers == 1 ? __('frontend.one_worker') : __('frontend.up_to_workers', ['count' => $Package->max_workers]));
+                @endphp
+                <li>
+                  <div class="feat-check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+                  {{ $projectsLabel }}
+                </li>
+                <li>
+                  <div class="feat-check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+                  {{ $workersLabel }}
+                </li>
                 @foreach($featureFlags as $flag => $labelKey)
                   <li @if(!$Package->{$flag}) class="feat-disabled" @endif>
                     <div class="feat-check @if(!$Package->{$flag}) feat-x @endif">

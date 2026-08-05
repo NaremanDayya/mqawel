@@ -55,6 +55,10 @@ class SubscriptionPackageResource extends Resource
                         TextInput::make('price')->numeric()->label(__('backend.price')),
                         //TextInput::make('currency')->label(__('backend.currency')),
                     ])->columns(2),
+                    Section::make()->schema([
+                        TextInput::make('max_projects')->numeric()->minValue(0)->label(__('backend.max_projects')),
+                        TextInput::make('max_workers')->numeric()->minValue(0)->label(__('backend.max_workers')),
+                    ])->columns(2),
                 ]),
                 Group::make()->schema([
                     Section::make(__('backend.services'))->icon('heroicon-o-squares-2x2')->schema([
@@ -85,6 +89,8 @@ class SubscriptionPackageResource extends Resource
                 TextColumn::make('period')->label(__('backend.period_in_months')),
                 TextColumn::make('price')->numeric()->label(__('backend.price')),
                 //TextColumn::make('currency')->label(__('backend.currency')),
+                TextColumn::make('max_projects')->label(__('backend.max_projects'))->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('max_workers')->label(__('backend.max_workers'))->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),
             ])
             ->filters([

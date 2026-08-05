@@ -121,4 +121,11 @@ return [
     'billing_cycle' => 'Billing cycle',
     'renews_every_30_days' => 'Renews every 30 days',
     'paid_upfront' => 'paid upfront',
+
+    'unlimited_projects' => 'Unlimited projects',
+    'one_project' => '1 project',
+    'up_to_projects' => 'Up to :count projects',
+    'unlimited_workers' => 'Unlimited workers',
+    'one_worker' => '1 worker',
+    'up_to_workers' => 'Up to :count workers',
 ];

@@ -27,6 +27,8 @@ class SubscriptionPackage extends Model
         'has_worker_expenses_report',
         'has_expired_files_report',
         'has_project_expenses_report',
+        'max_projects',
+        'max_workers',
         'is_active',
         'master_id',
     ];
