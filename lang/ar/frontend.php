@@ -128,4 +128,8 @@ return [
     'unlimited_workers' => 'عمال غير محدودين',
     'one_worker' => 'عامل واحد',
     'up_to_workers' => 'حتى :count عامل',
+
+    'instead_of_traditional_management' => 'بدل الإدارة التقليدية',
+    'traditional_cost_total' => 'التكلفة التقليدية',
+    'you_save' => 'توفّر :amount :currency شهرياً',
 ];

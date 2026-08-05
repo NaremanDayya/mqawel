@@ -159,6 +159,9 @@ return [
     'price' => 'السعر',
     'max_projects' => 'الحد الأقصى للمشاريع',
     'max_workers' => 'الحد الأقصى للعمال',
+    'traditional_cost_comparison' => 'مقارنة بتكلفة الإدارة التقليدية',
+    'cost_comparison_items' => 'بنود التكلفة التقليدية',
+    'savings_note' => 'ملاحظة التوفير',
 
     'package' => 'الباقة',
     'transaction_id' => 'معرف العملية',

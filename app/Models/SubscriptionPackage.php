@@ -29,8 +29,14 @@ class SubscriptionPackage extends Model
         'has_project_expenses_report',
         'max_projects',
         'max_workers',
+        'traditional_cost_items',
+        'savings_note',
         'is_active',
         'master_id',
+    ];
+
+    protected $casts = [
+        'traditional_cost_items' => 'array',
     ];
 
     public function subscriptions() : HasMany {

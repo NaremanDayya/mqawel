@@ -223,6 +223,26 @@
                 <p class="pricing-desc">{{ $Package->description }}</p>
               @endif
 
+              @if(!empty($Package->traditional_cost_items))
+                @php
+                  $costTotal = collect($Package->traditional_cost_items)->sum(fn($item) => (float) ($item['value'] ?? 0));
+                  $savings = max(0, $costTotal - $monthlyRate);
+                @endphp
+                <div class="plan-value">
+                  <p class="plan-value-title">{{ __('frontend.instead_of_traditional_management') }}</p>
+                  @foreach($Package->traditional_cost_items as $costItem)
+                    <div class="plan-value-row"><span>{{ $costItem['label'] }}</span><span>{{ number_format($costItem['value']) }} {{ __('backend.omani_riyal_code') }}</span></div>
+                  @endforeach
+                  <div class="plan-value-total"><span>{{ __('frontend.traditional_cost_total') }}</span><span>{{ number_format($costTotal) }} {{ __('backend.omani_riyal_code') }} / {{ __('frontend.months_singular') }}</span></div>
+                  <p class="plan-value-save">
+                    {{ __('frontend.you_save', ['amount' => number_format($savings), 'currency' => __('backend.omani_riyal_code')]) }}
+                    @if(!empty($Package->savings_note))
+                      — {{ $Package->savings_note }}
+                    @endif
+                  </p>
+                </div>
+              @endif
+
               <div class="pricing-divider"></div>
               <ul class="pricing-features">
                 @php

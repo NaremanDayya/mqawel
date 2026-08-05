@@ -9,6 +9,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -59,6 +60,17 @@ class SubscriptionPackageResource extends Resource
                         TextInput::make('max_projects')->numeric()->minValue(0)->label(__('backend.max_projects')),
                         TextInput::make('max_workers')->numeric()->minValue(0)->label(__('backend.max_workers')),
                     ])->columns(2),
+                    Section::make(__('backend.traditional_cost_comparison'))->icon('heroicon-o-scale')->schema([
+                        Repeater::make('traditional_cost_items')
+                            ->schema([
+                                TextInput::make('label')->required()->label(__('backend.title')),
+                                TextInput::make('value')->numeric()->required()->label(__('backend.amount')),
+                            ])
+                            ->columns(2)
+                            ->addActionLabel(__('backend.add_more'))
+                            ->label(__('backend.cost_comparison_items')),
+                        TextInput::make('savings_note')->label(__('backend.savings_note')),
+                    ]),
                 ]),
                 Group::make()->schema([
                     Section::make(__('backend.services'))->icon('heroicon-o-squares-2x2')->schema([

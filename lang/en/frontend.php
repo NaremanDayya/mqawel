@@ -128,4 +128,8 @@ return [
     'unlimited_workers' => 'Unlimited workers',
     'one_worker' => '1 worker',
     'up_to_workers' => 'Up to :count workers',
+
+    'instead_of_traditional_management' => 'Instead of traditional management',
+    'traditional_cost_total' => 'Traditional cost',
+    'you_save' => 'Save :amount :currency monthly',
 ];

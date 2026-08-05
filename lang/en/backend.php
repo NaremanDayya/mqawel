@@ -159,6 +159,9 @@ return [
     'price' => 'Price',
     'max_projects' => 'Max projects',
     'max_workers' => 'Max workers',
+    'traditional_cost_comparison' => 'Traditional management cost comparison',
+    'cost_comparison_items' => 'Traditional cost items',
+    'savings_note' => 'Savings note',
 
     'package' => 'Package',
     'transaction_id' => 'Transaction id',
