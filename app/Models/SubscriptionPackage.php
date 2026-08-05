@@ -31,12 +31,15 @@ class SubscriptionPackage extends Model
         'max_workers',
         'traditional_cost_items',
         'savings_note',
+        'feature_bullets',
+        'cta_label',
         'is_active',
         'master_id',
     ];
 
     protected $casts = [
         'traditional_cost_items' => 'array',
+        'feature_bullets' => 'array',
     ];
 
     public function subscriptions() : HasMany {

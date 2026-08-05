@@ -162,6 +162,10 @@ return [
     'traditional_cost_comparison' => 'مقارنة بتكلفة الإدارة التقليدية',
     'cost_comparison_items' => 'بنود التكلفة التقليدية',
     'savings_note' => 'ملاحظة التوفير',
+    'pricing_card_display' => 'عرض بطاقة الباقة',
+    'feature_bullets' => 'نقاط المميزات المعروضة',
+    'cta_label' => 'نص زر الشراء',
+    'cta_label_helper' => 'اتركه فارغاً لاستخدام النص الافتراضي "شراء الآن"',
 
     'package' => 'الباقة',
     'transaction_id' => 'معرف العملية',

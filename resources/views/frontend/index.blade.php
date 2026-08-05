@@ -261,22 +261,31 @@
                   <div class="feat-check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
                   {{ $workersLabel }}
                 </li>
-                @foreach($featureFlags as $flag => $labelKey)
-                  <li @if(!$Package->{$flag}) class="feat-disabled" @endif>
-                    <div class="feat-check @if(!$Package->{$flag}) feat-x @endif">
-                      @if($Package->{$flag})
-                        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                      @else
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                      @endif
-                    </div>
-                    {{ __($labelKey) }}
-                  </li>
-                @endforeach
+                @if(!empty($Package->feature_bullets))
+                  @foreach($Package->feature_bullets as $bullet)
+                    <li>
+                      <div class="feat-check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+                      {{ $bullet['text'] }}
+                    </li>
+                  @endforeach
+                @else
+                  @foreach($featureFlags as $flag => $labelKey)
+                    <li @if(!$Package->{$flag}) class="feat-disabled" @endif>
+                      <div class="feat-check @if(!$Package->{$flag}) feat-x @endif">
+                        @if($Package->{$flag})
+                          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        @else
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        @endif
+                      </div>
+                      {{ __($labelKey) }}
+                    </li>
+                  @endforeach
+                @endif
               </ul>
 
               <a href="{{url('company/register')}}" class="btn-pricing @if($index === $popularIndex) btn-pricing--white @else btn-pricing--outline @endif">
-                {{__('frontend.purchase_now')}}
+                {{ !empty($Package->cta_label) ? $Package->cta_label : __('frontend.purchase_now') }}
               </a>
             </div>
           @endforeach

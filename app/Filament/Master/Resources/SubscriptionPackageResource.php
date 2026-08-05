@@ -71,6 +71,15 @@ class SubscriptionPackageResource extends Resource
                             ->label(__('backend.cost_comparison_items')),
                         TextInput::make('savings_note')->label(__('backend.savings_note')),
                     ]),
+                    Section::make(__('backend.pricing_card_display'))->icon('heroicon-o-list-bullet')->schema([
+                        Repeater::make('feature_bullets')
+                            ->schema([
+                                TextInput::make('text')->required()->label(__('backend.title')),
+                            ])
+                            ->addActionLabel(__('backend.add_more'))
+                            ->label(__('backend.feature_bullets')),
+                        TextInput::make('cta_label')->label(__('backend.cta_label'))->helperText(__('backend.cta_label_helper')),
+                    ]),
                 ]),
                 Group::make()->schema([
                     Section::make(__('backend.services'))->icon('heroicon-o-squares-2x2')->schema([

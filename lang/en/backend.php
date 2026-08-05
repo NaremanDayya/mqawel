@@ -162,6 +162,10 @@ return [
     'traditional_cost_comparison' => 'Traditional management cost comparison',
     'cost_comparison_items' => 'Traditional cost items',
     'savings_note' => 'Savings note',
+    'pricing_card_display' => 'Pricing card display',
+    'feature_bullets' => 'Displayed feature bullets',
+    'cta_label' => 'Purchase button text',
+    'cta_label_helper' => 'Leave empty to use the default "Purchase now" text',
 
     'package' => 'Package',
     'transaction_id' => 'Transaction id',
