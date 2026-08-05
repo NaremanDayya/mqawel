@@ -55,4 +55,13 @@ class File extends Model
     public function parentContractor() : BelongsTo {
         return $this->belongsTo(Contractor::class, 'parent_id');
     }
+
+    public function downloadFilename(): string
+    {
+        $extension = pathinfo((string) $this->file, PATHINFO_EXTENSION);
+        $safeName = trim(preg_replace('/[\\\\\/:*?"<>|]+/u', ' ', (string) $this->name));
+        $safeName = $safeName !== '' ? $safeName : 'document';
+
+        return $extension ? "{$safeName}.{$extension}" : $safeName;
+    }
 }

@@ -55,7 +55,7 @@ class FilesRelationManager extends RelationManager
 
                 Group::make()->schema([
                     Section::make()->schema([
-                        FileUpload::make('file')->directory('documents')->maxSize(10240)->helperText(__('backend.max_file_size_10_mb'))->required()->label(__('backend.document')),
+                        FileUpload::make('file')->directory(fn () => 'documents/'.\Illuminate\Support\Str::uuid())->preserveFilenames()->maxSize(10240)->helperText(__('backend.max_file_size_10_mb'))->required()->label(__('backend.document')),
                     ]),
 
                     Section::make()->schema([
@@ -95,7 +95,7 @@ class FilesRelationManager extends RelationManager
                             abort(404, __('backend.file_not_found'));
                         }*/
 
-                        return Storage::download($filePath);
+                        return Storage::download($filePath, $record->downloadFilename());
                     })->label(__('backend.download')),
             ])
             ->bulkActions([
