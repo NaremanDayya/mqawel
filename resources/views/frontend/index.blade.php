@@ -187,7 +187,16 @@
         <div class="pricing-header">
           <p class="pricing-eyebrow">{{__('frontend.packages')}}</p>
           <h2 class="pricing-title" id="pricing-heading">{{__('frontend.packages_plans')}}</h2>
-          <p class="pricing-sub">{{__('frontend.select_package_that_suites_you')}}</p>
+          <p class="pricing-sub">{{__('frontend.pricing_headline')}}</p>
+
+          <div class="pricing-toggle" role="tablist" aria-label="{{__('frontend.billing_cycle')}}">
+            <button type="button" class="toggle-btn active" onclick="setMonthly(this)">{{__('frontend.billed_monthly')}}</button>
+            <button type="button" class="toggle-btn" onclick="setYearly(this)">
+              {{__('frontend.billed_yearly')}}
+              <span class="toggle-save">{{__('frontend.two_months_free')}}</span>
+            </button>
+          </div>
+
           <p class="pricing-note">{{__('frontend.pricing_note')}}</p>
         </div>
 
@@ -199,11 +208,16 @@
               @endif
 
               <p class="pricing-plan">{{ $Package->title }}</p>
+              @php
+                $monthlyRate = $Package->period > 0 ? $Package->price / $Package->period : $Package->price;
+                $monthlyDisplay = $monthlyRate == floor($monthlyRate) ? number_format($monthlyRate) : number_format($monthlyRate, 2);
+              @endphp
               <div class="pricing-price">
-                <span class="price-amount">{{ number_format($Package->price) }}</span>
+                <span class="price-amount" data-monthly="{{ $monthlyDisplay }}" data-yearly="{{ number_format($Package->price) }}">{{ $monthlyDisplay }}</span>
                 <span class="price-currency">{{ __('backend.omani_riyal_code') }}</span>
-                <span class="price-period">/ {{ $Package->period }} {{ __('frontend.months') }}</span>
+                <span class="price-period" data-monthly="/ {{ __('frontend.months_singular') }}" data-yearly="/ {{ $Package->period }} {{ __('frontend.months') }}">/ {{ __('frontend.months_singular') }}</span>
               </div>
+              <p class="price-term" data-monthly="{{ __('frontend.renews_every_30_days') }}" data-yearly="{{ $Package->period }} {{ __('frontend.months') }} — {{ __('frontend.paid_upfront') }}">{{ __('frontend.renews_every_30_days') }}</p>
 
               @if(!empty($Package->description))
                 <p class="pricing-desc">{{ $Package->description }}</p>

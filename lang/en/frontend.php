@@ -113,5 +113,12 @@ return [
     'proceed_to_payment' => 'Proceed to payment',
 
     'most_popular' => 'Most popular',
-    'pricing_note' => 'Duration and price vary by the selected package, no hidden fees',
+    'pricing_note' => 'Monthly plan: 30 days — Yearly plan: 12 months, pay for only 10 months',
+    'pricing_headline' => 'One clear price, no contracts, no hidden fees',
+    'billed_monthly' => 'Monthly (30 days)',
+    'billed_yearly' => 'Yearly (12 months)',
+    'two_months_free' => '2 months free',
+    'billing_cycle' => 'Billing cycle',
+    'renews_every_30_days' => 'Renews every 30 days',
+    'paid_upfront' => 'paid upfront',
 ];
