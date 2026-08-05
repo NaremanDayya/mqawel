@@ -16,7 +16,7 @@ class ListSubscriptions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->after(function ($record): void {
+            Actions\CreateAction::make()->label(__('backend.add_more'))->after(function ($record): void {
                 $Package= SubscriptionPackage::find($record->package_id);
 
                 if($Package){

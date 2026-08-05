@@ -42,7 +42,7 @@ class SubscriptionsRelationManager extends RelationManager
                         Select::make('package')->relationship('package', 'title')->required()->label(__('backend.package')),
                     ])->columns(1),
                     Section::make(__('backend.payment'))->schema([
-                        TextInput::make('payment_method')->label(__('backend.payment_method')),
+                        TextInput::make('payment_method')->extraInputAttributes(['autocomplete' => 'off'])->label(__('backend.payment_method')),
                         TextInput::make('payment_transaction_id')->label(__('backend.transaction_id')),
                         DatePicker::make('payment_date')->label(__('backend.payment_date')),
                         DatePicker::make('starting_date')->label(__('backend.starting_date')),
@@ -77,7 +77,7 @@ class SubscriptionsRelationManager extends RelationManager
                 TernaryFilter::make('is_active')->boolean()->trueLabel(__('backend.active'))->falseLabel(__('backend.inactive'))->native(false)->label(__('backend.active')),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->after(function($record){
+                Tables\Actions\CreateAction::make()->label(__('backend.add_more'))->after(function($record){
                     $Package= SubscriptionPackage::find($record->package_id);
 
                     if($Package){

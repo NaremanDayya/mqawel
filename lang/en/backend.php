@@ -140,6 +140,8 @@ return [
     'paid' => 'Paid',
     'unpaid' => 'Unpaid',
 
+    'add_more' => 'Add more',
+
     'select_language' => 'Select language',
 
     'business_number' => 'Business no.',
@@ -155,6 +157,8 @@ return [
 
     'period_in_months' => 'Period in months',
     'price' => 'Price',
+    'max_projects' => 'Max projects',
+    'max_workers' => 'Max workers',
 
     'package' => 'Package',
     'transaction_id' => 'Transaction id',

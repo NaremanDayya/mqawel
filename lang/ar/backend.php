@@ -140,6 +140,8 @@ return [
     'paid' => 'مسدد',
     'unpaid' => 'غير مسدد',
 
+    'add_more' => 'إضافة المزيد',
+
     'select_language' => 'اختيار اللغة',
 
     'business_number' => 'رقم العمل',
@@ -155,6 +157,8 @@ return [
 
     'period_in_months' => 'المدة بالشهور',
     'price' => 'السعر',
+    'max_projects' => 'الحد الأقصى للمشاريع',
+    'max_workers' => 'الحد الأقصى للعمال',
 
     'package' => 'الباقة',
     'transaction_id' => 'معرف العملية',

@@ -40,7 +40,7 @@ class PaymentsRelationManager extends RelationManager
                     Section::make()->schema([
                         //TextInput::make('currency')->required()->label(__('backend.currency')),
                         DatePicker::make('payment_date')->label(__('backend.payment_date')),
-                        TextInput::make('payment_method')->label(__('backend.payment_method')),
+                        TextInput::make('payment_method')->extraInputAttributes(['autocomplete' => 'off'])->label(__('backend.payment_method')),
                         Select::make('status')->options([
                             'paid' => __('backend.paid'),
                             'unpaid' => __('backend.unpaid'),
@@ -79,7 +79,7 @@ class PaymentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label(__('backend.add_more')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
