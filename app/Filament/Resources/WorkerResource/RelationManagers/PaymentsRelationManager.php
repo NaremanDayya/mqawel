@@ -34,13 +34,17 @@ class PaymentsRelationManager extends RelationManager
                 Hidden::make('created_by')->default(Auth::user()->id),
                 Group::make()->schema([
                     Section::make()->schema([
-                        TextInput::make('title')->required()->label(__('backend.title')),
-                        TextInput::make('amount')->numeric()->required()->label(__('backend.amount')),
+                        TextInput::make('title')->required()->label(__('backend.payment_purpose')),
+                        TextInput::make('amount')->numeric()->required()->label(__('backend.payment_amount')),
                     ])->columns(2),
                     Section::make()->schema([
                         //TextInput::make('currency')->required()->label(__('backend.currency')),
                         DatePicker::make('payment_date')->label(__('backend.payment_date')),
-                        TextInput::make('payment_method')->extraInputAttributes(['autocomplete' => 'off'])->label(__('backend.payment_method')),
+                        Select::make('payment_method')->options([
+                            'cash' => __('backend.payment_method_cash'),
+                            'bank_transfer' => __('backend.payment_method_bank_transfer'),
+                            'cheque' => __('backend.payment_method_cheque'),
+                        ])->label(__('backend.payment_method')),
                         Select::make('status')->options([
                             'paid' => __('backend.paid'),
                             'unpaid' => __('backend.unpaid'),
@@ -61,11 +65,16 @@ class PaymentsRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('worker.name')->label(__('backend.worker')),
-                TextColumn::make('title')->label(__('backend.title')),
-                TextColumn::make('amount')->numeric()->label(__('backend.amount')),
+                TextColumn::make('title')->label(__('backend.payment_purpose')),
+                TextColumn::make('amount')->numeric()->label(__('backend.payment_amount')),
                 //TextColumn::make('currency')->label(__('backend.currency')),
                 TextColumn::make('payment_date')->date()->label(__('backend.date')),
-                TextColumn::make('payment_method')->label(__('backend.method')),
+                TextColumn::make('payment_method')->formatStateUsing(fn (?string $state): string => match ($state) {
+                    'cash' => __('backend.payment_method_cash'),
+                    'bank_transfer' => __('backend.payment_method_bank_transfer'),
+                    'cheque' => __('backend.payment_method_cheque'),
+                    default => $state ?? '—',
+                })->label(__('backend.method')),
                 TextColumn::make('status')->formatStateUsing(fn(string $state): string => match($state){
                     'paid' => __('backend.paid'),
                     'unpaid' => __('backend.unpaid'),
@@ -74,7 +83,7 @@ class PaymentsRelationManager extends RelationManager
                     'unpaid' => 'danger',
                 })->label(__('backend.status')),
             ])
-            ->emptyStateHeading(__('backend.not_found').' '.__('backend.payments'))
+            ->emptyStateHeading(__('backend.not_found').' '.__('backend.dues'))
             ->filters([
                 //
             ])
@@ -97,12 +106,12 @@ class PaymentsRelationManager extends RelationManager
 
     protected function getTableHeading(): string|Htmlable|null
     {
-        return __('backend.payments');
+        return __('backend.dues');
     }
 
     public static function getModelLabel(): string
     {
-        return __('backend.payments');
+        return __('backend.dues');
     }
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string

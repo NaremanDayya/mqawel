@@ -304,8 +304,13 @@
         .my-area-banner-icon { width: 24px; height: 24px; color: var(--mq-warn); flex-shrink: 0; }
         .my-area-banner-ok .my-area-banner-icon { color: var(--mq-ok); }
         .my-area-banner-text { flex: 1; min-width: 200px; color: var(--mq-ink); font-size: 14px; }
-        .my-area-banner-stats { display: flex; gap: 24px; }
-        .my-area-banner-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .my-area-banner-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+        .my-area-banner-stat {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            background: var(--mq-surface, #fff); border: 1px solid var(--mq-border, rgba(0,0,0,.06));
+            border-radius: var(--mq-r-md, 12px); padding: 10px 20px; min-width: 96px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.05);
+        }
         .my-area-banner-stat b { font-size: 20px; font-weight: 800; }
         .my-area-banner-stat span { font-size: 11px; color: var(--mq-txt-2); }
 
