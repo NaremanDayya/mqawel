@@ -134,7 +134,7 @@ class CompanyProfile extends Page
                             $this->getFeaturedProjects()->pluck('name')->all(),
                         );
                     } catch (AiRequestException $e) {
-                        Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
+                        Notification::make()->title(__('backend.ai_improve_failed'))->danger()->send();
 
                         return;
                     }

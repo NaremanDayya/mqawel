@@ -565,6 +565,7 @@ return [
     'ai_scan_upload_label' => 'Document image',
     'ai_scan_action' => 'Extract data',
     'ai_scan_failed' => 'Could not extract the data automatically, please fill in the fields manually.',
+    'ai_improve_failed' => 'Could not generate the AI text, please try again later.',
     'document_type_national_id' => 'National ID',
     'document_type_passport' => 'Passport',
     'document_type_other' => 'Document',

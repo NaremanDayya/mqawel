@@ -565,6 +565,7 @@ return [
     'ai_scan_upload_label' => 'صورة المستند',
     'ai_scan_action' => 'استخراج البيانات',
     'ai_scan_failed' => 'تعذر استخراج البيانات تلقائياً، الرجاء تعبئة الحقول يدوياً.',
+    'ai_improve_failed' => 'تعذر إنشاء النص عبر الذكاء الاصطناعي، الرجاء المحاولة مرة أخرى لاحقاً.',
     'document_type_national_id' => 'بطاقة هوية',
     'document_type_passport' => 'جواز سفر',
     'document_type_other' => 'مستند',
