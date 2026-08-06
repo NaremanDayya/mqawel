@@ -51,7 +51,7 @@ class FilesRelationManager extends RelationManager
 
                 Group::make()->schema([
                     Section::make()->schema([
-                        FileUpload::make('file')->directory('documents')->required()->label(__('backend.document')),
+                        FileUpload::make('file')->directory('documents')->openable()->downloadable()->required()->label(__('backend.document')),
                     ]),
 
                     Section::make()->schema([

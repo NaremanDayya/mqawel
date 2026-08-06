@@ -55,7 +55,7 @@ class FilesRelationManager extends RelationManager
 
                 Group::make()->schema([
                     Section::make()->schema([
-                        FileUpload::make('file')->directory(fn () => 'documents/'.\Illuminate\Support\Str::uuid())->preserveFilenames()->maxSize(10240)->helperText(__('backend.max_file_size_10_mb'))->required()->label(__('backend.document')),
+                        FileUpload::make('file')->directory(fn () => 'documents/'.\Illuminate\Support\Str::uuid())->preserveFilenames()->maxSize(10240)->helperText(__('backend.max_file_size_10_mb'))->openable()->downloadable()->required()->label(__('backend.document')),
                     ]),
 
                     Section::make()->schema([
