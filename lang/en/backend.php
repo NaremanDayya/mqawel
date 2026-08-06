@@ -70,6 +70,7 @@ return [
     'name' => 'Name',
     'company' => 'Company',
     'ethnicity' => 'Ethnicity',
+    'id_number' => 'Employee / ID / Residency number',
     'living_address' => 'Living address',
 
     'storage' => 'Storage',

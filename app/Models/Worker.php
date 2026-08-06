@@ -18,6 +18,7 @@ class Worker extends Model
         'name',
         'phone',
         'ethnicity',
+        'id_number',
         'living_address',
         'living_type',
         'job_title',

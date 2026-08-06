@@ -81,6 +81,8 @@ class WorkerResource extends Resource
 
                         TextInput::make('ethnicity')->label(__('backend.ethnicity')),
 
+                        TextInput::make('id_number')->label(__('backend.id_number')),
+
                         TextInput::make('living_address')->label(__('backend.living_address')),
 
                         Select::make('living_type')->options([
@@ -116,6 +118,7 @@ class WorkerResource extends Resource
                 TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.position')),
                 TextColumn::make('phone')->searchable()->sortable()->label(__('backend.phone')),
                 TextColumn::make('ethnicity')->searchable()->sortable()->label(__('backend.ethnicity')),
+                TextColumn::make('id_number')->searchable()->sortable()->label(__('backend.id_number'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('projects.project.name')->listWithLineBreaks()->limitList(2)->label(__('backend.projects')),
                 TextColumn::make('living_address')->searchable()->sortable()->label(__('backend.living_address'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('living_type')->formatStateUsing(fn(string $state): string => match($state){

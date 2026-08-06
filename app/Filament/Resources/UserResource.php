@@ -71,6 +71,7 @@ class UserResource extends Resource
                         ])->label(__('backend.email')),
                         
                         TextInput::make('phone')->label(__('backend.phone')),
+                        TextInput::make('id_number')->label(__('backend.id_number')),
                         
                         TextInput::make('password')->password()->required(fn (string $operation): bool => $operation === 'create')
                             ->dehydrateStateUsing(fn (?string $state) => filled($state) ? bcrypt($state) : null)

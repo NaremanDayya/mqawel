@@ -158,6 +158,11 @@ class ListWorkers extends ListRecords
                     ]),
 
                     Grid::make(2)->schema([
+                        TextInput::make('id_number')
+                            ->label(__('backend.id_number')),
+                    ]),
+
+                    Grid::make(2)->schema([
                         TextInput::make('job_title')
                             ->label(__('backend.job_title'))
                             ->required(),
