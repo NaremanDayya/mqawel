@@ -169,6 +169,23 @@ class ListCompanyFiles extends ListRecords
                 ])
                 ->using(function (array $data): File {
                     $companyId = Auth::user()->company_id;
+                    $parentId = $data['section'] === 'companies' ? $companyId : $data['parent_id'];
+
+                    $limits = ['companies' => 30, 'projects' => 20, 'workers' => 10];
+                    $limit = $limits[$data['section']] ?? null;
+
+                    if ($limit) {
+                        $count = File::where('company_id', $companyId)
+                            ->where('parent_table', $data['section'])
+                            ->where('parent_id', $parentId)
+                            ->count();
+
+                        if ($count >= $limit) {
+                            Notification::make()->title(__('backend.file_limit_reached', ['limit' => $limit]))->danger()->send();
+
+                            throw (new \Filament\Support\Exceptions\Halt());
+                        }
+                    }
 
                     return File::create([
                         'company_id' => $companyId,

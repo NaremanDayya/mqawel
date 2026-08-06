@@ -130,7 +130,14 @@ class FilesRelationManager extends RelationManager
                         ]);
                     }),
                 Tables\Actions\CreateAction::make()
-                    ->fillForm(fn (array $arguments): array => $arguments),
+                    ->fillForm(fn (array $arguments): array => $arguments)
+                    ->before(function () {
+                        if ($this->ownerRecord->files()->count() >= 10) {
+                            Notification::make()->title(__('backend.file_limit_reached', ['limit' => 10]))->danger()->send();
+
+                            throw (new \Filament\Support\Exceptions\Halt());
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

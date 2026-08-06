@@ -12,6 +12,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -79,7 +80,14 @@ class FilesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->before(function () {
+                        if ($this->ownerRecord->files()->count() >= 20) {
+                            Notification::make()->title(__('backend.file_limit_reached', ['limit' => 20]))->danger()->send();
+
+                            throw (new \Filament\Support\Exceptions\Halt());
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

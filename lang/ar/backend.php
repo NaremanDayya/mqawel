@@ -123,6 +123,7 @@ return [
     'document' => 'المستند',
     'download' => 'تحميل',
     'file_not_found' => 'الملف غير موجود',
+    'file_limit_reached' => 'تم الوصول للحد الأقصى (:limit مستند) لهذا القسم.',
 
     'title' => 'العنوان',
     'payment_date' => 'تاريخ الدفع',

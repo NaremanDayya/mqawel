@@ -123,6 +123,7 @@ return [
     'document' => 'Document',
     'download' => 'Download',
     'file_not_found' => 'File not found',
+    'file_limit_reached' => 'Reached the maximum (:limit documents) for this section.',
 
     'title' => 'Title',
     'payment_date' => 'Payment date',
