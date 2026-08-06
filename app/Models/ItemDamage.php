@@ -17,6 +17,8 @@ class ItemDamage extends Model
         'responsible_id',
         'quantity',
         'damage_date',
+        'reason',
+        'location',
         'notes',
         'created_by',
     ];

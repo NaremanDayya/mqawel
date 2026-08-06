@@ -36,7 +36,9 @@ class DamagesRelationManager extends RelationManager
                         Select::make('storage')->relationship('storage', 'name')->label(__('backend.storage')),
                         Select::make('item')->relationship('item', 'name')->label(__('backend.item')),
                         TextInput::make('quantity')->numeric()->label(__('backend.quantity')),
-                        DatePicker::make('damage_date')->label(__('backend.damage_date')),
+                        DatePicker::make('damage_date')->label(__('backend.mistake_date')),
+                        TextInput::make('reason')->label(__('backend.mistake_reason')),
+                        TextInput::make('location')->label(__('backend.location')),
                     ]),
                 ]),
                 Group::make()->schema([
@@ -57,19 +59,21 @@ class DamagesRelationManager extends RelationManager
                 TextColumn::make('storage.name')->label(__('backend.storage')),
                 TextColumn::make('responsible.name')->label(__('backend.responsible')),
                 TextColumn::make('quantity')->numeric()->label(__('backend.quantity')),
-                TextColumn::make('damage_date')->date()->label(__('backend.damage_date')),
+                TextColumn::make('reason')->label(__('backend.mistake_reason')),
+                TextColumn::make('location')->label(__('backend.location')),
+                TextColumn::make('damage_date')->date()->label(__('backend.mistake_date')),
             ])
-            ->emptyStateHeading(__('backend.not_found').' '.__('backend.damages'))
+            ->emptyStateHeading(__('backend.not_found').' '.__('backend.mistakes'))
             ->filters([
                 //
             ])
             ->headerActions([
-                //Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label(__('backend.add_more')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                /*Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),*/
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -80,12 +84,12 @@ class DamagesRelationManager extends RelationManager
 
     protected function getTableHeading(): string|Htmlable|null
     {
-        return __('backend.damages');
+        return __('backend.mistakes');
     }
 
     public static function getModelLabel(): string
     {
-        return __('backend.damages');
+        return __('backend.mistakes');
     }
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string

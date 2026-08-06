@@ -135,6 +135,8 @@ return [
 
     'damage_date' => 'تاريخ التلف',
     'responsible' => 'المسؤول',
+    'mistake_date' => 'تاريخ الخطأ',
+    'mistake_reason' => 'سبب الخطأ',
 
     'payment_status' => 'حالة الدفع',
     'paid' => 'مسدد',
@@ -144,7 +146,6 @@ return [
 
     'select_language' => 'اختيار اللغة',
 
-    'business_number' => 'رقم العمل',
     'activity' => 'النشاط',
 
     'purpose' => 'الهدف',
@@ -434,7 +435,7 @@ return [
     'company_email' => 'البريد الالكتروني للشركة',
     'company_phone' => 'رقم هاتف الشركة',
     'company_website' => 'الموقع الالكتروني للشركة',
-    'company_business_number' => 'رقم العمل',
+    'company_business_number' => 'رقم السجل التجاري',
     'company_tax_number' => 'الرقم الضريبي',
     'company_activity' => 'نشاط الشركة',
 

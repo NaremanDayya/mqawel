@@ -152,15 +152,9 @@ class ListWorkers extends ListRecords
                             ->label(__('backend.phone'))
                             ->tel(),
 
-                        Select::make('ethnicity')
+                        TextInput::make('ethnicity')
                             ->label(__('backend.ethnicity'))
-                            ->required()
-                            ->options([
-                                __('backend.nationality_indian') => __('backend.nationality_indian'),
-                                __('backend.nationality_pakistani') => __('backend.nationality_pakistani'),
-                                __('backend.nationality_bangladeshi') => __('backend.nationality_bangladeshi'),
-                                __('backend.nationality_omani') => __('backend.nationality_omani'),
-                            ]),
+                            ->required(),
                     ]),
 
                     Grid::make(2)->schema([

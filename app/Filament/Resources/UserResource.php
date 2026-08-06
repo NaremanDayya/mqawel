@@ -128,7 +128,11 @@ class UserResource extends Resource
                         default => 'gray',
                     }),
                 TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.role_name'))->toggleable(isToggledHiddenByDefault: true),
-                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.status')),
+                ToggleColumn::make('is_active')
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->label(__('backend.active'))
+                    ->tooltip(fn ($record) => $record->is_active ? __('backend.active') : __('backend.inactive')),
             ])
             ->actionsColumnLabel(__('backend.actions'))
             ->filters([

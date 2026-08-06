@@ -135,6 +135,8 @@ return [
 
     'damage_date' => 'Damage date',
     'responsible' => 'Responsible',
+    'mistake_date' => 'Mistake date',
+    'mistake_reason' => 'Reason for the mistake',
 
     'payment_status' => 'Payment status',
     'paid' => 'Paid',
@@ -144,7 +146,6 @@ return [
 
     'select_language' => 'Select language',
 
-    'business_number' => 'Business no.',
     'activity' => 'Activity',
 
     'purpose' => 'Purpose',
@@ -434,7 +435,7 @@ return [
     'company_email' => 'Company email',
     'company_phone' => 'Company phone',
     'company_website' => 'Company website',
-    'company_business_number' => 'Business number',
+    'company_business_number' => 'Commercial Registration Number',
     'company_tax_number' => 'Tax number',
     'company_activity' => 'Company activity',
 
