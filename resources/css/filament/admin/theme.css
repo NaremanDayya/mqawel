@@ -88,7 +88,7 @@ main.fi-main {
    ========================================================================== */
 .fi-sidebar {
     background: linear-gradient(178deg, #2A3060 0%, #1B1F3D 100%);
-    border-inline-start: 1px solid rgba(255, 255, 255, .06);
+    border-inline-start: none;
     overflow: hidden;
 }
 
@@ -157,7 +157,7 @@ main.fi-main {
     border-radius: 11px;
     flex-shrink: 0;
     overflow: hidden;
-    background: #fff;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -198,8 +198,7 @@ main.fi-main {
 }
 
 .fi-sidebar .mq-brand-rule {
-    display: block;
-    background: rgba(255, 255, 255, .12);
+    display: none;
 }
 
 .mq-brand-txt span {

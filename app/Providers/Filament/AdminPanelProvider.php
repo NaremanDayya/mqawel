@@ -84,14 +84,7 @@ class AdminPanelProvider extends PanelProvider
                 /*Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,*/
             ])
-            ->navigationItems([
-                NavigationItem::make(__('backend.settings'))
-                ->label(fn() => __('backend.settings'))
-                ->url(fn (): string => '/company/companies/'.Auth::user()->company_id.'/edit')
-                ->icon('heroicon-o-cog')
-                ->group(fn() => __('backend.company'))
-                ->sort(4),
-            ])
+            ->navigationItems([])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
