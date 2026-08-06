@@ -66,7 +66,7 @@
         x-on:click="open = !open"
         class="flex h-14 w-14 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg transition hover:bg-primary-500"
     >
-        <x-filament::icon x-show="!open" icon="heroicon-o-chat-bubble-left-right" class="h-6 w-6" />
+        <img x-show="!open" src="{{ asset('images/chatbot-icon.svg') }}" alt="" class="h-7 w-7" />
         <x-filament::icon x-show="open" x-cloak icon="heroicon-o-x-mark" class="h-6 w-6" />
     </button>
 </div>
