@@ -47,7 +47,7 @@ class AnthropicClient
                 'x-api-key' => $this->apiKey,
                 'anthropic-version' => '2023-06-01',
                 'content-type' => 'application/json',
-            ])->timeout(60)->post($this->endpoint, $payload);
+            ])->connectTimeout(10)->timeout(45)->post($this->endpoint, $payload);
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::warning('Anthropic API connection failed', ['message' => $e->getMessage()]);
 
