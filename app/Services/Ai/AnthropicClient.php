@@ -42,11 +42,17 @@ class AnthropicClient
             'tool_choice' => $toolChoice,
         ], fn ($value) => ! is_null($value));
 
-        $response = Http::withHeaders([
-            'x-api-key' => $this->apiKey,
-            'anthropic-version' => '2023-06-01',
-            'content-type' => 'application/json',
-        ])->timeout(60)->post($this->endpoint, $payload);
+        try {
+            $response = Http::withHeaders([
+                'x-api-key' => $this->apiKey,
+                'anthropic-version' => '2023-06-01',
+                'content-type' => 'application/json',
+            ])->timeout(60)->post($this->endpoint, $payload);
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::warning('Anthropic API connection failed', ['message' => $e->getMessage()]);
+
+            throw new AiRequestException('Could not connect to the Anthropic API: '.$e->getMessage());
+        }
 
         if ($response->failed()) {
             $message = data_get($response->json(), 'error.message', $response->body());
