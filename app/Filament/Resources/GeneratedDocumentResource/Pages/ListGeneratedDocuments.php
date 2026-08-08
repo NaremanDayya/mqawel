@@ -173,6 +173,8 @@ class ListGeneratedDocuments extends ListRecords
                     ->directory('documents')
                     ->maxSize(10240)
                     ->helperText(__('backend.max_file_size_10_mb'))
+                    ->openable()
+                    ->downloadable()
                     ->required(),
             ])
             ->action(function (array $data) {
