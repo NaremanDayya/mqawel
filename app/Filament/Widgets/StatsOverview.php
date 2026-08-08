@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Concerns\HasWidgetVisibility;
 use App\Models\Item;
 use App\Models\Project;
 use App\Models\Storage;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 
 class StatsOverview extends BaseWidget
 {
+    use HasWidgetVisibility;
+
     protected static ?string $pollingInterval= '0s';
 
     protected static bool $isLazy= true;

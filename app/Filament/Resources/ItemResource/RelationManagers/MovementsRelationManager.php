@@ -68,6 +68,7 @@ class MovementsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('address')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('item.name')->label(__('backend.name')),
                 TextColumn::make('storage.name')->label(__('backend.storage')),
                 TextColumn::make('project.name')->label(__('backend.project')),

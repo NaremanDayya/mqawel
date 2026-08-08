@@ -81,6 +81,7 @@ class ContactResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
                 TextColumn::make('phone')->searchable()->sortable()->label(__('backend.phone')),
                 TextColumn::make('email')->searchable()->sortable()->label(__('backend.email')),

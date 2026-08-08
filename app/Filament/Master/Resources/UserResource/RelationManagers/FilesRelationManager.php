@@ -66,6 +66,7 @@ class FilesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->label(__('backend.name')),
                 TextColumn::make('expiry_date')->label(__('backend.expiry_date')),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),

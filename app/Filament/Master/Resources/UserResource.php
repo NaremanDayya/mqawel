@@ -99,6 +99,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
                 TextColumn::make('company.name')->badge()->searchable()->sortable()->label(__('backend.company')),

@@ -26,6 +26,7 @@ class Company extends Model
         'services',
         'about_to_expire_days',
         'notification_settings',
+        'dashboard_widgets',
         'is_active',
         'is_verified',
         'master_id',
@@ -33,6 +34,7 @@ class Company extends Model
 
     protected $casts = [
         'notification_settings' => 'array',
+        'dashboard_widgets' => 'array',
         'services' => 'array',
         'is_verified' => 'boolean',
     ];

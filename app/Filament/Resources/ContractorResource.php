@@ -107,6 +107,8 @@ class ContractorResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
+
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
 
                 TextColumn::make('type')->searchable()->sortable()->label(__('backend.type')),

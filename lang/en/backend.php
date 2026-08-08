@@ -80,6 +80,7 @@ return [
     'currency' => 'Currency',
     'status' => 'Status',
     'actions' => 'Actions',
+    'row_number' => '#',
 
     'amount' => 'Amount',
     'category' => 'Category',
@@ -617,4 +618,14 @@ return [
     'wizard_step_final_output' => 'Final output',
     'wizard_generate_description' => 'The AI assistant will generate the document content based on the details you entered. Click "Next" to start generating.',
     'wizard_final_output_description' => 'Review the document\'s final status before saving.',
+
+    'project_number' => 'Project Number',
+    'item_code' => 'Item Code',
+    'unit' => 'Unit',
+    'unit_price' => 'Unit Price',
+    'building_system' => 'Building System',
+    'phase' => 'Phase',
+    'owner_name' => 'Owner Name',
+    'owner_phone' => 'Owner Phone',
+    'photos' => 'Photos',
 ];

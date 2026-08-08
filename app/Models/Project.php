@@ -16,13 +16,24 @@ class Project extends Model
         'company_id',
         'storage_id',
         'name',
+        'number',
         'description',
+        'location',
         'address',
+        'building_system',
+        'phase',
+        'owner_name',
+        'owner_phone',
+        'photos',
         'budget',
         'currency',
         'status',
         'completion_percentage',
         'created_by',
+    ];
+
+    protected $casts = [
+        'photos' => 'array',
     ];
 
     public function company() : BelongsTo {

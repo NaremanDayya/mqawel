@@ -26,6 +26,7 @@ class LatestProjects extends BaseWidget
             ->paginated(false)
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('company.name')->label(__('backend.company')),
                 TextColumn::make('name')->label(__('backend.name')),
                 TextColumn::make('address')->label(__('backend.address'))->toggleable(isToggledHiddenByDefault: true),

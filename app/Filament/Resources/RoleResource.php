@@ -146,6 +146,7 @@ class RoleResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->label(__('backend.name')),
             ])
             ->filters([

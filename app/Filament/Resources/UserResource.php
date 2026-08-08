@@ -104,6 +104,7 @@ class UserResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
                 TextColumn::make('role.name')->badge()->color('primary')->searchable()->sortable()->label(__('backend.role')),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Concerns\HasWidgetVisibility;
 use App\Models\Project;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectsChart extends ChartWidget
 {
+    use HasWidgetVisibility;
+
     protected static ?string $heading = 'Projects';
 
     protected static ?string $description= 'Growth this year';

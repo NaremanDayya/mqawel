@@ -14,6 +14,7 @@ class ProjectWorker extends Model
         'company_id',
         'project_id',
         'worker_id',
+        'role',
         'date',
         'created_by',
     ];

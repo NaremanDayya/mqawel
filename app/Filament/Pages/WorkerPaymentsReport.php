@@ -41,6 +41,7 @@ class WorkerPaymentsReport extends Page implements HasTable
             ->paginated(false)*/
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('worker.name')->searchable()->sortable()->label(__('backend.worker')),
                 TextColumn::make('title')->searchable()->sortable()->label(__('backend.title')),
                 TextColumn::make('amount')->searchable()->sortable()->numeric()->label(__('backend.amount')),

@@ -115,6 +115,7 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
             )
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('parent_table')->formatStateUsing(fn(string $state): string => match($state){
                     'users' => __('backend.users'),
                     'workers' => __('backend.workers'),

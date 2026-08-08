@@ -47,6 +47,8 @@ class ExpensesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
+
                 TextColumn::make('title')->label(__('backend.title')),
 
                 TextColumn::make('amount')->numeric()->label(__('backend.amount')),

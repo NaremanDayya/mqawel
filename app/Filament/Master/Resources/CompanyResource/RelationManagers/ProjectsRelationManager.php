@@ -61,6 +61,7 @@ class ProjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
                 TextColumn::make('address')->searchable()->sortable()->label(__('backend.address')),
                 TextColumn::make('budget')->searchable()->sortable()->numeric()->label(__('backend.budget')),

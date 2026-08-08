@@ -65,6 +65,7 @@ class SubscriptionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('period')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('package.title')->sortable()->searchable()->label(__('backend.package')),
                 TextColumn::make('period')->sortable()->searchable()->label(__('backend.period')),
                 TextColumn::make('starting_date')->sortable()->searchable()->label(__('backend.starting')),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Concerns\HasWidgetVisibility;
 use App\Models\Company;
 use App\Models\Project;
 use Filament\Widgets\ChartWidget;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class ActiveProjectsChart extends ChartWidget
 {
+    use HasWidgetVisibility;
+
     protected static ?string $heading = 'Companies';
 
     protected static ?string $description= 'Active vs Inactive companies';

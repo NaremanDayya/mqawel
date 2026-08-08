@@ -7,6 +7,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use App\Filament\Pages\Auth\Register;
@@ -85,6 +86,12 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\FilamentInfoWidget::class,*/
             ])
             ->navigationItems([])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label(fn () => app()->getLocale() === 'ar' ? 'English' : 'العربية')
+                    ->icon('heroicon-o-language')
+                    ->url(fn () => url('lang/'.(app()->getLocale() === 'ar' ? 'en' : 'ar'))),
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

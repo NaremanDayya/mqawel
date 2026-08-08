@@ -61,7 +61,9 @@ class ProjectResource extends Resource
 
                 Group::make()->schema([
                     Section::make()->schema([
-                        TextInput::make('name')->required()->columnSpanFull()->label(__('backend.name')),
+                        TextInput::make('name')->required()->label(__('backend.name')),
+
+                        TextInput::make('number')->label(__('backend.project_number')),
 
                         //Select::make('storage')->relationship('storage', 'name')->label(__('backend.storage')),
 
@@ -71,11 +73,23 @@ class ProjectResource extends Resource
 
                 Group::make()->schema([
                     Section::make()->schema([
-                        TextInput::make('address')->label(__('backend.location')),
-                        
+                        TextInput::make('location')->label(__('backend.location')),
+
+                        TextInput::make('address')->label(__('backend.address')),
+
+                        TextInput::make('building_system')->label(__('backend.building_system')),
+
+                        TextInput::make('phase')->label(__('backend.phase')),
+
                         TextInput::make('budget')->label(__('backend.budget')),
 
                         //TextInput::make('currency')->label(__('backend.currency')),
+                    ])->columns(2),
+
+                    Section::make()->schema([
+                        TextInput::make('owner_name')->label(__('backend.owner_name')),
+
+                        TextInput::make('owner_phone')->label(__('backend.owner_phone')),
                     ])->columns(2),
 
                     Section::make()->schema([
@@ -88,6 +102,10 @@ class ProjectResource extends Resource
 
                         TextInput::make('completion_percentage')->numeric()->minValue(0)->maxValue(100)->suffix('%')->default(0)->label(__('backend.completion_percentage')),
                     ]),
+
+                    Section::make()->schema([
+                        FileUpload::make('photos')->image()->multiple()->reorderable()->directory(fn () => 'documents/'.\Illuminate\Support\Str::uuid())->openable()->label(__('backend.photos')),
+                    ]),
                 ]),
             ]);
     }
@@ -99,8 +117,13 @@ class ProjectResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
+                TextColumn::make('number')->searchable()->sortable()->label(__('backend.project_number')),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.project_name')),
+                TextColumn::make('location')->searchable()->sortable()->label(__('backend.location')),
                 TextColumn::make('address')->searchable()->sortable()->label(__('backend.project_location')),
+                TextColumn::make('phase')->searchable()->sortable()->label(__('backend.phase')),
+                TextColumn::make('owner_name')->searchable()->sortable()->label(__('backend.owner_name')),
                 /*TextColumn::make('budget')->searchable()->sortable()->numeric()->label(__('backend.budget')),
                 TextColumn::make('currency')->searchable()->sortable()->label(__('backend.currency')),*/
                 TextColumn::make('status')->formatStateUsing(fn(string $state): string => match($state){

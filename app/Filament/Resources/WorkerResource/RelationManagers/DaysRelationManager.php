@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WorkerResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -26,7 +27,9 @@ class DaysRelationManager extends RelationManager
         return $form
             ->schema([
                 Hidden::make('created_by')->default(Auth::user()->id),
-                
+
+                DatePicker::make('date')->required()->label(__('backend.date')),
+
                 Select::make('day')->options([
                     'saturday' => __('backend.saturday'),
                     'sunday' => __('backend.sunday'),
@@ -43,7 +46,9 @@ class DaysRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('day')
+            ->defaultSort('date', 'desc')
             ->columns([
+                TextColumn::make('date')->date()->label(__('backend.date')),
                 TextColumn::make('day')->formatStateUsing(fn(string $state): string => match($state){
                     'saturday' => __('backend.saturday'),
                     'sunday' => __('backend.sunday'),

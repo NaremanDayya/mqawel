@@ -84,6 +84,7 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
                 TextColumn::make('company.name')->searchable()->sortable()->label(__('backend.company')),
                 TextColumn::make('address')->searchable()->sortable()->label(__('backend.address')),

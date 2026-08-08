@@ -81,6 +81,7 @@ class CompanyResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('name')->label(__('backend.name'))->searchable()->sortable(),
                 TextColumn::make('email')->label(__('backend.email'))->searchable()->sortable(),

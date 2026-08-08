@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProjectResource\Pages;
 
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Concerns\TogglesRecordsView;
 use App\Filament\Resources\ProjectResource;
 use Filament\Actions;
@@ -12,6 +13,7 @@ use Filament\Tables\Table;
 
 class ListProjects extends ListRecords
 {
+    use HasSectionNotificationSettings;
     use TogglesRecordsView;
 
     protected static string $resource = ProjectResource::class;
@@ -53,6 +55,7 @@ class ListProjects extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            $this->notificationSettingsAction('projects', __('backend.projects')),
             Actions\CreateAction::make(),
         ];
     }

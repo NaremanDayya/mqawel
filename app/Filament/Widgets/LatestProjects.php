@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Concerns\HasWidgetVisibility;
 use App\Filament\Resources\ProjectResource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 
 class LatestProjects extends BaseWidget
 {
+    use HasWidgetVisibility;
+
     protected static ?int $sort= 5;
 
     protected int | string | array $columnSpan= 'full';

@@ -31,6 +31,7 @@ class MovementsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('type')
             ->columns([
+                Tables\Columns\TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 Tables\Columns\TextColumn::make('type'),
             ])
             ->filters([

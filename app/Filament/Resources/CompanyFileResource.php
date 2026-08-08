@@ -92,6 +92,7 @@ class CompanyFileResource extends Resource
             })
             ->description('⚠️ '.__('backend.max_file_size_10_mb'))
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')
                     ->searchable()
                     ->label(__('backend.name'))

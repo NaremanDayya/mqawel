@@ -71,6 +71,7 @@ class SubscriptionResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('company.name')->sortable()->searchable()->label(__('backend.company')),
                 TextColumn::make('package.title')->sortable()->searchable()->label(__('backend.package')),
                 TextColumn::make('period')->sortable()->searchable()->label(__('backend.period'))->toggleable(isToggledHiddenByDefault: true),

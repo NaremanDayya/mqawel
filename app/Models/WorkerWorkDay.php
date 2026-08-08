@@ -14,7 +14,12 @@ class WorkerWorkDay extends Model
         'company_id',
         'worker_id',
         'day',
+        'date',
         'created_by',
+    ];
+
+    protected $casts = [
+        'date' => 'date',
     ];
 
     public function worker() : BelongsTo {

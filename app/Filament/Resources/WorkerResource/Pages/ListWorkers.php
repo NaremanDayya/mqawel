@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WorkerResource\Pages;
 
 use App\Filament\Concerns\HasMockupPageHeader;
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Concerns\TogglesRecordsView;
 use App\Filament\Pages\WorkersReport;
 use App\Filament\Resources\WorkerResource;
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Storage;
 class ListWorkers extends ListRecords
 {
     use HasMockupPageHeader;
+    use HasSectionNotificationSettings;
     use TogglesRecordsView;
 
     protected static string $resource = WorkerResource::class;
@@ -84,6 +86,8 @@ class ListWorkers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            $this->notificationSettingsAction('workers', __('backend.workers')),
+
             Actions\Action::make('workersReport')
                 ->label(__('backend.workers_report'))
                 ->icon('heroicon-o-chart-bar')

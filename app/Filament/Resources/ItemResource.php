@@ -66,8 +66,14 @@ class ItemResource extends Resource
                         })->validationMessages([
                             'unique' => __('backend.unavailable_to_use'),
                         ])*/->required()->label(__('backend.name')),
-                        
+
+                        TextInput::make('code')->label(__('backend.item_code')),
+
                         TextInput::make('quantity')->required()->label(__('backend.quantity')),
+
+                        TextInput::make('unit')->label(__('backend.unit')),
+
+                        TextInput::make('unit_price')->numeric()->label(__('backend.unit_price')),
 
                         MarkdownEditor::make('description')->columnSpan('full')->label(__('backend.description')),
                     ])->columns(2),
@@ -112,12 +118,16 @@ class ItemResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
+                TextColumn::make('code')->searchable()->sortable()->label(__('backend.item_code')),
                 TextColumn::make('project.name')->searchable()->sortable()->default('----')->label(__('backend.project')),
                 //TextColumn::make('storage.name')->searchable()->sortable()->default('----')->label(__('backend.storage')),
                 //TextColumn::make('category.name')->searchable()->sortable()->default('----')->label(__('backend.category')),
                 TextColumn::make('quantity')->searchable()->sortable()->label(__('backend.quantity')),
+                TextColumn::make('unit')->searchable()->sortable()->label(__('backend.unit')),
+                TextColumn::make('unit_price')->numeric()->sortable()->label(__('backend.unit_price')),
                 TextColumn::make('status')->formatStateUsing(fn(string $state): string => match($state){
                     'new' => __('backend.new'),
                     'used' => __('backend.used'),

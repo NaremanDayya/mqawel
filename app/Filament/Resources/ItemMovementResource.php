@@ -105,6 +105,7 @@ class ItemMovementResource extends Resource
             })
             ->defaultSort('movement_date', 'desc')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('item.name')
                     ->description(fn (ItemMovement $record): ?string => $record->item?->category?->name)
                     ->searchable()

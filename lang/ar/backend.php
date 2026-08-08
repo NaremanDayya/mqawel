@@ -80,6 +80,7 @@ return [
     'currency' => 'العملة',
     'status' => 'الحالة',
     'actions' => 'اجراءات',
+    'row_number' => 'م',
 
     'amount' => 'القيمة',
     'category' => 'التصنيف',
@@ -617,4 +618,14 @@ return [
     'wizard_step_final_output' => 'الإخراج النهائي',
     'wizard_generate_description' => 'سيقوم المساعد الذكي بتوليد محتوى المستند بناءً على البيانات المدخلة. اضغط "التالي" لبدء التوليد.',
     'wizard_final_output_description' => 'راجع الحالة النهائية للمستند قبل الحفظ.',
+
+    'project_number' => 'رقم المشروع',
+    'item_code' => 'رمز الصنف',
+    'unit' => 'الوحدة',
+    'unit_price' => 'سعر الوحدة',
+    'building_system' => 'نظام البناء',
+    'phase' => 'المرحلة',
+    'owner_name' => 'اسم المالك',
+    'owner_phone' => 'رقم هاتف المالك',
+    'photos' => 'الصور',
 ];

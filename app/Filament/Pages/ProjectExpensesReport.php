@@ -38,6 +38,8 @@ class ProjectExpensesReport extends Page implements HasTable
             )
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
+
                 TextColumn::make('project.name')->searchable()->sortable()->label(__('backend.project')),
 
                 TextColumn::make('title')->searchable()->sortable()->label(__('backend.title')),

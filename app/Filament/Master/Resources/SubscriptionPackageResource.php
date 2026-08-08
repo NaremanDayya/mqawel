@@ -105,6 +105,7 @@ class SubscriptionPackageResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('title')->label(__('backend.title')),
                 TextColumn::make('period')->label(__('backend.period_in_months')),

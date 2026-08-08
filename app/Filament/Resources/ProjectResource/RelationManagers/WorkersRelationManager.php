@@ -39,7 +39,11 @@ class WorkersRelationManager extends RelationManager
                             ->from('project_workers')
                             ->where('project_id', $project_id);
                     });
+                })->live()->afterStateUpdated(function ($state, Forms\Set $set) {
+                    $set('role', \App\Models\Worker::find($state)?->job_title);
                 })->required()->label(__('backend.worker')),
+
+                TextInput::make('role')->label(__('backend.role')),
 
                 DatePicker::make('date')
                     ->displayFormat('d/m/Y')
@@ -56,6 +60,7 @@ class WorkersRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('worker.name')->label('Worker')->label(__('backend.worker')),
+                TextColumn::make('role')->label(__('backend.role')),
                 TextColumn::make('date')->date()->label(__('backend.date')),
             ])->emptyStateHeading(__('backend.not_found').' '.__('backend.workers'))
             ->filters([

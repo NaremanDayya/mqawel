@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Concerns\HasWidgetVisibility;
 use App\Models\File;
 use App\Models\Worker;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class StatsAlerts extends BaseWidget
 {
+    use HasWidgetVisibility;
+
     //protected int | string | array $columnSpan= 'full';
 
     protected static ?int $sort= 2;
