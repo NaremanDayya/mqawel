@@ -89,6 +89,8 @@ main.fi-main {
 .fi-sidebar {
     background: linear-gradient(178deg, #2A3060 0%, #1B1F3D 100%);
     border-inline-start: none;
+    border-inline-end: none;
+    box-shadow: none;
     overflow: hidden;
 }
 
