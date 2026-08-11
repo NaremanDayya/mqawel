@@ -258,6 +258,10 @@ main.fi-main {
         &:hover .fi-sidebar-item-icon {
             color: #fff;
         }
+
+        & .fi-sidebar-item-grouped-border {
+            display: none !important;
+        }
     }
 
     & li.fi-sidebar-item.fi-active {
