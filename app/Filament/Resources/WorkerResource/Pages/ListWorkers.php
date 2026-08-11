@@ -118,12 +118,12 @@ class ListWorkers extends ListRecords
                         $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
                     } catch (AiRequestException $e) {
                         Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
-                        $this->mountAction('create', ['picture' => $path]);
+                        $this->replaceMountedAction('create', ['picture' => $path]);
 
                         return;
                     }
 
-                    $this->mountAction('create', [
+                    $this->replaceMountedAction('create', [
                         'picture' => $path,
                         'name' => $extracted['full_name'],
                         'ethnicity' => $this->matchNationality($extracted['nationality']),

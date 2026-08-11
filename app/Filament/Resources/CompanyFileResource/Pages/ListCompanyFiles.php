@@ -87,7 +87,7 @@ class ListCompanyFiles extends ListRecords
                         $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
                     } catch (AiRequestException $e) {
                         Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
-                        $this->mountAction('create', ['file' => $path]);
+                        $this->replaceMountedAction('create', ['file' => $path]);
 
                         return;
                     }
@@ -98,7 +98,7 @@ class ListCompanyFiles extends ListRecords
                         default => __('backend.document_type_other'),
                     };
 
-                    $this->mountAction('create', [
+                    $this->replaceMountedAction('create', [
                         'name' => $typeLabel,
                         'expiry_date' => $extracted['expiry_date'],
                         'file' => $path,

@@ -139,7 +139,7 @@ class CompanyProfile extends Page
                         return;
                     }
 
-                    $this->mountAction('editAbout', ['description' => $draft]);
+                    $this->replaceMountedAction('editAbout', ['description' => $draft]);
                 }),
 
             Action::make('createCompanyFile')

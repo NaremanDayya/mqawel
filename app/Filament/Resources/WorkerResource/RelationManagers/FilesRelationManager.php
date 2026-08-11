@@ -107,7 +107,7 @@ class FilesRelationManager extends RelationManager
                             $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
                         } catch (AiRequestException $e) {
                             Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
-                            $this->mountAction('create', ['file' => $path]);
+                            $this->replaceMountedAction('create', ['file' => $path]);
 
                             return;
                         }
@@ -118,7 +118,7 @@ class FilesRelationManager extends RelationManager
                             default => __('backend.document_type_other'),
                         };
 
-                        $this->mountAction('create', [
+                        $this->replaceMountedAction('create', [
                             'name' => $typeLabel,
                             'description' => __('backend.extracted_data_summary', [
                                 'name' => $extracted['full_name'] ?? '—',

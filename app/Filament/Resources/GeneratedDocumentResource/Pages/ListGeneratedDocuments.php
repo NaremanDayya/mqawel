@@ -132,7 +132,7 @@ class ListGeneratedDocuments extends ListRecords
                         ->label(__('backend.create'))
                         ->icon('heroicon-o-sparkles')
                         ->color('primary')
-                        ->action(fn (DocumentTemplate $record) => $this->mountAction('create', [
+                        ->action(fn (DocumentTemplate $record) => $this->replaceMountedAction('create', [
                             'name' => $record->name,
                             'category' => $record->category,
                         ])),
