@@ -58,6 +58,13 @@ class CompanyFileResource extends Resource
                         })->validationMessages([
                             'unique' => __('backend.unavailable_to_use'),
                         ])->required()->label(__('backend.name')),
+                        DatePicker::make('issue_date')->label(__('backend.issue_date')),
+
+                        Forms\Components\Select::make('validity_type')->options([
+                            'permanent' => __('backend.validity_type_permanent'),
+                            'temporary' => __('backend.validity_type_temporary'),
+                        ])->default('permanent')->label(__('backend.validity_type')),
+
                         DatePicker::make('expiry_date')->required()->label(__('backend.expiry_date')),
                         Forms\Components\Select::make('category')
                             ->label(__('backend.file_category'))
@@ -124,6 +131,10 @@ class CompanyFileResource extends Resource
                     })
                     ->color(fn (File $record): string => ($record->expiry_date && now()->greaterThan($record->expiry_date)) ? 'danger' : 'success')
                     ->description(fn (File $record): ?string => $record->expiry_date ? \Carbon\Carbon::parse($record->expiry_date)->format('d-m-Y') : null),
+                TextColumn::make('validity_type')->formatStateUsing(fn (?string $state): string => match ($state) {
+                    'temporary' => __('backend.validity_type_temporary'),
+                    default => __('backend.validity_type_permanent'),
+                })->badge()->toggleable(isToggledHiddenByDefault: true)->label(__('backend.validity_type')),
             ])
             ->actionsColumnLabel(__('backend.actions'))
             ->filters([

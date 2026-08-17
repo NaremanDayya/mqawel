@@ -16,6 +16,7 @@ class WorkerPayment extends Model
         'amount',
         'currency',
         'title',
+        'payment_type',
         'payment_date',
         'payment_method',
         'notes',

@@ -32,6 +32,7 @@ class ProjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('project.name')->label(__('backend.project')),
                 TextColumn::make('role')->label(__('backend.role')),
                 TextColumn::make('project.address')->label(__('backend.address')),

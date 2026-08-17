@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,6 +35,10 @@ class PaymentsRelationManager extends RelationManager
                 Hidden::make('created_by')->default(Auth::user()->id),
                 Group::make()->schema([
                     Section::make()->schema([
+                        Select::make('payment_type')->options([
+                            'salary' => __('backend.payment_type_salary'),
+                            'dues' => __('backend.payment_type_dues'),
+                        ])->default('dues')->required()->label(__('backend.payment_type')),
                         TextInput::make('title')->required()->label(__('backend.payment_purpose')),
                         TextInput::make('amount')->numeric()->required()->label(__('backend.payment_amount')),
                     ])->columns(2),
@@ -64,7 +69,12 @@ class PaymentsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('worker.name')->label(__('backend.worker')),
+                TextColumn::make('payment_type')->formatStateUsing(fn (?string $state): string => match ($state) {
+                    'salary' => __('backend.payment_type_salary'),
+                    default => __('backend.payment_type_dues'),
+                })->badge()->color(fn (?string $state): string => $state === 'salary' ? 'primary' : 'gray')->label(__('backend.payment_type')),
                 TextColumn::make('title')->label(__('backend.payment_purpose')),
                 TextColumn::make('amount')->numeric()->label(__('backend.payment_amount')),
                 //TextColumn::make('currency')->label(__('backend.currency')),
@@ -85,7 +95,10 @@ class PaymentsRelationManager extends RelationManager
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.dues'))
             ->filters([
-                //
+                SelectFilter::make('payment_type')->options([
+                    'salary' => __('backend.payment_type_salary'),
+                    'dues' => __('backend.payment_type_dues'),
+                ])->label(__('backend.payment_type')),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()->label(__('backend.add_more')),

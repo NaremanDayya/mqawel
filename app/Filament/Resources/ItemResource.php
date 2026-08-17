@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\StorageItem;
 use App\Models\Subscription;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -87,6 +88,24 @@ class ItemResource extends Resource
 
                         Toggle::make('is_active')->default(true)->label(__('backend.active')),
                     ]),
+
+                    Section::make()->schema([
+                        Toggle::make('is_transferred')->live()->label(__('backend.is_transferred')),
+
+                        TextInput::make('transferred_from')
+                            ->label(__('backend.transferred_from'))
+                            ->visible(fn (\Filament\Forms\Get $get) => $get('is_transferred')),
+
+                        DatePicker::make('transfer_or_purchase_date')
+                            ->displayFormat('d/m/Y')
+                            ->format('Y-m-d')
+                            ->native(false)
+                            ->label(__('backend.transfer_or_purchase_date')),
+
+                        TextInput::make('performed_by')->label(__('backend.performed_by')),
+
+                        TextInput::make('usage_purpose')->label(__('backend.usage_purpose')),
+                    ])->columns(2),
                 ]),
 
                 Group::make()->schema([
@@ -133,6 +152,10 @@ class ItemResource extends Resource
                     'used' => __('backend.used'),
                     'damaged' => __('backend.damaged'),
                 })->badge()->sortable()->searchable()->label(__('backend.status')),
+                TextColumn::make('transfer_or_purchase_date')->date()->sortable()->toggleable(isToggledHiddenByDefault: true)->label(__('backend.transfer_or_purchase_date')),
+                TextColumn::make('performed_by')->searchable()->toggleable(isToggledHiddenByDefault: true)->label(__('backend.performed_by')),
+                TextColumn::make('usage_purpose')->searchable()->toggleable(isToggledHiddenByDefault: true)->label(__('backend.usage_purpose')),
+                IconColumn::make('is_transferred')->boolean()->toggleable(isToggledHiddenByDefault: true)->label(__('backend.is_transferred')),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),
             ])
             ->actionsColumnLabel(__('backend.actions'))

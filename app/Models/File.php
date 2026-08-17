@@ -17,11 +17,18 @@ class File extends Model
         'name',
         'description',
         'file',
+        'issue_date',
         'expiry_date',
+        'validity_type',
         'category',
         'is_active',
         'created_by',
         'master_id',
+    ];
+
+    protected $casts = [
+        'issue_date' => 'date',
+        'expiry_date' => 'date',
     ];
 
     public function company() : BelongsTo {

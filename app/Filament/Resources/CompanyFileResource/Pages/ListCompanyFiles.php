@@ -146,6 +146,17 @@ class ListCompanyFiles extends ListRecords
                             ->hidden(fn (Get $get) => $get('section') === 'companies'),
                     ]),
 
+                    DatePicker::make('issue_date')
+                        ->label(__('backend.issue_date')),
+
+                    Select::make('validity_type')
+                        ->options([
+                            'permanent' => __('backend.validity_type_permanent'),
+                            'temporary' => __('backend.validity_type_temporary'),
+                        ])
+                        ->default('permanent')
+                        ->label(__('backend.validity_type')),
+
                     DatePicker::make('expiry_date')
                         ->label(__('backend.expiry_date'))
                         ->required(),

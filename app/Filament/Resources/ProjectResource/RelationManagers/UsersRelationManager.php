@@ -42,6 +42,7 @@ class UsersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('user.name')->label(__('backend.user')),
                 TextColumn::make('date')->date()->label(__('backend.date')),
             ])

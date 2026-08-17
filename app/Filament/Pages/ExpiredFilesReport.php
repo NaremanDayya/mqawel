@@ -19,6 +19,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -197,6 +198,13 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                     Group::make()->schema([
                         Section::make()->schema([
                             TextInput::make('name')->required()->label(__('backend.name')),
+                            DatePicker::make('issue_date')->label(__('backend.issue_date')),
+
+                            Select::make('validity_type')->options([
+                                'permanent' => __('backend.validity_type_permanent'),
+                                'temporary' => __('backend.validity_type_temporary'),
+                            ])->default('permanent')->label(__('backend.validity_type')),
+
                             DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
                             MarkdownEditor::make('description')->columnSpanFull()->label(__('backend.description')),
                         ])->columns(2),
@@ -217,6 +225,13 @@ class ExpiredFilesReport extends Page implements HasTable, HasForms
                     Group::make()->schema([
                         Section::make()->schema([
                             TextInput::make('name')->required()->label(__('backend.name')),
+                            DatePicker::make('issue_date')->label(__('backend.issue_date')),
+
+                            Select::make('validity_type')->options([
+                                'permanent' => __('backend.validity_type_permanent'),
+                                'temporary' => __('backend.validity_type_temporary'),
+                            ])->default('permanent')->label(__('backend.validity_type')),
+
                             DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
                             MarkdownEditor::make('description')->columnSpanFull()->label(__('backend.description')),
                         ])->columns(2),

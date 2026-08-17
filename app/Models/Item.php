@@ -23,8 +23,18 @@ class Item extends Model
         'unit',
         'unit_price',
         'status',
+        'is_transferred',
+        'transferred_from',
+        'transfer_or_purchase_date',
+        'performed_by',
+        'usage_purpose',
         'is_active',
         'created_by',
+    ];
+
+    protected $casts = [
+        'is_transferred' => 'boolean',
+        'transfer_or_purchase_date' => 'date',
     ];
 
     public function storage() : BelongsTo {

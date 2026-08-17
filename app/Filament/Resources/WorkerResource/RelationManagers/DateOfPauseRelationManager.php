@@ -36,6 +36,7 @@ class DateOfPauseRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('date_of_pause')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('date_of_pause')->date()->label(__('backend.date')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.dates'))

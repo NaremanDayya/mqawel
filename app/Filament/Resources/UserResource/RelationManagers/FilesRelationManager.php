@@ -9,6 +9,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -48,6 +49,13 @@ class FilesRelationManager extends RelationManager
                         })->validationMessages([
                             'unique' => __('backend.unavailable_to_use'),
                         ])->required()->label(__('backend.name')),
+                        DatePicker::make('issue_date')->label(__('backend.issue_date')),
+
+                        Select::make('validity_type')->options([
+                            'permanent' => __('backend.validity_type_permanent'),
+                            'temporary' => __('backend.validity_type_temporary'),
+                        ])->default('permanent')->label(__('backend.validity_type')),
+
                         DatePicker::make('expiry_date')->required()->label(__('backend.expiry_date')),
                         MarkdownEditor::make('description')->columnSpanFull()->label(__('backend.description')),
                     ])->columns(2),
@@ -70,8 +78,13 @@ class FilesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->label(__('backend.name')),
                 TextColumn::make('expiry_date')->label(__('backend.expiry_date')),
+                TextColumn::make('validity_type')->formatStateUsing(fn (?string $state): string => match ($state) {
+                    'temporary' => __('backend.validity_type_temporary'),
+                    default => __('backend.validity_type_permanent'),
+                })->badge()->toggleable(isToggledHiddenByDefault: true)->label(__('backend.validity_type')),
                 IconColumn::make('is_active')->boolean()->label(__('backend.active')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.files'))

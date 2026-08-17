@@ -34,6 +34,7 @@ class ProjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                Tables\Columns\TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 Tables\Columns\TextColumn::make('project.name')->label(__('backend.project')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.projects'))

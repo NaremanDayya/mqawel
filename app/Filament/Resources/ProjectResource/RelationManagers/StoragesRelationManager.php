@@ -39,6 +39,7 @@ class StoragesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('storage.name')->label('Storage')->label(__('backend.storage')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.storages'))

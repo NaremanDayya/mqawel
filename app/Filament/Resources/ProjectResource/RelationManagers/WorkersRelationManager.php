@@ -59,6 +59,7 @@ class WorkersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('worker.name')->label('Worker')->label(__('backend.worker')),
                 TextColumn::make('role')->label(__('backend.role')),
                 TextColumn::make('date')->date()->label(__('backend.date')),

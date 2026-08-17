@@ -48,6 +48,7 @@ class DaysRelationManager extends RelationManager
             ->recordTitleAttribute('day')
             ->defaultSort('date', 'desc')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('date')->date()->label(__('backend.date')),
                 TextColumn::make('day')->formatStateUsing(fn(string $state): string => match($state){
                     'saturday' => __('backend.saturday'),

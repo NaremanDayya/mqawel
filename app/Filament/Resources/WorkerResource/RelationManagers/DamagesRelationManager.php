@@ -55,6 +55,7 @@ class DamagesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('notes')
             ->columns([
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('item.name')->label(__('backend.item')),
                 TextColumn::make('storage.name')->label(__('backend.storage')),
                 TextColumn::make('responsible.name')->label(__('backend.responsible')),
