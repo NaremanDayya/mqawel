@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Concerns\HasMockupPageHeader;
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Resources\UserResource;
 use App\Models\CompanyRole;
 use App\Models\User;
@@ -22,6 +23,7 @@ use Illuminate\Support\Str;
 class ListUsers extends ListRecords
 {
     use HasMockupPageHeader;
+    use HasSectionNotificationSettings;
 
     protected static string $resource = UserResource::class;
 
@@ -33,6 +35,8 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            $this->notificationSettingsAction('users', __('backend.users')),
+
             Actions\CreateAction::make()
                 ->label(__('backend.add_user'))
                 ->icon('heroicon-o-plus')

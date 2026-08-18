@@ -7,7 +7,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use App\Filament\Pages\Auth\Register;
@@ -73,7 +72,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER, fn(): View => view('filament.hooks.profile'),)
+            ->renderHook(PanelsRenderHook::USER_MENU_PROFILE_AFTER, fn(): View => view('filament.hooks.lang-switcher'),)
             ->renderHook(PanelsRenderHook::BODY_END, fn(): View => view('filament.hooks.ai-assistant-widget'),)
+            ->renderHook(PanelsRenderHook::BODY_END, fn(): View => view('filament.hooks.lang-switch-guard'),)
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             //->databaseNotifications()
@@ -86,12 +87,6 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\FilamentInfoWidget::class,*/
             ])
             ->navigationItems([])
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label(fn () => app()->getLocale() === 'ar' ? 'English' : 'العربية')
-                    ->icon('heroicon-o-language')
-                    ->url(fn () => url('lang/'.(app()->getLocale() === 'ar' ? 'en' : 'ar'))),
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
