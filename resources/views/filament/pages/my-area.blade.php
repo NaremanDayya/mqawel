@@ -319,11 +319,11 @@
 
         .my-area-banner {
             display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-            background: var(--mq-warn-bg); border: 1px solid rgba(245,165,36,.25);
+            background: var(--mq-pink-bg); border: 1px solid rgba(227,99,151,.25);
             border-radius: var(--mq-r-lg); padding: 16px 20px; margin-bottom: 20px;
         }
         .my-area-banner-ok { background: var(--mq-ok-bg); border-color: rgba(18,165,148,.25); }
-        .my-area-banner-icon { width: 24px; height: 24px; color: var(--mq-warn); flex-shrink: 0; }
+        .my-area-banner-icon { width: 24px; height: 24px; color: var(--mq-pink); flex-shrink: 0; }
         .my-area-banner-ok .my-area-banner-icon { color: var(--mq-ok); }
         .my-area-banner-text { flex: 1; min-width: 200px; color: var(--mq-ink); font-size: 14px; }
         .my-area-banner-stats { display: flex; gap: 12px; flex-wrap: wrap; }
