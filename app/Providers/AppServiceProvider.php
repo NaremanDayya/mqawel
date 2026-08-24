@@ -27,7 +27,13 @@ class AppServiceProvider extends ServiceProvider
         // order follows OS/browser locale, not the app's direction), which is
         // what made dates look reversed. Filament's own JS picker renders the
         // same way everywhere regardless of OS locale.
-        DatePicker::configureUsing(fn (DatePicker $component) => $component->native(false)->displayFormat('d/m/Y'));
+        //
+        // DatePicker extends DateTimePicker, so a DatePicker instance matches
+        // both configureUsing() calls below; whichever runs last wins. This
+        // one must stay registered first so DatePicker's own d/m/Y format
+        // overrides it for DatePicker fields, while genuine DateTimePicker
+        // fields (not instanceof DatePicker) are unaffected by the order.
         DateTimePicker::configureUsing(fn (DateTimePicker $component) => $component->native(false)->displayFormat('d/m/Y H:i'));
+        DatePicker::configureUsing(fn (DatePicker $component) => $component->native(false)->displayFormat('d/m/Y'));
     }
 }

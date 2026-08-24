@@ -76,7 +76,7 @@ class FilesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('name')->label(__('backend.name')),
-                TextColumn::make('expiry_date')->label(__('backend.expiry_date')),
+                TextColumn::make('expiry_date')->date()->label(__('backend.expiry_date')),
                 TextColumn::make('validity_type')->formatStateUsing(fn (?string $state): string => match ($state) {
                     'temporary' => __('backend.validity_type_temporary'),
                     default => __('backend.validity_type_permanent'),

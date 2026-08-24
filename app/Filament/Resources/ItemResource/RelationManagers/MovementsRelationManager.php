@@ -78,7 +78,7 @@ class MovementsRelationManager extends RelationManager
                     'adjust' => __('backend.adjust_storage'),
                 })->badge()->label(__('backend.type')),
                 TextColumn::make('quantity')->label(__('backend.quantity')),
-                TextColumn::make('movement_date')->label(__('backend.date')),
+                TextColumn::make('movement_date')->date()->label(__('backend.date')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.movements'))
             ->filters([
