@@ -28,6 +28,8 @@ class DateOfPauseRelationManager extends RelationManager
                 Hidden::make('created_by')->default(Auth::user()->id),
                 
                 DatePicker::make('date_of_pause')->label(__('backend.date'))->default(now()),
+
+                TextInput::make('reason')->label(__('backend.pause_reason')),
             ]);
     }
 
@@ -38,6 +40,7 @@ class DateOfPauseRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('date_of_pause')->date()->label(__('backend.date')),
+                TextColumn::make('reason')->label(__('backend.pause_reason')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.dates'))
             ->filters([

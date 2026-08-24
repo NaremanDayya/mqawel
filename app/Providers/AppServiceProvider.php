@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Http\Responses\Auth\PanelScopedLoginResponse;
+use Filament\Actions\CreateAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Filament\Tables\Actions\CreateAction as TableCreateAction;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,5 +37,13 @@ class AppServiceProvider extends ServiceProvider
         // fields (not instanceof DatePicker) are unaffected by the order.
         DateTimePicker::configureUsing(fn (DateTimePicker $component) => $component->native(false)->displayFormat('d/m/Y H:i'));
         DatePicker::configureUsing(fn (DatePicker $component) => $component->native(false)->displayFormat('d/m/Y'));
+
+        // Every "Create" modal was showing two near-identical submit buttons
+        // (the normal one plus Filament's built-in "create & create another"),
+        // which read as a duplicated button rather than two distinct actions.
+        // Table actions and page/header actions are separate class hierarchies
+        // in Filament, so both need configuring.
+        CreateAction::configureUsing(fn (CreateAction $action) => $action->createAnother(false));
+        TableCreateAction::configureUsing(fn (TableCreateAction $action) => $action->createAnother(false));
     }
 }

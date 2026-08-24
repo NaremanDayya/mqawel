@@ -28,7 +28,25 @@ class DaysRelationManager extends RelationManager
             ->schema([
                 Hidden::make('created_by')->default(Auth::user()->id),
 
-                DatePicker::make('date')->required()->label(__('backend.date')),
+                DatePicker::make('date')
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function ($state, \Filament\Forms\Set $set) {
+                        if (! $state) {
+                            return;
+                        }
+
+                        $set('day', match (\Carbon\Carbon::parse($state)->dayOfWeek) {
+                            0 => 'sunday',
+                            1 => 'monday',
+                            2 => 'tuesday',
+                            3 => 'wednesday',
+                            4 => 'thursday',
+                            5 => 'friday',
+                            6 => 'saturday',
+                        });
+                    })
+                    ->label(__('backend.date')),
 
                 Select::make('day')->options([
                     'saturday' => __('backend.saturday'),
@@ -38,7 +56,7 @@ class DaysRelationManager extends RelationManager
                     'wednesday' => __('backend.wednesday'),
                     'thursday' => __('backend.thursday'),
                     'friday' => __('backend.friday'),
-                ])->required()->label(__('backend.day')),
+                ])->required()->disabled()->dehydrated()->label(__('backend.day')),
             ]);
     }
 
@@ -50,7 +68,7 @@ class DaysRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 TextColumn::make('date')->date()->label(__('backend.date')),
-                TextColumn::make('day')->formatStateUsing(fn(string $state): string => match($state){
+                TextColumn::make('day')->formatStateUsing(fn(?string $state): string => match($state){
                     'saturday' => __('backend.saturday'),
                     'sunday' => __('backend.sunday'),
                     'monday' => __('backend.monday'),
@@ -58,6 +76,7 @@ class DaysRelationManager extends RelationManager
                     'wednesday' => __('backend.wednesday'),
                     'thursday' => __('backend.thursday'),
                     'friday' => __('backend.friday'),
+                    default => $state ?? '—',
                 })->badge()->color('success')->label(__('backend.day')),
             ])
             ->emptyStateHeading(__('backend.not_found').' '.__('backend.days'))

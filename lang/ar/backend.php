@@ -148,6 +148,7 @@ return [
     'responsible' => 'المسؤول',
     'mistake_date' => 'تاريخ الخطأ',
     'mistake_reason' => 'سبب الخطأ',
+    'pause_reason' => 'سبب التوقف',
 
     'payment_status' => 'حالة الدفع',
     'paid' => 'مسدد',

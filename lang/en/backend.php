@@ -148,6 +148,7 @@ return [
     'responsible' => 'Responsible',
     'mistake_date' => 'Mistake date',
     'mistake_reason' => 'Reason for the mistake',
+    'pause_reason' => 'Reason for the pause',
 
     'payment_status' => 'Payment status',
     'paid' => 'Paid',

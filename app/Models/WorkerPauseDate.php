@@ -14,6 +14,7 @@ class WorkerPauseDate extends Model
         'company_id',
         'worker_id',
         'date_of_pause',
+        'reason',
         'created_by',
     ];
 
