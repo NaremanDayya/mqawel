@@ -63,6 +63,7 @@ return [
     'phone' => 'Phone',
     'password' => 'Password',
     'picture' => 'Picture',
+    'company_logo' => 'Company Logo',
     'job_title' => 'Job title',
     'job_description' => 'Job description',
     'active' => 'Active',

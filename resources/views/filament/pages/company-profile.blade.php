@@ -36,9 +36,13 @@
         <div class="grid gap-4">
             {{-- Company header --}}
             <div class="flex flex-wrap items-center gap-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-white/10 dark:bg-gray-900">
-                <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-900 text-lg font-bold text-white dark:bg-white/10">
-                    {{ mb_substr($company->name, 0, 1) }}
-                </span>
+                @if ($company->picture)
+                    <img src="{{ asset('storage/'.$company->picture) }}" alt="{{ $company->name }}" class="h-14 w-14 rounded-2xl object-cover" />
+                @else
+                    <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-900 text-lg font-bold text-white dark:bg-white/10">
+                        {{ mb_substr($company->name, 0, 1) }}
+                    </span>
+                @endif
                 <div class="min-w-0 flex-1">
                     <b class="block text-base">{{ $company->name }}</b>
                     <span class="text-xs text-gray-500 dark:text-gray-400">

@@ -200,9 +200,15 @@ class CompanyProfile extends Page
             ->color('gray')
             ->modalHeading(__('backend.main_company_info'))
             ->fillForm(fn () => $this->company()->only([
-                'name', 'business_number', 'founded_year', 'address', 'phone', 'email', 'website',
+                'picture', 'name', 'business_number', 'founded_year', 'address', 'phone', 'email', 'website',
             ]))
             ->form([
+                FileUpload::make('picture')
+                    ->label(__('backend.company_logo'))
+                    ->image()
+                    ->avatar()
+                    ->directory('form-attachments'),
+
                 TextInput::make('name')->label(__('backend.name'))->required(),
                 TextInput::make('business_number')->label(__('backend.business_number')),
                 TextInput::make('founded_year')->label(__('backend.founded_year'))->numeric()->minValue(1900)->maxValue((int) date('Y')),

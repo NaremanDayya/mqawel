@@ -32,11 +32,17 @@
         <div class="flex flex-1 flex-col gap-2 overflow-y-auto p-3" x-ref="scroller" x-init="$watch('open', value => value && $nextTick(() => $refs.scroller.scrollTop = $refs.scroller.scrollHeight))">
             @forelse ($messages as $message)
                 <div @class([
-                    'max-w-[85%] rounded-xl px-3 py-2 text-sm whitespace-pre-line',
+                    'max-w-[85%] rounded-xl px-3 py-2 text-sm',
+                    'whitespace-pre-line' => $message['role'] === 'user',
+                    'prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-ol:my-1' => $message['role'] === 'assistant',
                     'self-end bg-primary-600 text-white' => $message['role'] === 'user',
                     'self-start bg-gray-100 text-gray-800 dark:bg-white/5 dark:text-gray-100' => $message['role'] === 'assistant',
                 ])>
-                    {{ $message['content'] }}
+                    @if ($message['role'] === 'assistant')
+                        {!! \Illuminate\Support\Str::markdown($message['content']) !!}
+                    @else
+                        {{ $message['content'] }}
+                    @endif
                 </div>
             @empty
                 <p class="m-auto max-w-[85%] text-center text-sm text-gray-400">{{ __('backend.ai_assistant_empty_state') }}</p>

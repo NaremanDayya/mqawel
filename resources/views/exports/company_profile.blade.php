@@ -6,6 +6,14 @@
         $direction = 'rtl';
         $text_align = 'right';
     }
+
+    $logoDataUri = null;
+    if ($company->picture) {
+        $logoPath = \Illuminate\Support\Facades\Storage::disk('public')->path($company->picture);
+        if (is_file($logoPath)) {
+            $logoDataUri = 'data:'.mime_content_type($logoPath).';base64,'.base64_encode(file_get_contents($logoPath));
+        }
+    }
 @endphp
 
 <!DOCTYPE html>
@@ -26,8 +34,12 @@
 </head>
 
 <body>
+    @if ($logoDataUri)
+        <img src="{{ $logoDataUri }}" alt="{{ $company->name }}" style="width: 60px; height: 60px; object-fit: cover; float: {{ $direction === 'rtl' ? 'right' : 'left' }}; margin-{{ $direction === 'rtl' ? 'left' : 'right' }}: 10px;" />
+    @endif
     <h1>{{ $company->name }}</h1>
     <p class="muted">{{ $company->activity }} @if($company->address) — {{ $company->address }} @endif @if($company->founded_year) — {{ __('backend.founded_year') }}: {{ $company->founded_year }} @endif</p>
+    <div style="clear: both;"></div>
 
     <h2>{{ __('backend.completion_title') }} — {{ $overall }}%</h2>
     <table>

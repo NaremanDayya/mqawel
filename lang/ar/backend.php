@@ -63,6 +63,7 @@ return [
     'phone' => 'رقم الهاتف',
     'password' => 'كلمة المرور',
     'picture' => 'الصورة',
+    'company_logo' => 'شعار الشركة',
     'job_title' => 'اسم المهنة',
     'job_description' => 'وصف المهنة',
     'active' => 'نشط',
