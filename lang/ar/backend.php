@@ -154,6 +154,7 @@ return [
     'unpaid' => 'غير مسدد',
 
     'add_more' => 'إضافة المزيد',
+    'register_entry' => 'تسجيل',
 
     'select_language' => 'اختيار اللغة',
 

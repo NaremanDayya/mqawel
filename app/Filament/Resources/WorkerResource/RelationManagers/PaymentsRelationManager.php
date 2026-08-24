@@ -101,7 +101,7 @@ class PaymentsRelationManager extends RelationManager
                 ])->label(__('backend.payment_type')),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->label(__('backend.add_more')),
+                Tables\Actions\CreateAction::make()->label(__('backend.register_entry')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([

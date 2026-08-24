@@ -33,17 +33,20 @@ class DamagesRelationManager extends RelationManager
                 Hidden::make('created_by')->default(Auth::user()->id),
                 Group::make()->schema([
                     Section::make()->schema([
-                        Select::make('storage')->relationship('storage', 'name')->label(__('backend.storage')),
-                        Select::make('item')->relationship('item', 'name')->label(__('backend.item')),
                         TextInput::make('quantity')->numeric()->label(__('backend.quantity')),
                         DatePicker::make('damage_date')->label(__('backend.mistake_date')),
                         TextInput::make('reason')->label(__('backend.mistake_reason')),
-                        TextInput::make('location')->label(__('backend.location')),
+                        Select::make('location')
+                            ->options(fn () => \App\Models\Project::query()
+                                ->where('company_id', Auth::user()->company_id)
+                                ->whereNotNull('location')
+                                ->pluck('location', 'location'))
+                            ->searchable()
+                            ->label(__('backend.location')),
                     ]),
                 ]),
                 Group::make()->schema([
                     Section::make()->schema([
-                        Select::make('responsible')->relationship('responsible', 'name')->label(__('backend.responsible')),
                         MarkdownEditor::make('notes')->label(__('backend.notes')),
                     ])
                 ])
@@ -56,9 +59,6 @@ class DamagesRelationManager extends RelationManager
             ->recordTitleAttribute('notes')
             ->columns([
                 TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
-                TextColumn::make('item.name')->label(__('backend.item')),
-                TextColumn::make('storage.name')->label(__('backend.storage')),
-                TextColumn::make('responsible.name')->label(__('backend.responsible')),
                 TextColumn::make('quantity')->numeric()->label(__('backend.quantity')),
                 TextColumn::make('reason')->label(__('backend.mistake_reason')),
                 TextColumn::make('location')->label(__('backend.location')),
@@ -69,7 +69,7 @@ class DamagesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->label(__('backend.add_more')),
+                Tables\Actions\CreateAction::make()->label(__('backend.register_entry')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

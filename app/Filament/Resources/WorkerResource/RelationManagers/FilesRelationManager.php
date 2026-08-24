@@ -143,6 +143,7 @@ class FilesRelationManager extends RelationManager
                         ]);
                     }),
                 Tables\Actions\CreateAction::make()
+                    ->label(__('backend.register_entry'))
                     ->fillForm(fn (array $arguments): array => $arguments)
                     ->before(function () {
                         if ($this->ownerRecord->files()->count() >= 10) {

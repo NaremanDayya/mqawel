@@ -74,8 +74,7 @@ class ListUsers extends ListRecords
                         ->datalist(fn () => CompanyRole::query()
                             ->where('company_id', Auth::user()->company_id)
                             ->pluck('name')
-                            ->all())
-                        ->helperText(__('backend.role_hint')),
+                            ->all()),
 
                     TextInput::make('password')
                         ->label(__('backend.password'))

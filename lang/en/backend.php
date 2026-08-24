@@ -154,6 +154,7 @@ return [
     'unpaid' => 'Unpaid',
 
     'add_more' => 'Add more',
+    'register_entry' => 'Register',
 
     'select_language' => 'Select language',
 

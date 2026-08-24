@@ -44,7 +44,7 @@ class DateOfPauseRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label(__('backend.register_entry')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([

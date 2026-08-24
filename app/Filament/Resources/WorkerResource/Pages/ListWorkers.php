@@ -24,7 +24,6 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -79,7 +78,6 @@ class ListWorkers extends ListRecords
                     })
                     ->badge(),
             ])->space(2),
-            ToggleColumn::make('is_active')->onColor('success')->label(__('backend.active')),
         ];
     }
 
