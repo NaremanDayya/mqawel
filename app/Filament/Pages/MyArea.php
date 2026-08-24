@@ -10,6 +10,9 @@ use App\Models\Worker;
 use App\Services\CompanyInsights;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Get;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Carbon;
@@ -66,13 +69,41 @@ class MyArea extends BaseDashboard
                 ->modalCancelActionLabel(__('backend.cancel'))
                 ->fillForm(fn () => $this->getPreferences())
                 ->form([
-                    Checkbox::make('attention')->label(__('backend.pref_attention')),
-                    Checkbox::make('kpis')->label(__('backend.pref_kpis')),
-                    Checkbox::make('alerts')->label(__('backend.pref_alerts')),
-                    Checkbox::make('actions')->label(__('backend.pref_actions')),
-                    Checkbox::make('progress')->label(__('backend.pref_progress')),
-                    Checkbox::make('activity')->label(__('backend.pref_activity')),
-                    Checkbox::make('distribution')->label(__('backend.pref_distribution')),
+                    $this->widgetFieldset('attention', __('backend.pref_attention'), [
+                        'pending_actions' => __('backend.pending_actions'),
+                        'workers_under_management' => __('backend.workers_under_management'),
+                        'active_projects' => __('backend.active_projects'),
+                    ]),
+                    $this->widgetFieldset('kpis', __('backend.pref_kpis'), [
+                        'total_projects' => __('backend.total_projects'),
+                        'processing_projects' => __('backend.processing_projects'),
+                        'total_workers' => __('backend.total_workers'),
+                        'active_warnings' => __('backend.active_warnings'),
+                    ]),
+                    $this->widgetFieldset('alerts', __('backend.pref_alerts'), [
+                        'expired_files' => __('backend.expired_files'),
+                        'incomplete_workers' => __('backend.incomplete_workers'),
+                        'about_to_expire' => __('backend.about_to_expire'),
+                        'incomplete_files' => __('backend.incomplete_files'),
+                    ]),
+                    $this->widgetFieldset('actions', __('backend.pref_actions'), [
+                        'renew_document' => __('backend.pref_item_renew_document'),
+                        'complete_worker' => __('backend.pref_item_complete_worker'),
+                        'unassigned_inventory' => __('backend.pref_item_unassigned_inventory'),
+                    ]),
+                    $this->widgetFieldset('progress', __('backend.pref_progress'), [
+                        'project_rows' => __('backend.pref_item_project_rows'),
+                        'overall_average' => __('backend.overall_average_completion'),
+                    ]),
+                    $this->widgetFieldset('activity', __('backend.pref_activity'), [
+                        'in' => __('backend.in_to_storage'),
+                        'out' => __('backend.out_from_storage'),
+                        'adjust' => __('backend.adjust_storage'),
+                    ]),
+                    $this->widgetFieldset('distribution', __('backend.pref_distribution'), [
+                        'donut' => __('backend.pref_item_donut'),
+                        'legend' => __('backend.pref_item_legend'),
+                    ]),
                 ])
                 ->action(function (array $data) {
                     Auth::user()->update(['dashboard_preferences' => $data]);
@@ -98,19 +129,51 @@ class MyArea extends BaseDashboard
         ];
     }
 
+    protected function widgetFieldset(string $key, string $label, array $items): Fieldset
+    {
+        return Fieldset::make($label)
+            ->schema([
+                Checkbox::make("{$key}.enabled")
+                    ->label($label)
+                    ->live()
+                    ->columnSpanFull(),
+                Grid::make(2)
+                    ->schema(collect($items)
+                        ->map(fn ($itemLabel, $itemKey) => Checkbox::make("{$key}.items.{$itemKey}")->label($itemLabel))
+                        ->values()
+                        ->all())
+                    ->visible(fn (Get $get) => (bool) $get("{$key}.enabled"))
+                    ->columnSpanFull(),
+            ]);
+    }
+
+    public function getPreferenceDefaults(): array
+    {
+        return [
+            'attention' => ['enabled' => true, 'items' => ['pending_actions' => true, 'workers_under_management' => true, 'active_projects' => true]],
+            'kpis' => ['enabled' => true, 'items' => ['total_projects' => true, 'processing_projects' => true, 'total_workers' => true, 'active_warnings' => true]],
+            'alerts' => ['enabled' => true, 'items' => ['expired_files' => true, 'incomplete_workers' => true, 'about_to_expire' => true, 'incomplete_files' => true]],
+            'actions' => ['enabled' => true, 'items' => ['renew_document' => true, 'complete_worker' => true, 'unassigned_inventory' => true]],
+            'progress' => ['enabled' => true, 'items' => ['project_rows' => true, 'overall_average' => true]],
+            'activity' => ['enabled' => true, 'items' => ['in' => true, 'out' => true, 'adjust' => true]],
+            'distribution' => ['enabled' => true, 'items' => ['donut' => true, 'legend' => true]],
+        ];
+    }
+
     public function getPreferences(): array
     {
-        $defaults = [
-            'attention' => true,
-            'kpis' => true,
-            'alerts' => true,
-            'actions' => true,
-            'progress' => true,
-            'activity' => true,
-            'distribution' => true,
-        ];
+        $defaults = $this->getPreferenceDefaults();
+        $saved = Auth::user()->dashboard_preferences ?? [];
 
-        return array_merge($defaults, Auth::user()->dashboard_preferences ?? []);
+        foreach ($defaults as $section => $config) {
+            $defaults[$section]['enabled'] = $saved[$section]['enabled'] ?? $config['enabled'];
+
+            foreach ($config['items'] as $itemKey => $itemDefault) {
+                $defaults[$section]['items'][$itemKey] = $saved[$section]['items'][$itemKey] ?? $itemDefault;
+            }
+        }
+
+        return $defaults;
     }
 
     public function getGreeting(): string
@@ -178,9 +241,10 @@ class MyArea extends BaseDashboard
     public function getAlerts(): array
     {
         $counts = $this->getAlertCounts();
+        $enabled = $this->getPreferences()['alerts']['items'];
         $rows = [];
 
-        if ($counts['expired_files'] > 0) {
+        if ($enabled['expired_files'] && $counts['expired_files'] > 0) {
             $rows[] = [
                 'icon' => 'heroicon-o-archive-box-x-mark',
                 'tone' => 'danger',
@@ -191,7 +255,7 @@ class MyArea extends BaseDashboard
             ];
         }
 
-        if ($counts['incomplete_workers'] > 0) {
+        if ($enabled['incomplete_workers'] && $counts['incomplete_workers'] > 0) {
             $rows[] = [
                 'icon' => 'heroicon-o-briefcase',
                 'tone' => 'warning',
@@ -202,7 +266,7 @@ class MyArea extends BaseDashboard
             ];
         }
 
-        if ($counts['about_to_expire'] > 0) {
+        if ($enabled['about_to_expire'] && $counts['about_to_expire'] > 0) {
             $rows[] = [
                 'icon' => 'heroicon-o-archive-box-arrow-down',
                 'tone' => 'warning',
@@ -213,7 +277,7 @@ class MyArea extends BaseDashboard
             ];
         }
 
-        if ($counts['incomplete_files'] > 0) {
+        if ($enabled['incomplete_files'] && $counts['incomplete_files'] > 0) {
             $rows[] = [
                 'icon' => 'heroicon-o-archive-box',
                 'tone' => 'info',
@@ -230,9 +294,12 @@ class MyArea extends BaseDashboard
     public function getSuggestedActions(): array
     {
         $companyId = $this->companyId();
+        $enabled = $this->getPreferences()['actions']['items'];
         $suggestions = [];
 
-        $expiredFile = File::where('company_id', $companyId)->where('expiry_date', '<', date('Y-m-d'))->orderBy('expiry_date')->first();
+        $expiredFile = $enabled['renew_document']
+            ? File::where('company_id', $companyId)->where('expiry_date', '<', date('Y-m-d'))->orderBy('expiry_date')->first()
+            : null;
         if ($expiredFile) {
             $suggestions[] = [
                 'tone' => 'danger',
@@ -242,9 +309,11 @@ class MyArea extends BaseDashboard
             ];
         }
 
-        $incompleteWorker = Worker::where('company_id', $companyId)->where(function ($q) {
-            $q->whereNull('picture')->orWhereNull('name')->orWhereNull('phone')->orWhereNull('ethnicity')->orWhereNull('living_address')->orWhereNull('job_title');
-        })->first();
+        $incompleteWorker = $enabled['complete_worker']
+            ? Worker::where('company_id', $companyId)->where(function ($q) {
+                $q->whereNull('picture')->orWhereNull('name')->orWhereNull('phone')->orWhereNull('ethnicity')->orWhereNull('living_address')->orWhereNull('job_title');
+            })->first()
+            : null;
         if ($incompleteWorker) {
             $suggestions[] = [
                 'tone' => 'clay',
@@ -254,7 +323,7 @@ class MyArea extends BaseDashboard
             ];
         }
 
-        $unassignedItems = Item::where('company_id', $companyId)->whereNull('storage_id')->count();
+        $unassignedItems = $enabled['unassigned_inventory'] ? Item::where('company_id', $companyId)->whereNull('storage_id')->count() : 0;
         if ($unassignedItems > 0) {
             $suggestions[] = [
                 'tone' => 'info',
@@ -269,7 +338,14 @@ class MyArea extends BaseDashboard
 
     public function getRecentActivity(): array
     {
+        $enabledTypes = array_keys(array_filter($this->getPreferences()['activity']['items']));
+
+        if (empty($enabledTypes)) {
+            return [];
+        }
+
         return ItemMovement::where('company_id', $this->companyId())
+            ->whereIn('type', $enabledTypes)
             ->with(['item', 'storage', 'createdBy'])
             ->latest('created_at')
             ->limit(5)

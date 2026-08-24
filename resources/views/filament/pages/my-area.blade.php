@@ -21,7 +21,7 @@
         @endif
     </p>
 
-    @if ($prefs['attention'])
+    @if ($prefs['attention']['enabled'])
         @if ($banner['pending_actions'] > 0)
             <div class="my-area-banner">
                 <x-filament::icon icon="heroicon-o-exclamation-triangle" class="my-area-banner-icon" />
@@ -29,18 +29,24 @@
                     <b>{{ __('backend.attention_needed_title') }}</b>
                 </div>
                 <div class="my-area-banner-stats">
+                    @if ($prefs['attention']['items']['pending_actions'])
                     <div class="my-area-banner-stat">
                         <b style="color: var(--mq-warn)">{{ $banner['pending_actions'] }}</b>
                         <span>{{ __('backend.pending_actions') }}</span>
                     </div>
+                    @endif
+                    @if ($prefs['attention']['items']['workers_under_management'])
                     <div class="my-area-banner-stat">
                         <b style="color: var(--mq-clay)">{{ $banner['workers_under_management'] }}</b>
                         <span>{{ __('backend.workers_under_management') }}</span>
                     </div>
+                    @endif
+                    @if ($prefs['attention']['items']['active_projects'])
                     <div class="my-area-banner-stat">
                         <b style="color: var(--mq-info)">{{ $banner['active_projects'] }}</b>
                         <span>{{ __('backend.active_projects') }}</span>
                     </div>
+                    @endif
                 </div>
             </div>
         @else
@@ -51,9 +57,9 @@
         @endif
     @endif
 
-    @if ($prefs['alerts'] || $prefs['actions'])
+    @if ($prefs['alerts']['enabled'] || $prefs['actions']['enabled'])
     <div class="my-area-grid-2">
-        @if ($prefs['alerts'])
+        @if ($prefs['alerts']['enabled'])
         <section class="fi-section my-area-card" id="alerts-panel">
             <div class="my-area-card-head">
                 <div>
@@ -88,7 +94,7 @@
         </section>
         @endif
 
-        @if ($prefs['actions'])
+        @if ($prefs['actions']['enabled'])
         <section class="fi-section my-area-card">
             <div class="my-area-card-head">
                 <div>
@@ -113,8 +119,9 @@
     </div>
     @endif
 
-    @if ($prefs['kpis'])
+    @if ($prefs['kpis']['enabled'])
     <div class="my-area-kpi-grid">
+        @if ($prefs['kpis']['items']['total_projects'])
         <div class="fi-wi-stats-overview-stat my-area-kpi-hero">
             <div class="my-area-kpi-top">
                 <span class="my-area-kpi-lbl">{{ __('backend.total_projects') }}</span>
@@ -131,7 +138,9 @@
                 @endif
             </div>
         </div>
+        @endif
 
+        @if ($prefs['kpis']['items']['processing_projects'])
         <div class="fi-wi-stats-overview-stat">
             <div class="my-area-kpi-top">
                 <span class="my-area-kpi-lbl">{{ __('backend.processing_projects') }}</span>
@@ -144,7 +153,9 @@
                 @endif
             </div>
         </div>
+        @endif
 
+        @if ($prefs['kpis']['items']['total_workers'])
         <div class="fi-wi-stats-overview-stat">
             <div class="my-area-kpi-top">
                 <span class="my-area-kpi-lbl">{{ __('backend.total_workers') }}</span>
@@ -157,7 +168,9 @@
                 @endif
             </div>
         </div>
+        @endif
 
+        @if ($prefs['kpis']['items']['active_warnings'])
         <a href="#alerts-panel" class="fi-wi-stats-overview-stat my-area-kpi-alert">
             <div class="my-area-kpi-top">
                 <span class="my-area-kpi-lbl">{{ __('backend.active_warnings') }}</span>
@@ -170,10 +183,11 @@
                 @endif
             </div>
         </a>
+        @endif
     </div>
     @endif
 
-    @if ($prefs['progress'] && count($progress['rows']) > 0)
+    @if ($prefs['progress']['enabled'] && count($progress['rows']) > 0)
         <section class="fi-section my-area-card" style="margin-bottom: 16px">
             <div class="my-area-card-head">
                 <div>
@@ -183,34 +197,38 @@
                 <span class="fi-badge my-area-count-badge" data-color="info">{{ __('backend.average') }} {{ $progress['average'] }}%</span>
             </div>
 
-            @foreach ($progress['rows'] as $row)
+            @if ($prefs['progress']['items']['project_rows'])
+                @foreach ($progress['rows'] as $row)
+                    <div class="my-area-goal-row">
+                        <div class="my-area-goal-top">
+                            <b>{{ $row['name'] }}</b>
+                            <span>{{ $row['meta'] }}</span>
+                        </div>
+                        <div class="my-area-goal-bar">
+                            <div class="my-area-goal-fill" style="width: {{ $row['pct'] }}%; background: {{ $row['color'] }}"></div>
+                        </div>
+                        <span class="my-area-goal-pct">{{ $row['pct'] }}%</span>
+                    </div>
+                @endforeach
+            @endif
+
+            @if ($prefs['progress']['items']['overall_average'])
                 <div class="my-area-goal-row">
                     <div class="my-area-goal-top">
-                        <b>{{ $row['name'] }}</b>
-                        <span>{{ $row['meta'] }}</span>
+                        <b>{{ __('backend.overall_average_completion') }}</b>
                     </div>
                     <div class="my-area-goal-bar">
-                        <div class="my-area-goal-fill" style="width: {{ $row['pct'] }}%; background: {{ $row['color'] }}"></div>
+                        <div class="my-area-goal-fill" style="width: {{ $progress['average'] }}%; background: #22C1D6"></div>
                     </div>
-                    <span class="my-area-goal-pct">{{ $row['pct'] }}%</span>
+                    <span class="my-area-goal-pct">{{ $progress['average'] }}%</span>
                 </div>
-            @endforeach
-
-            <div class="my-area-goal-row">
-                <div class="my-area-goal-top">
-                    <b>{{ __('backend.overall_average_completion') }}</b>
-                </div>
-                <div class="my-area-goal-bar">
-                    <div class="my-area-goal-fill" style="width: {{ $progress['average'] }}%; background: #22C1D6"></div>
-                </div>
-                <span class="my-area-goal-pct">{{ $progress['average'] }}%</span>
-            </div>
+            @endif
         </section>
     @endif
 
-    @if ($prefs['activity'] || $prefs['distribution'])
+    @if ($prefs['activity']['enabled'] || $prefs['distribution']['enabled'])
     <div class="my-area-grid-2">
-        @if ($prefs['activity'])
+        @if ($prefs['activity']['enabled'])
         <section class="fi-section my-area-card">
             <div class="my-area-card-head">
                 <div>
@@ -237,7 +255,7 @@
         </section>
         @endif
 
-        @if ($prefs['distribution'])
+        @if ($prefs['distribution']['enabled'])
         <section class="fi-section my-area-card">
             <div class="my-area-card-head">
                 <div>
@@ -252,6 +270,7 @@
                     $offsetAcc = 0;
                 @endphp
                 <div class="my-area-donut-wrap">
+                    @if ($prefs['distribution']['items']['donut'])
                     <div class="my-area-donut">
                         <svg viewBox="0 0 150 150" width="150" height="150">
                             <circle cx="75" cy="75" r="52" fill="none" stroke="var(--mq-line)" stroke-width="20" />
@@ -271,6 +290,8 @@
                             <b>{{ rtrim(rtrim(number_format($totalUnits, 2), '0'), '.') }}</b>
                         </div>
                     </div>
+                    @endif
+                    @if ($prefs['distribution']['items']['legend'])
                     <div class="my-area-donut-legend">
                         @foreach ($distribution as $slice)
                             <div class="my-area-donut-legend-row">
@@ -281,6 +302,7 @@
                             </div>
                         @endforeach
                     </div>
+                    @endif
                 </div>
             @else
                 <p class="my-area-empty">{{ __('backend.no_inventory_recorded') }}</p>
