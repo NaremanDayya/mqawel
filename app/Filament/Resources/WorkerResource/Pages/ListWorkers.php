@@ -125,6 +125,7 @@ class ListWorkers extends ListRecords
                         'picture' => $path,
                         'name' => $extracted['full_name'],
                         'ethnicity' => $this->matchNationality($extracted['nationality']),
+                        'id_number' => $extracted['id_number'],
                     ]);
                 }),
 

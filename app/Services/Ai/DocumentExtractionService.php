@@ -29,7 +29,7 @@ class DocumentExtractionService
                         'description' => 'The kind of document shown in the image.',
                     ],
                     'full_name' => ['type' => 'string', 'description' => 'The document holder\'s full name, as printed.'],
-                    'id_number' => ['type' => 'string', 'description' => 'The ID/passport number.'],
+                    'id_number' => ['type' => 'string', 'description' => 'The person\'s identifying number: for an Omani national ID or resident card, use the "Civil Number" (الرقم المدني) specifically, not any other number printed on the card. For a passport, use the passport number.'],
                     'nationality' => ['type' => 'string', 'description' => 'The document holder\'s nationality.'],
                     'expiry_date' => ['type' => 'string', 'description' => 'The document expiry date, formatted as YYYY-MM-DD.'],
                 ],
