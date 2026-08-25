@@ -469,6 +469,7 @@ div.fi-topbar nav {
    Cards / sections — `.fi-section` is Filament's card equivalent.
    ========================================================================== */
 .fi-section {
+    background: #FFFFFF !important;
     border-radius: var(--mq-r-lg) !important;
     border: 1px solid var(--mq-line) !important;
     box-shadow: var(--mq-shadow) !important;
@@ -487,6 +488,10 @@ div.fi-topbar nav {
     border: 1px solid var(--mq-line) !important;
     box-shadow: var(--mq-shadow) !important;
     transition: border-color .15s, transform .15s;
+}
+
+.fi-wi-stats-overview-stat:not(.my-area-kpi-hero) {
+    background: #FFFFFF !important;
 }
 
 .fi-wi-stats-overview-stat:hover {
