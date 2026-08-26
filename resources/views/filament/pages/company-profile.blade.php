@@ -199,6 +199,7 @@
                     };
 
                     $fileUrl = $file->file ? \Illuminate\Support\Facades\Storage::disk('public')->url($file->file) : null;
+                    $completion = $this->getFileCompletion($file);
                 @endphp
                 <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-gray-900">
                     <div class="mb-3 flex items-center gap-3">
@@ -207,6 +208,11 @@
                             <span class="block truncate text-sm font-semibold">{{ $file->name }}</span>
                             <span class="block text-xs text-gray-500 dark:text-gray-400">{{ $categoryLabel }} &middot; {{ $file->created_at?->diffForHumans() }}</span>
                         </div>
+                    </div>
+
+                    <div class="mb-3 flex items-center justify-between text-xs">
+                        <span class="text-gray-500 dark:text-gray-400">{{ __('backend.completion_percentage') }}</span>
+                        <span class="font-semibold text-gray-700 dark:text-gray-300">{{ $completion }}%</span>
                     </div>
 
                     @if ($fileUrl)

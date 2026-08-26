@@ -10,7 +10,9 @@ use App\Services\Ai\AiRequestException;
 use App\Services\Ai\CompanyProfileAiService;
 use App\Services\CompanyProfileInsights;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -104,6 +106,26 @@ class CompanyProfile extends Page
             ->get();
     }
 
+    /**
+     * How much of the create-file form was actually filled in, as a
+     * percentage — the required fields (name, category, file) are always
+     * present, so this really measures how many of the optional fields
+     * (description, issue date, expiry date) were also filled.
+     */
+    public function getFileCompletion(File $file): int
+    {
+        $fields = [
+            filled($file->name),
+            filled($file->category),
+            filled($file->file),
+            filled($file->description),
+            filled($file->issue_date),
+            filled($file->expiry_date),
+        ];
+
+        return (int) round((count(array_filter($fields)) / count($fields)) * 100);
+    }
+
     public function getActivityLogs()
     {
         return CompanyActivityLog::where('company_id', $this->company()->id)
@@ -166,6 +188,9 @@ class CompanyProfile extends Page
                         ->openable()
                         ->downloadable()
                         ->required(),
+                    DatePicker::make('issue_date')->label(__('backend.issue_date')),
+                    DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
+                    MarkdownEditor::make('description')->label(__('backend.description'))->columnSpanFull(),
                 ])
                 ->action(function (array $data) {
                     $company = $this->company();
@@ -178,6 +203,9 @@ class CompanyProfile extends Page
                         'name' => $data['name'],
                         'category' => $data['category'],
                         'file' => $data['file'] ?? null,
+                        'issue_date' => $data['issue_date'] ?? null,
+                        'expiry_date' => $data['expiry_date'] ?? null,
+                        'description' => $data['description'] ?? null,
                         'is_active' => true,
                     ]);
 

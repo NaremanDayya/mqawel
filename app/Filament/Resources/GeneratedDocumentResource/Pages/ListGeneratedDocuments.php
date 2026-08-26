@@ -153,7 +153,7 @@ class ListGeneratedDocuments extends ListRecords
     {
         $importAction = Actions\Action::make('importDocument')
             ->label(__('backend.import'))
-            ->icon('heroicon-o-arrow-down-tray')
+            ->icon('heroicon-o-arrow-up-tray')
             ->color('gray')
             ->modalHeading(__('backend.import'))
             ->modalDescription(__('backend.import_description'))
