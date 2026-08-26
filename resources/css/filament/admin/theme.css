@@ -720,6 +720,22 @@ table.fi-ta-table {
     flex-direction: row-reverse !important;
 }
 
+/* List/cards view-toggle buttons (.mq-view-toggle, set via extraAttributes()
+   in TogglesRecordsView) render in their own header row above the
+   search/filter toolbar row by default, reading as two stacked "levels"
+   instead of one simple toolbar. Merge the two rows into a single flex
+   row so the toggle buttons sit alongside search/filters. */
+.fi-ta-header-ctn:has(.mq-view-toggle) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fi-ta-header-ctn:has(.mq-view-toggle) > .fi-ta-header-toolbar {
+    border-top: 0 !important;
+}
+
 /* Actions column header defaults to start-alignment while the row action
    buttons themselves default to end-alignment — misaligned. Match them. */
 .fi-ta thead th:last-child > span.justify-start {

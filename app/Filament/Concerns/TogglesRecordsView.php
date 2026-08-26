@@ -35,6 +35,7 @@ trait TogglesRecordsView
                 ->icon('heroicon-o-bars-3')
                 ->iconButton()
                 ->color(fn () => $this->isCardsView() ? 'gray' : 'primary')
+                ->extraAttributes(['class' => 'mq-view-toggle'])
                 ->action(function () {
                     $this->recordsView = 'list';
                     $this->resetTable();
@@ -45,6 +46,7 @@ trait TogglesRecordsView
                 ->icon('heroicon-o-squares-2x2')
                 ->iconButton()
                 ->color(fn () => $this->isCardsView() ? 'primary' : 'gray')
+                ->extraAttributes(['class' => 'mq-view-toggle'])
                 ->action(function () {
                     $this->recordsView = 'cards';
                     $this->resetTable();
