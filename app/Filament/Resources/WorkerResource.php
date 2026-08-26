@@ -113,8 +113,8 @@ class WorkerResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
-                TextColumn::make('index')->rowIndex()->label(__('backend.row_number'))->toggleable(),
-                ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label('')->toggleable(),
+                TextColumn::make('index')->rowIndex()->label('ID')->toggleable(),
+                ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('name')->searchable()->sortable()->label(__('backend.name'))->toggleable(),
                 TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.position'))->toggleable(),
                 TextColumn::make('phone')->searchable()->sortable()->label(__('backend.phone'))->toggleable(),
