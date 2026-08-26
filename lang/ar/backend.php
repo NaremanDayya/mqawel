@@ -127,6 +127,7 @@ return [
     'expiry_date' => 'تاريخ الانتهاء',
     'document' => 'المستند',
     'download' => 'تحميل',
+    'preview' => 'معاينة',
     'file_not_found' => 'الملف غير موجود',
     'file_limit_reached' => 'تم الوصول للحد الأقصى (:limit مستند) لهذا القسم.',
 

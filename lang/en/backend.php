@@ -127,6 +127,7 @@ return [
     'expiry_date' => 'Expiry date',
     'document' => 'Document',
     'download' => 'Download',
+    'preview' => 'Preview',
     'file_not_found' => 'File not found',
     'file_limit_reached' => 'Reached the maximum (:limit documents) for this section.',
 

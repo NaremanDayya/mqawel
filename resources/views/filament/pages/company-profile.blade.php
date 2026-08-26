@@ -185,14 +185,42 @@
     @elseif ($activeTab === 'files')
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @forelse ($this->getCompanyFiles() as $file)
+                @php
+                    $categoryLabel = match ($file->category) {
+                        'certificate' => __('backend.file_category_certificate'),
+                        'work_photo' => __('backend.file_category_work_photo'),
+                        default => __('backend.file_category_general'),
+                    };
+
+                    $tone = match ($file->category) {
+                        'certificate' => ['bg-amber-50 dark:bg-amber-500/10', 'text-amber-600 dark:text-amber-400'],
+                        'work_photo' => ['bg-violet-50 dark:bg-violet-500/10', 'text-violet-600 dark:text-violet-400'],
+                        default => ['bg-blue-50 dark:bg-blue-500/10', 'text-blue-600 dark:text-blue-400'],
+                    };
+
+                    $fileUrl = $file->file ? \Illuminate\Support\Facades\Storage::disk('public')->url($file->file) : null;
+                @endphp
                 <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-gray-900">
-                    <div class="mb-2 flex items-center gap-3">
-                        <x-filament::icon icon="heroicon-o-document" class="h-9 w-9 shrink-0 rounded-lg bg-gray-100 p-2 text-gray-500 dark:bg-white/5" />
+                    <div class="mb-3 flex items-center gap-3">
+                        <x-filament::icon icon="heroicon-o-document-text" class="h-11 w-11 shrink-0 rounded-xl p-2.5 {{ $tone[0] }} {{ $tone[1] }}" />
                         <div class="min-w-0">
-                            <span class="block truncate text-sm font-medium">{{ $file->name }}</span>
-                            <span class="block text-xs text-gray-500 dark:text-gray-400">{{ $file->created_at?->diffForHumans() }}</span>
+                            <span class="block truncate text-sm font-semibold">{{ $file->name }}</span>
+                            <span class="block text-xs text-gray-500 dark:text-gray-400">{{ $categoryLabel }} &middot; {{ $file->created_at?->diffForHumans() }}</span>
                         </div>
                     </div>
+
+                    @if ($fileUrl)
+                        <div class="flex gap-2">
+                            <a href="{{ $fileUrl }}" download="{{ $file->downloadFilename() }}" class="fi-btn fi-btn-size-sm fi-btn-color-gray flex-1 justify-center gap-1.5">
+                                <x-filament::icon icon="heroicon-o-document-arrow-down" class="h-4 w-4" />
+                                PDF
+                            </a>
+                            <a href="{{ $fileUrl }}" target="_blank" class="fi-btn fi-btn-size-sm fi-btn-color-gray flex-1 justify-center gap-1.5">
+                                <x-filament::icon icon="heroicon-o-eye" class="h-4 w-4" />
+                                {{ __('backend.preview') }}
+                            </a>
+                        </div>
+                    @endif
                 </div>
             @empty
                 <span class="text-sm text-gray-400">{{ __('backend.no_documents_yet') }}</span>
