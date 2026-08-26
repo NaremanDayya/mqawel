@@ -149,7 +149,7 @@ class CompanyProfile extends Page
                 ->form([
                     TextInput::make('name')->label(__('backend.name'))->required(),
                     Select::make('category')
-                        ->label(__('backend.file_category'))
+                        ->label(__('backend.file_classification'))
                         ->options([
                             'certificate' => __('backend.file_category_certificate'),
                             'work_photo' => __('backend.file_category_work_photo'),

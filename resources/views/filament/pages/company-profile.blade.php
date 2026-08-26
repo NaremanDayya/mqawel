@@ -198,9 +198,6 @@
                 <span class="text-sm text-gray-400">{{ __('backend.no_documents_yet') }}</span>
             @endforelse
         </div>
-        <a href="{{ \App\Filament\Resources\CompanyFileResource::getUrl() }}" class="mt-3 inline-flex text-sm text-primary-600 hover:underline">
-            {{ __('backend.view_all_in_documents') }}
-        </a>
     @elseif ($activeTab === 'log')
         <div class="rounded-xl border border-gray-200 bg-white dark:border-white/10 dark:bg-gray-900">
             @forelse ($this->getActivityLogs() as $log)

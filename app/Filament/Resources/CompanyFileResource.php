@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CompanyFileResource\Pages;
 use App\Filament\Resources\CompanyFileResource\RelationManagers;
+use App\Models\CompanyActivityLog;
 use App\Models\File;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -143,7 +144,13 @@ class CompanyFileResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make()->iconButton(),
                 Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton()
+                    ->after(fn (File $record) => CompanyActivityLog::log(
+                        $record->company_id,
+                        __('backend.activity_file_deleted', ['name' => $record->name]),
+                        'heroicon-o-trash',
+                        'danger',
+                    )),
                 Tables\Actions\Action::make('download_file')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->tooltip(__('backend.download'))
@@ -161,7 +168,17 @@ class CompanyFileResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->after(function (\Illuminate\Support\Collection $records) {
+                            foreach ($records as $record) {
+                                CompanyActivityLog::log(
+                                    $record->company_id,
+                                    __('backend.activity_file_deleted', ['name' => $record->name]),
+                                    'heroicon-o-trash',
+                                    'danger',
+                                );
+                            }
+                        }),
                 ]),
             ]);
     }
