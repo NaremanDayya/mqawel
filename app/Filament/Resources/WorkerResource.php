@@ -113,20 +113,20 @@ class WorkerResource extends Resource
                 $query->where('company_id', Auth::user()->company_id)->where('company_id', '<>', null);
             })
             ->columns([
-                TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
-                ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
-                TextColumn::make('name')->searchable()->sortable()->label(__('backend.name')),
-                TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.position')),
-                TextColumn::make('phone')->searchable()->sortable()->label(__('backend.phone')),
-                TextColumn::make('ethnicity')->searchable()->sortable()->label(__('backend.ethnicity')),
+                TextColumn::make('index')->rowIndex()->label(__('backend.row_number'))->toggleable(),
+                ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label('')->toggleable(),
+                TextColumn::make('name')->searchable()->sortable()->label(__('backend.name'))->toggleable(),
+                TextColumn::make('job_title')->searchable()->sortable()->label(__('backend.position'))->toggleable(),
+                TextColumn::make('phone')->searchable()->sortable()->label(__('backend.phone'))->toggleable(),
+                TextColumn::make('ethnicity')->searchable()->sortable()->label(__('backend.ethnicity'))->toggleable(),
                 TextColumn::make('id_number')->searchable()->sortable()->label(__('backend.id_number'))->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('projects.project.name')->listWithLineBreaks()->limitList(2)->label(__('backend.projects')),
+                TextColumn::make('projects.project.name')->listWithLineBreaks()->limitList(2)->label(__('backend.projects'))->toggleable(),
                 TextColumn::make('living_address')->searchable()->sortable()->label(__('backend.living_address'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('living_type')->formatStateUsing(fn(string $state): string => match($state){
                     'temporary' => __('backend.temporary'),
                     'primary' => __('backend.primary'),
-                })->badge()->searchable()->sortable()->label(__('backend.living_place')),
-                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.status')),
+                })->badge()->searchable()->sortable()->label(__('backend.living_place'))->toggleable(),
+                ToggleColumn::make('is_active')->onColor('success')->label(__('backend.status'))->toggleable(),
             ])
             ->actionsColumnLabel(__('backend.actions'))
             ->filters([
