@@ -723,16 +723,22 @@ table.fi-ta-table {
 /* List/cards view-toggle buttons (.mq-view-toggle, set via extraAttributes()
    in TogglesRecordsView) render in their own header row above the
    search/filter toolbar row by default, reading as two stacked "levels"
-   instead of one simple toolbar. Merge the two rows into a single flex
-   row so the toggle buttons sit alongside search/filters. */
+   instead of one simple toolbar. Merge them into a single row, and use
+   `order` to put the toggle buttons right next to the search/filter
+   group (search, filter, then list/cards icons, reading right-to-left)
+   instead of on the opposite side of the row. */
 .fi-ta-header-ctn:has(.mq-view-toggle) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+}
+
+.fi-ta-header-ctn:has(.mq-view-toggle) > .fi-ta-header {
+    order: 2;
 }
 
 .fi-ta-header-ctn:has(.mq-view-toggle) > .fi-ta-header-toolbar {
+    order: 1;
     border-top: 0 !important;
 }
 
