@@ -465,6 +465,19 @@ div.fi-topbar nav {
     border-radius: 10px !important;
 }
 
+/* AI action buttons (.mq-ai-btn, set via extraAttributes()) get a distinct
+   blue-to-purple gradient so they read as "AI" and stand apart from plain
+   primary (create/add) buttons. */
+.fi-btn.fi-color-primary.mq-ai-btn:not(.fi-btn-outlined) {
+    background: linear-gradient(135deg, #3E63DD, #8B5CF6) !important;
+    box-shadow: 0 4px 14px -4px rgba(62, 99, 221, .5);
+}
+
+.fi-btn.fi-color-primary.mq-ai-btn:not(.fi-btn-outlined):hover {
+    background: linear-gradient(135deg, #3554C4, #7C4FE0) !important;
+    box-shadow: 0 6px 18px -4px rgba(62, 99, 221, .6);
+}
+
 /* ==========================================================================
    Cards / sections — `.fi-section` is Filament's card equivalent.
    ========================================================================== */

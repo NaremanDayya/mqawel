@@ -63,10 +63,13 @@ class ListCompanyFiles extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            $this->notificationSettingsAction('documents', __('backend.company_documents_section')),
+
             Actions\Action::make('aiScanDocument')
                 ->label(__('backend.ai_scan'))
                 ->icon('heroicon-o-viewfinder-circle')
                 ->color('primary')
+                ->extraAttributes(['class' => 'mq-ai-btn'])
                 ->modalHeading(__('backend.ai_scan'))
                 ->modalDescription(__('backend.ai_scan_description'))
                 ->modalSubmitActionLabel(__('backend.ai_scan_action'))
@@ -213,8 +216,6 @@ class ListCompanyFiles extends ListRecords
                         'is_active' => true,
                     ]);
                 }),
-
-            $this->notificationSettingsAction('documents', __('backend.company_documents_section')),
         ];
     }
 }

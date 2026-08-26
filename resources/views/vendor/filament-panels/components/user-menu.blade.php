@@ -13,10 +13,6 @@
 
     $userRole = is_string($user?->role ?? null) ? $user->role : ($user?->role?->name ?? null);
     $userInitials = collect(explode(' ', (string) filament()->getUserName($user)))->map(fn ($word) => mb_substr($word, 0, 1))->take(2)->implode('');
-
-    $currentLocale = app()->getLocale();
-    $otherLocale = $currentLocale === 'ar' ? 'en' : 'ar';
-    $localeLabel = ['ar' => 'عربي', 'en' => 'English'];
 @endphp
 
 {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_BEFORE) }}
@@ -55,19 +51,6 @@
             @endif
         </span>
     </div>
-
-    <x-filament::dropdown.list>
-        <x-filament::dropdown.list.item
-            icon="heroicon-o-globe-alt"
-            :href="url('lang/'.$otherLocale)"
-            tag="a"
-        >
-            <span class="mq-menu-item-row">
-                {{ __('backend.language') }}
-                <span class="mq-menu-item-hint">{{ $localeLabel[$currentLocale] }}</span>
-            </span>
-        </x-filament::dropdown.list.item>
-    </x-filament::dropdown.list>
 
     @if ($profileItem?->isVisible() ?? true)
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_BEFORE) }}

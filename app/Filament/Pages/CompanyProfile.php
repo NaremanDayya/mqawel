@@ -125,6 +125,7 @@ class CompanyProfile extends Page
                 ->label(__('backend.improve_with_ai'))
                 ->icon('heroicon-o-sparkles')
                 ->color('primary')
+                ->extraAttributes(['class' => 'mq-ai-btn'])
                 ->action(function () {
                     $company = $this->company();
 

@@ -96,6 +96,7 @@ class ListWorkers extends ListRecords
                 ->label(__('backend.ai_scan'))
                 ->icon('heroicon-o-viewfinder-circle')
                 ->color('primary')
+                ->extraAttributes(['class' => 'mq-ai-btn'])
                 ->modalHeading(__('backend.ai_scan'))
                 ->modalDescription(__('backend.ai_scan_new_worker_description'))
                 ->modalSubmitActionLabel(__('backend.ai_scan_action'))
