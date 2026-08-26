@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Filament\Resources\UserResource\RelationManagers\FilesRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\ProjectsRelationManager;
+use App\Models\CompanyRole;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -13,7 +14,6 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -61,10 +61,13 @@ class UserResource extends Resource
                     Section::make(__('backend.information'))->icon('heroicon-o-identification')->schema([
                         TextInput::make('name')->columnSpanFull()->required()->label(__('backend.name')),
 
-                        Select::make('role')->relationship('role', 'name', function($query){
-                            $query->where('company_id', Auth::user()->company_id);
-                            $query->orWhere('company_id', null);
-                        })->required()/*->preload()*->searchable()*/->label(__('backend.role')),
+                        TextInput::make('role_name')
+                            ->required()
+                            ->datalist(fn () => CompanyRole::query()
+                                ->where('company_id', Auth::user()->company_id)
+                                ->pluck('name')
+                                ->all())
+                            ->label(__('backend.role')),
 
                         TextInput::make('email')->required()->unique(ignoreRecord:true)->validationMessages([
                             'unique' => __('backend.unavailable_to_use'),
