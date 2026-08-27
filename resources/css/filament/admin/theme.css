@@ -479,6 +479,61 @@ div.fi-topbar nav {
 }
 
 /* ==========================================================================
+   AI assistant floating launcher — idle swing + pulse ring so it reads as
+   alive/interactive instead of a static icon; pauses once the chat is open.
+   ========================================================================== */
+.mq-ai-launcher {
+    transition: transform .15s, background-color .15s;
+}
+
+.mq-ai-launcher:hover {
+    transform: scale(1.06);
+}
+
+.mq-ai-launcher:active {
+    transform: scale(.94);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mq-ai-launcher-idle {
+        position: relative;
+    }
+
+    .mq-ai-launcher-idle::before {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        z-index: -1;
+        border-radius: 9999px;
+        background: rgba(110, 86, 207, .35);
+        animation: mq-ai-pulse 2.4s ease-out infinite;
+    }
+
+    .mq-ai-launcher-idle .mq-ai-launcher-icon {
+        transform-origin: 50% 15%;
+        animation: mq-ai-swing 4.5s ease-in-out infinite;
+    }
+
+    .mq-ai-launcher-idle:hover .mq-ai-launcher-icon {
+        animation-play-state: paused;
+        transform: rotate(0deg) scale(1.1);
+    }
+}
+
+@keyframes mq-ai-pulse {
+    0% { transform: scale(.85); opacity: .6; }
+    70%, 100% { transform: scale(1.35); opacity: 0; }
+}
+
+@keyframes mq-ai-swing {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-12deg); }
+    40% { transform: rotate(9deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(3deg); }
+}
+
+/* ==========================================================================
    Cards / sections — `.fi-section` is Filament's card equivalent.
    ========================================================================== */
 .fi-section {
