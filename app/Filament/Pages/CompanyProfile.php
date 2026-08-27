@@ -193,22 +193,12 @@ class CompanyProfile extends Page
                     DatePicker::make('issue_date')->label(__('backend.issue_date')),
                     DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
                     MarkdownEditor::make('description')->label(__('backend.description'))->columnSpanFull(),
-                    FileUpload::make('letterhead')
-                        ->label(__('backend.letterhead'))
-                        ->helperText(__('backend.letterhead_hint'))
-                        ->acceptedFileTypes(['application/pdf', 'image/png', 'image/jpeg', 'image/webp'])
-                        ->directory('letterheads')
-                        ->maxSize(10240)
-                        ->openable()
-                        ->default(fn () => $this->company()->letterhead)
-                        ->columnSpanFull(),
+                    static::letterheadFormField(),
                 ])
                 ->action(function (array $data) {
                     $company = $this->company();
-
-                    if (array_key_exists('letterhead', $data)) {
-                        $company->update(['letterhead' => $data['letterhead']]);
-                    }
+                    $letterhead = static::persistLetterhead($data);
+                    $file = static::stampLetterheadOnUploadedFile($data['file'] ?? null, $letterhead);
 
                     File::create([
                         'company_id' => $company->id,
@@ -217,7 +207,7 @@ class CompanyProfile extends Page
                         'parent_id' => $company->id,
                         'name' => $data['name'],
                         'category' => $data['category'],
-                        'file' => $data['file'] ?? null,
+                        'file' => $file,
                         'issue_date' => $data['issue_date'] ?? null,
                         'expiry_date' => $data['expiry_date'] ?? null,
                         'description' => $data['description'] ?? null,

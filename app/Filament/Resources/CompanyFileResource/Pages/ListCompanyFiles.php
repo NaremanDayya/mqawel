@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CompanyFileResource\Pages;
 
+use App\Filament\Concerns\AppliesCompanyLetterhead;
 use App\Filament\Concerns\HasMockupPageHeader;
 use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Resources\CompanyFileResource;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ListCompanyFiles extends ListRecords
 {
+    use AppliesCompanyLetterhead;
     use HasMockupPageHeader;
     use HasSectionNotificationSettings;
 
@@ -183,6 +185,9 @@ class ListCompanyFiles extends ListRecords
                         ->openable()
                         ->downloadable()
                         ->required(),
+
+                    static::letterheadFormField()
+                        ->visible(fn (Get $get) => $get('section') === 'companies'),
                 ])
                 ->using(function (array $data): File {
                     $companyId = Auth::user()->company_id;
@@ -204,6 +209,13 @@ class ListCompanyFiles extends ListRecords
                         }
                     }
 
+                    $file = $data['file'] ?? null;
+
+                    if ($data['section'] === 'companies') {
+                        $letterhead = static::persistLetterhead($data);
+                        $file = static::stampLetterheadOnUploadedFile($file, $letterhead);
+                    }
+
                     return File::create([
                         'company_id' => $companyId,
                         'created_by' => Auth::user()->id,
@@ -212,7 +224,7 @@ class ListCompanyFiles extends ListRecords
                         'name' => $data['name'],
                         'expiry_date' => $data['expiry_date'],
                         'category' => $data['category'] ?? 'general',
-                        'file' => $data['file'] ?? null,
+                        'file' => $file,
                         'is_active' => true,
                     ]);
                 }),
