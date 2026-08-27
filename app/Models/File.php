@@ -21,6 +21,7 @@ class File extends Model
         'expiry_date',
         'validity_type',
         'category',
+        'status',
         'is_active',
         'created_by',
         'master_id',

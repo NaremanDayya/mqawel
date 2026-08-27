@@ -186,8 +186,7 @@ class ListCompanyFiles extends ListRecords
                         ->downloadable()
                         ->required(),
 
-                    static::letterheadFormField()
-                        ->visible(fn (Get $get) => $get('section') === 'companies'),
+                    static::letterheadFormField(),
                 ])
                 ->using(function (array $data): File {
                     $companyId = Auth::user()->company_id;
@@ -209,12 +208,8 @@ class ListCompanyFiles extends ListRecords
                         }
                     }
 
-                    $file = $data['file'] ?? null;
-
-                    if ($data['section'] === 'companies') {
-                        $letterhead = static::persistLetterhead($data);
-                        $file = static::stampLetterheadOnUploadedFile($file, $letterhead);
-                    }
+                    $letterhead = static::persistLetterhead($data);
+                    $file = static::stampLetterheadOnUploadedFile($data['file'] ?? null, $letterhead);
 
                     $record = File::create([
                         'company_id' => $companyId,

@@ -200,6 +200,14 @@
 
                     $fileUrl = $file->file ? \Illuminate\Support\Facades\Storage::disk('public')->url($file->file) : null;
                     $completion = $this->getFileCompletion($file);
+
+                    $statusLabel = \App\Filament\Resources\GeneratedDocumentResource::statusOptions()[$file->status] ?? $file->status;
+                    $statusTone = match (\App\Filament\Resources\GeneratedDocumentResource::statusColor($file->status)) {
+                        'warning' => ['bg-amber-50 dark:bg-amber-500/10', 'text-amber-700 dark:text-amber-400', 'bg-amber-500'],
+                        'info' => ['bg-blue-50 dark:bg-blue-500/10', 'text-blue-700 dark:text-blue-400', 'bg-blue-500'],
+                        'success' => ['bg-emerald-50 dark:bg-emerald-500/10', 'text-emerald-700 dark:text-emerald-400', 'bg-emerald-500'],
+                        default => ['bg-gray-100 dark:bg-white/5', 'text-gray-600 dark:text-gray-400', 'bg-gray-400'],
+                    };
                 @endphp
                 <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/10 dark:bg-gray-900">
                     <div class="mb-3 flex items-center gap-3">
@@ -208,6 +216,14 @@
                             <span class="block truncate text-sm font-semibold">{{ $file->name }}</span>
                             <span class="block text-xs text-gray-500 dark:text-gray-400">{{ $categoryLabel }} &middot; {{ $file->created_at?->diffForHumans() }}</span>
                         </div>
+                    </div>
+
+                    <div class="mb-2 flex items-center justify-between text-xs">
+                        <span class="text-gray-500 dark:text-gray-400">{{ __('backend.status') }}</span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-semibold {{ $statusTone[0] }} {{ $statusTone[1] }}">
+                            <i class="h-1.5 w-1.5 rounded-full {{ $statusTone[2] }}"></i>
+                            {{ $statusLabel }}
+                        </span>
                     </div>
 
                     <div class="mb-3 flex items-center justify-between text-xs">

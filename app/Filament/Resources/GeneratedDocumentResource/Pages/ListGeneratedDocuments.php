@@ -10,7 +10,9 @@ use App\Models\GeneratedDocument;
 use App\Models\Project;
 use App\Services\Ai\AiRequestException;
 use App\Services\Ai\DocumentDraftingService;
+use App\Services\Ai\DocumentExtractionService;
 use Filament\Actions;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
@@ -137,6 +139,28 @@ class ListGeneratedDocuments extends ListRecords
                             'category' => $record->category,
                             'file' => $record->file ? $this->copyTemplateFile($record->file) : null,
                         ])),
+                    Tables\Actions\Action::make('upload_template_file')
+                        ->label(__('backend.upload_template_file'))
+                        ->tooltip(__('backend.template_file_hint'))
+                        ->icon('heroicon-o-arrow-up-tray')
+                        ->color('gray')
+                        ->modalHeading(fn (DocumentTemplate $record): string => $record->name)
+                        ->modalDescription(__('backend.template_file_hint'))
+                        ->modalSubmitActionLabel(__('backend.save_settings'))
+                        ->fillForm(fn (DocumentTemplate $record): array => ['file' => $record->file])
+                        ->form([
+                            FileUpload::make('file')
+                                ->label(__('backend.template_file'))
+                                ->directory('document-templates')
+                                ->maxSize(10240)
+                                ->openable()
+                                ->downloadable(),
+                        ])
+                        ->action(function (DocumentTemplate $record, array $data) {
+                            $record->update(['file' => $data['file'] ?? null]);
+
+                            Notification::make()->title(__('backend.settings_saved'))->success()->send();
+                        }),
                     Tables\Actions\Action::make('edit_template')
                         ->label(__('backend.edit'))
                         ->icon('heroicon-o-pencil-square')
@@ -160,15 +184,6 @@ class ListGeneratedDocuments extends ListRecords
             ->modalDescription(__('backend.import_description'))
             ->modalSubmitActionLabel(__('backend.import'))
             ->form([
-                TextInput::make('name')
-                    ->label(__('backend.document_type'))
-                    ->required(),
-
-                Select::make('category')
-                    ->label(__('backend.document_section'))
-                    ->options(GeneratedDocumentResource::categoryOptions())
-                    ->required(),
-
                 FileUpload::make('file')
                     ->label(__('backend.document'))
                     ->directory('documents')
@@ -176,7 +191,49 @@ class ListGeneratedDocuments extends ListRecords
                     ->helperText(__('backend.max_file_size_10_mb'))
                     ->openable()
                     ->downloadable()
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function ($state, Set $set) {
+                        if (blank($state)) {
+                            return;
+                        }
+
+                        $mime = Storage::disk('public')->mimeType($state) ?: 'application/pdf';
+
+                        try {
+                            $extracted = app(DocumentExtractionService::class)->extractDocumentInfo([[
+                                'path' => Storage::disk('public')->path($state),
+                                'mime' => $mime,
+                            ]]);
+                        } catch (AiRequestException $e) {
+                            return;
+                        }
+
+                        if (filled($extracted['document_title'])) {
+                            $set('name', $extracted['document_title']);
+                        }
+
+                        if (filled($extracted['issue_date'])) {
+                            $set('issue_date', $extracted['issue_date']);
+                        }
+
+                        if (filled($extracted['expiry_date'])) {
+                            $set('expiry_date', $extracted['expiry_date']);
+                        }
+                    }),
+
+                TextInput::make('name')
+                    ->label(__('backend.document_type'))
+                    ->helperText(__('backend.import_auto_extracted_hint'))
                     ->required(),
+
+                Select::make('category')
+                    ->label(__('backend.document_section'))
+                    ->options(GeneratedDocumentResource::categoryOptions())
+                    ->required(),
+
+                DatePicker::make('issue_date')->label(__('backend.issue_date')),
+                DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
             ])
             ->action(function (array $data) {
                 GeneratedDocument::create([
@@ -185,6 +242,8 @@ class ListGeneratedDocuments extends ListRecords
                     'name' => $data['name'],
                     'category' => $data['category'],
                     'file' => $data['file'],
+                    'issue_date' => $data['issue_date'] ?? null,
+                    'expiry_date' => $data['expiry_date'] ?? null,
                     'status' => 'draft',
                 ]);
 

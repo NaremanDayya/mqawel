@@ -80,4 +80,93 @@ class DocumentExtractionService
             'expiry_date' => $input['expiry_date'] ?? null,
         ];
     }
+
+    /**
+     * Classifies a general business document (a commercial registration
+     * certificate, a license, a tax card, …) and extracts its key dates —
+     * used when a company imports an existing document into the document
+     * generator instead of drafting one from a template.
+     *
+     * @param  array<int, array{path: string, mime: string}>  $images
+     * @return array{document_title: ?string, issue_date: ?string, expiry_date: ?string}
+     */
+    public function extractDocumentInfo(array $images): array
+    {
+        $tool = [
+            'name' => 'extract_document_info',
+            'description' => 'Classify a business document and extract its issue and expiry dates.',
+            'input_schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'document_title' => [
+                        'type' => 'string',
+                        'description' => 'A short Arabic label naming what kind of document this is, based on its actual heading/title — e.g. "سجل تجاري" (commercial registration certificate), "رخصة" or "ترخيص" (license/permit), "شهادة" (certificate), "بطاقة ضريبية" (tax card), "عقد" (contract). Use the document\'s own title if there is one printed on it.',
+                    ],
+                    'issue_date' => [
+                        'type' => 'string',
+                        'description' => 'The date this specific document/registration was issued (تاريخ التسجيل أو الإصدار), formatted as YYYY-MM-DD. If the document shows multiple dates (e.g. both a company "establishment date" and a certificate "registration date"), use the registration/issue date of the document itself, not the establishment/founding date of the underlying company.',
+                    ],
+                    'expiry_date' => [
+                        'type' => 'string',
+                        'description' => 'The document\'s expiry / validity-end date (تاريخ الانتهاء أو الصلاحية), formatted as YYYY-MM-DD.',
+                    ],
+                ],
+                'required' => [],
+            ],
+        ];
+
+        $content = array_map(fn (array $image) => $this->contentBlock($image), $images);
+
+        $content[] = [
+            'type' => 'text',
+            'text' => 'Classify this document and extract its issue and expiry dates using the extract_document_info tool. If a field is not present on the document, omit it.',
+        ];
+
+        $response = $this->client->send(
+            messages: [[
+                'role' => 'user',
+                'content' => $content,
+            ]],
+            system: 'You are a precise document-data extraction assistant for a construction company\'s records. Only report what is actually printed on the document.',
+            tools: [$tool],
+            toolChoice: ['type' => 'tool', 'name' => 'extract_document_info'],
+            maxTokens: 512,
+        );
+
+        $input = $this->client->toolInputFrom($response, 'extract_document_info') ?? [];
+
+        return [
+            'document_title' => $input['document_title'] ?? null,
+            'issue_date' => $input['issue_date'] ?? null,
+            'expiry_date' => $input['expiry_date'] ?? null,
+        ];
+    }
+
+    /**
+     * @param  array{path: string, mime: string}  $image
+     */
+    protected function contentBlock(array $image): array
+    {
+        $base64 = base64_encode(file_get_contents($image['path']));
+
+        if ($image['mime'] === 'application/pdf') {
+            return [
+                'type' => 'document',
+                'source' => [
+                    'type' => 'base64',
+                    'media_type' => 'application/pdf',
+                    'data' => $base64,
+                ],
+            ];
+        }
+
+        return [
+            'type' => 'image',
+            'source' => [
+                'type' => 'base64',
+                'media_type' => $image['mime'],
+                'data' => $base64,
+            ],
+        ];
+    }
 }

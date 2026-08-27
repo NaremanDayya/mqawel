@@ -20,9 +20,16 @@ class GeneratedDocument extends Model
         'details',
         'content',
         'file',
+        'issue_date',
+        'expiry_date',
         'status',
         'value',
         'created_by',
+    ];
+
+    protected $casts = [
+        'issue_date' => 'date',
+        'expiry_date' => 'date',
     ];
 
     public function company(): BelongsTo

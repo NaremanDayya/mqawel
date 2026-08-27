@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Concerns\AppliesCompanyLetterhead;
 use App\Filament\Concerns\HasMockupPageHeader;
+use App\Filament\Resources\GeneratedDocumentResource;
 use App\Models\Company;
 use App\Models\CompanyActivityLog;
 use App\Models\File;
@@ -192,6 +193,11 @@ class CompanyProfile extends Page
                         ->required(),
                     DatePicker::make('issue_date')->label(__('backend.issue_date')),
                     DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
+                    Select::make('status')
+                        ->label(__('backend.status'))
+                        ->options(GeneratedDocumentResource::statusOptions())
+                        ->default('draft')
+                        ->required(),
                     MarkdownEditor::make('description')->label(__('backend.description'))->columnSpanFull(),
                     static::letterheadFormField(),
                 ])
@@ -210,6 +216,7 @@ class CompanyProfile extends Page
                         'file' => $file,
                         'issue_date' => $data['issue_date'] ?? null,
                         'expiry_date' => $data['expiry_date'] ?? null,
+                        'status' => $data['status'] ?? 'draft',
                         'description' => $data['description'] ?? null,
                         'is_active' => true,
                     ]);
