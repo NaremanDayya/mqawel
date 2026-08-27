@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\AppliesCompanyLetterhead;
 use App\Filament\Resources\GeneratedDocumentResource\Pages;
 use App\Models\GeneratedDocument;
 use App\Models\Project;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class GeneratedDocumentResource extends Resource
 {
+    use AppliesCompanyLetterhead;
+
     protected static ?string $model = GeneratedDocument::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
@@ -272,6 +275,8 @@ class GeneratedDocumentResource extends Resource
         if (session('current_lang') === 'ar') {
             $mpdf->SetDirectionality('rtl');
         }
+
+        static::applyLetterhead($mpdf, $record->company?->letterhead);
 
         $mpdf->WriteHTML(Str::markdown((string) $record->content));
 

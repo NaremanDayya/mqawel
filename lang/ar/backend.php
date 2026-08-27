@@ -37,6 +37,8 @@ return [
     'export' => 'تصدير',
     'improve_with_ai' => 'تحسين بالـ AI',
     'create_file' => 'إنشاء ملف',
+    'letterhead' => 'الترويسة الرسمية',
+    'letterhead_hint' => 'ملف PDF أو صورة بخلفية الشركة الرسمية (شعار، تذييل...) — تُستخدم كخلفية عند إنشاء المستند كملف PDF. اختياري، ويُحفظ لاستخدامه لاحقاً في مستندات الشركة الأخرى.',
     'file_category' => 'تصنيف المستند',
     'file_classification' => 'تصنيف الملف',
     'file_category_certificate' => 'شهادة جودة',

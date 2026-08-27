@@ -320,9 +320,22 @@ class ListGeneratedDocuments extends ListRecords
                                 ->options(GeneratedDocumentResource::statusOptions())
                                 ->default('draft')
                                 ->required(),
+
+                            FileUpload::make('letterhead')
+                                ->label(__('backend.letterhead'))
+                                ->helperText(__('backend.letterhead_hint'))
+                                ->acceptedFileTypes(['application/pdf', 'image/png', 'image/jpeg', 'image/webp'])
+                                ->directory('letterheads')
+                                ->maxSize(10240)
+                                ->openable()
+                                ->default(fn () => Auth::user()->company->letterhead),
                         ]),
                 ])
                 ->using(function (array $data): GeneratedDocument {
+                    if (array_key_exists('letterhead', $data)) {
+                        Auth::user()->company->update(['letterhead' => $data['letterhead']]);
+                    }
+
                     return GeneratedDocument::create([
                         'company_id' => Auth::user()->company_id,
                         'created_by' => Auth::user()->id,

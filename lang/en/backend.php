@@ -37,6 +37,8 @@ return [
     'export' => 'Export',
     'improve_with_ai' => 'Improve with AI',
     'create_file' => 'Create File',
+    'letterhead' => 'Official Letterhead',
+    'letterhead_hint' => "A PDF or image of your company's official letterhead (logo, footer, etc.) — used as the background when a document is generated as a PDF. Optional, and saved for reuse on your other company documents.",
     'file_category' => 'Document Category',
     'file_classification' => 'File Category',
     'file_category_certificate' => 'Quality Certificate',

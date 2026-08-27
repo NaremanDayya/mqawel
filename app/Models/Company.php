@@ -28,6 +28,7 @@ class Company extends Model
         'notification_settings',
         'dashboard_widgets',
         'document_categories',
+        'letterhead',
         'is_active',
         'is_verified',
         'master_id',

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\AppliesCompanyLetterhead;
 use App\Filament\Concerns\HasMockupPageHeader;
 use App\Models\Company;
 use App\Models\CompanyActivityLog;
@@ -26,6 +27,7 @@ use Mpdf\Output\Destination;
 
 class CompanyProfile extends Page
 {
+    use AppliesCompanyLetterhead;
     use HasMockupPageHeader;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
@@ -191,9 +193,22 @@ class CompanyProfile extends Page
                     DatePicker::make('issue_date')->label(__('backend.issue_date')),
                     DatePicker::make('expiry_date')->label(__('backend.expiry_date')),
                     MarkdownEditor::make('description')->label(__('backend.description'))->columnSpanFull(),
+                    FileUpload::make('letterhead')
+                        ->label(__('backend.letterhead'))
+                        ->helperText(__('backend.letterhead_hint'))
+                        ->acceptedFileTypes(['application/pdf', 'image/png', 'image/jpeg', 'image/webp'])
+                        ->directory('letterheads')
+                        ->maxSize(10240)
+                        ->openable()
+                        ->default(fn () => $this->company()->letterhead)
+                        ->columnSpanFull(),
                 ])
                 ->action(function (array $data) {
                     $company = $this->company();
+
+                    if (array_key_exists('letterhead', $data)) {
+                        $company->update(['letterhead' => $data['letterhead']]);
+                    }
 
                     File::create([
                         'company_id' => $company->id,
@@ -325,6 +340,8 @@ class CompanyProfile extends Page
         if (session('current_lang') == 'ar') {
             $mpdf->SetDirectionality('rtl');
         }
+
+        static::applyLetterhead($mpdf, $company->letterhead);
 
         $mpdf->WriteHTML($html);
 
