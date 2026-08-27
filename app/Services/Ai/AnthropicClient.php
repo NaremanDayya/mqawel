@@ -43,11 +43,18 @@ class AnthropicClient
         ], fn ($value) => ! is_null($value));
 
         try {
+            // A single dropped connection (a one-off network blip) shouldn't
+            // surface as a full failure to the user — retry transient
+            // connection errors and 5xx responses a couple of times first.
             $response = Http::withHeaders([
                 'x-api-key' => $this->apiKey,
                 'anthropic-version' => '2023-06-01',
                 'content-type' => 'application/json',
-            ])->connectTimeout(10)->timeout(45)->post($this->endpoint, $payload);
+            ])
+                ->connectTimeout(10)
+                ->timeout(45)
+                ->retry(2, 500, throw: false)
+                ->post($this->endpoint, $payload);
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::warning('Anthropic API connection failed', ['message' => $e->getMessage()]);
 
