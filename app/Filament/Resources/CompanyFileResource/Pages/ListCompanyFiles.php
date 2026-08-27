@@ -87,7 +87,7 @@ class ListCompanyFiles extends ListRecords
                     $mime = Storage::disk('public')->mimeType($path) ?: 'image/jpeg';
 
                     try {
-                        $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
+                        $extracted = app(DocumentExtractionService::class)->extract([['path' => $absolutePath, 'mime' => $mime]]);
                     } catch (AiRequestException $e) {
                         Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
                         $this->replaceMountedAction('create', ['file' => $path]);

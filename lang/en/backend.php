@@ -593,6 +593,8 @@ return [
     'document_type_national_id' => 'National ID',
     'document_type_passport' => 'Passport',
     'document_type_other' => 'Document',
+    'id_card_front' => 'ID Card Front',
+    'id_card_back' => 'ID Card Back',
     'extracted_data_summary' => 'Name: :name — Document no.: :id_number — Nationality: :nationality',
     'document_creator' => 'Document creator',
     'document_creator_description' => 'Create contracts, quotes, letters, and correspondence from ready templates.',

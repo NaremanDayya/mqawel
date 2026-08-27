@@ -9,14 +9,17 @@ class DocumentExtractionService
     }
 
     /**
-     * Extract structured identity-document data from an uploaded ID card or passport image.
+     * Extract structured identity-document data from one or more uploaded
+     * identity document images (e.g. a passport's single page, or an ID
+     * card's front and back) — all images are sent together so data can be
+     * combined across sides (e.g. a resident/ID card's occupation field is
+     * often only on the back).
      *
-     * @return array{document_type: string, full_name: ?string, id_number: ?string, nationality: ?string, expiry_date: ?string}
+     * @param  array<int, array{path: string, mime: string}>  $images
+     * @return array{document_type: string, full_name: ?string, id_number: ?string, nationality: ?string, job_title: ?string, expiry_date: ?string}
      */
-    public function extract(string $absolutePath, string $mimeType): array
+    public function extract(array $images): array
     {
-        $base64 = base64_encode(file_get_contents($absolutePath));
-
         $tool = [
             'name' => 'extract_identity_document',
             'description' => 'Extract structured data from an identity document image (national ID card or passport).',
@@ -31,29 +34,33 @@ class DocumentExtractionService
                     'full_name' => ['type' => 'string', 'description' => 'The document holder\'s full name, as printed.'],
                     'id_number' => ['type' => 'string', 'description' => 'The person\'s identifying number: for an Omani national ID or resident card, use the "Civil Number" (الرقم المدني) specifically, not any other number printed on the card. For a passport, use the passport number.'],
                     'nationality' => ['type' => 'string', 'description' => 'The document holder\'s nationality.'],
+                    'job_title' => ['type' => 'string', 'description' => 'The document holder\'s occupation/profession (المهنة), if printed on the card — commonly found on a resident/ID card, often on the back side.'],
                     'expiry_date' => ['type' => 'string', 'description' => 'The document expiry date, formatted as YYYY-MM-DD.'],
                 ],
                 'required' => ['document_type'],
             ],
         ];
 
+        $content = array_map(fn (array $image) => [
+            'type' => 'image',
+            'source' => [
+                'type' => 'base64',
+                'media_type' => $image['mime'],
+                'data' => base64_encode(file_get_contents($image['path'])),
+            ],
+        ], $images);
+
+        $content[] = [
+            'type' => 'text',
+            'text' => count($images) > 1
+                ? 'These images are the front and back of the same identity document. Extract the combined document data using the extract_identity_document tool. If a field is not visible or not applicable, omit it.'
+                : 'Extract the identity document data from this image using the extract_identity_document tool. If a field is not visible or not applicable, omit it.',
+        ];
+
         $response = $this->client->send(
             messages: [[
                 'role' => 'user',
-                'content' => [
-                    [
-                        'type' => 'image',
-                        'source' => [
-                            'type' => 'base64',
-                            'media_type' => $mimeType,
-                            'data' => $base64,
-                        ],
-                    ],
-                    [
-                        'type' => 'text',
-                        'text' => 'Extract the identity document data from this image using the extract_identity_document tool. If a field is not visible or not applicable, omit it.',
-                    ],
-                ],
+                'content' => $content,
             ]],
             system: 'You are a precise document-data extraction assistant for a construction company\'s HR records. Only report what is actually visible in the image.',
             tools: [$tool],
@@ -68,6 +75,7 @@ class DocumentExtractionService
             'full_name' => $input['full_name'] ?? null,
             'id_number' => $input['id_number'] ?? null,
             'nationality' => $input['nationality'] ?? null,
+            'job_title' => $input['job_title'] ?? null,
             'expiry_date' => $input['expiry_date'] ?? null,
         ];
     }

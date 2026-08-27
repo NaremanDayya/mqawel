@@ -593,6 +593,8 @@ return [
     'document_type_national_id' => 'بطاقة هوية',
     'document_type_passport' => 'جواز سفر',
     'document_type_other' => 'مستند',
+    'id_card_front' => 'الوجه الأمامي للبطاقة',
+    'id_card_back' => 'الوجه الخلفي للبطاقة',
     'extracted_data_summary' => 'الاسم: :name — رقم الوثيقة: :id_number — الجنسية: :nationality',
     'document_creator' => 'منشئ المستندات',
     'document_creator_description' => 'أنشئ العقود والعروض والخطابات والمراسلات من نماذج جاهزة.',

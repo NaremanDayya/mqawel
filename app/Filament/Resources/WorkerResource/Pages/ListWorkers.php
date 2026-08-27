@@ -18,6 +18,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Columns\ImageColumn;
@@ -101,32 +102,70 @@ class ListWorkers extends ListRecords
                 ->modalDescription(__('backend.ai_scan_new_worker_description'))
                 ->modalSubmitActionLabel(__('backend.ai_scan_action'))
                 ->form([
+                    Select::make('document_type')
+                        ->label(__('backend.document_type'))
+                        ->options([
+                            'passport' => __('backend.document_type_passport'),
+                            'national_id' => __('backend.document_type_national_id'),
+                        ])
+                        ->default('passport')
+                        ->live()
+                        ->required(),
+
                     FileUpload::make('scan')
                         ->label(__('backend.ai_scan_upload_label'))
                         ->image()
                         ->directory('form-attachments')
                         ->maxSize(10240)
-                        ->required(),
+                        ->visible(fn (Get $get) => $get('document_type') !== 'national_id')
+                        ->required(fn (Get $get) => $get('document_type') !== 'national_id'),
+
+                    Grid::make(2)
+                        ->schema([
+                            FileUpload::make('scan_front')
+                                ->label(__('backend.id_card_front'))
+                                ->image()
+                                ->directory('form-attachments')
+                                ->maxSize(10240)
+                                ->required(fn (Get $get) => $get('document_type') === 'national_id'),
+
+                            FileUpload::make('scan_back')
+                                ->label(__('backend.id_card_back'))
+                                ->image()
+                                ->directory('form-attachments')
+                                ->maxSize(10240),
+                        ])
+                        ->visible(fn (Get $get) => $get('document_type') === 'national_id'),
                 ])
                 ->action(function (array $data) {
-                    $path = $data['scan'];
-                    $absolutePath = Storage::disk('public')->path($path);
-                    $mime = Storage::disk('public')->mimeType($path) ?: 'image/jpeg';
+                    $isNationalId = $data['document_type'] === 'national_id';
+
+                    $paths = $isNationalId
+                        ? array_filter([$data['scan_front'] ?? null, $data['scan_back'] ?? null])
+                        : array_filter([$data['scan'] ?? null]);
+
+                    $images = array_map(fn (string $path) => [
+                        'path' => Storage::disk('public')->path($path),
+                        'mime' => Storage::disk('public')->mimeType($path) ?: 'image/jpeg',
+                    ], $paths);
+
+                    $picture = array_values($paths)[0] ?? null;
 
                     try {
-                        $extracted = app(DocumentExtractionService::class)->extract($absolutePath, $mime);
+                        $extracted = app(DocumentExtractionService::class)->extract($images);
                     } catch (AiRequestException $e) {
                         Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
-                        $this->replaceMountedAction('create', ['picture' => $path]);
+                        $this->replaceMountedAction('create', ['picture' => $picture]);
 
                         return;
                     }
 
                     $this->replaceMountedAction('create', [
-                        'picture' => $path,
+                        'picture' => $picture,
                         'name' => $extracted['full_name'],
                         'ethnicity' => $this->matchNationality($extracted['nationality']),
                         'id_number' => $extracted['id_number'],
+                        'job_title' => $extracted['job_title'],
                     ]);
                 }),
 
