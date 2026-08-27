@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Resources\CompanyFileResource\Pages;
 use App\Filament\Resources\CompanyFileResource\RelationManagers;
 use App\Models\CompanyActivityLog;
@@ -29,6 +30,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CompanyFileResource extends Resource
 {
+    use HasSectionNotificationSettings;
+
     protected static ?string $model = File::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-paper-clip';
@@ -145,12 +148,21 @@ class CompanyFileResource extends Resource
                 Tables\Actions\ViewAction::make()->iconButton(),
                 Tables\Actions\EditAction::make()->iconButton(),
                 Tables\Actions\DeleteAction::make()->iconButton()
-                    ->after(fn (File $record) => CompanyActivityLog::log(
-                        $record->company_id,
-                        __('backend.activity_file_deleted', ['name' => $record->name]),
-                        'heroicon-o-trash',
-                        'danger',
-                    )),
+                    ->after(function (File $record) {
+                        CompanyActivityLog::log(
+                            $record->company_id,
+                            __('backend.activity_file_deleted', ['name' => $record->name]),
+                            'heroicon-o-trash',
+                            'danger',
+                        );
+
+                        static::notifyIfEnabled(
+                            'documents',
+                            'delete',
+                            'تم حذف المستند "'.$record->name.'"',
+                            'Document "'.$record->name.'" was deleted',
+                        );
+                    }),
                 Tables\Actions\Action::make('download_file')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->tooltip(__('backend.download'))
@@ -176,6 +188,13 @@ class CompanyFileResource extends Resource
                                     __('backend.activity_file_deleted', ['name' => $record->name]),
                                     'heroicon-o-trash',
                                     'danger',
+                                );
+
+                                static::notifyIfEnabled(
+                                    'documents',
+                                    'delete',
+                                    'تم حذف المستند "'.$record->name.'"',
+                                    'Document "'.$record->name.'" was deleted',
                                 );
                             }
                         }),

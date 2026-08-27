@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Filament\Resources\WorkerResource\Pages;
 use App\Filament\Resources\WorkerResource\RelationManagers;
 use App\Filament\Resources\WorkerResource\RelationManagers\DamagesRelationManager;
@@ -39,6 +40,8 @@ use Illuminate\Support\Facades\Auth;
 
 class WorkerResource extends Resource
 {
+    use HasSectionNotificationSettings;
+
     protected static ?string $model = Worker::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -146,7 +149,13 @@ class WorkerResource extends Resource
                         'record' => $record,
                         'activeRelationManager' => array_search(FilesRelationManager::class, static::getRelations()),
                     ])),
-                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton()
+                    ->after(fn (Worker $record) => static::notifyIfEnabled(
+                        'workers',
+                        'delete',
+                        'تم حذف العامل "'.$record->name.'" من سجل الشركة',
+                        'Worker "'.$record->name.'" was removed from the company records',
+                    )),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

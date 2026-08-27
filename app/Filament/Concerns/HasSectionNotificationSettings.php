@@ -5,6 +5,7 @@ namespace App\Filament\Concerns;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,16 +35,31 @@ trait HasSectionNotificationSettings
                 Toggle::make('expiry_alert')
                     ->label(__('backend.expiry_alert'))
                     ->helperText(__('backend.expiry_alert_hint'))
-                    ->visible(fn (\Filament\Forms\Get $get) => $get('enabled')),
+                    ->visible(fn (Get $get) => $get('enabled')),
+
+                Toggle::make('notify_on_create')
+                    ->label(__('backend.notify_on_create'))
+                    ->helperText(__('backend.notify_on_create_hint'))
+                    ->visible(fn (Get $get) => $get('enabled')),
+
+                Toggle::make('notify_on_update')
+                    ->label(__('backend.notify_on_update'))
+                    ->helperText(__('backend.notify_on_update_hint'))
+                    ->visible(fn (Get $get) => $get('enabled')),
+
+                Toggle::make('notify_on_delete')
+                    ->label(__('backend.notify_on_delete'))
+                    ->helperText(__('backend.notify_on_delete_hint'))
+                    ->visible(fn (Get $get) => $get('enabled')),
 
                 Toggle::make('whatsapp')
                     ->label(__('backend.whatsapp_alert'))
                     ->helperText(__('backend.whatsapp_alert_hint'))
-                    ->visible(fn (\Filament\Forms\Get $get) => $get('enabled')),
+                    ->visible(fn (Get $get) => $get('enabled')),
 
                 Select::make('lead_time_days')
                     ->label(__('backend.lead_time'))
-                    ->visible(fn (\Filament\Forms\Get $get) => $get('enabled'))
+                    ->visible(fn (Get $get) => $get('enabled'))
                     ->options([
                         1 => __('backend.lead_time_1_day'),
                         3 => __('backend.lead_time_3_days'),
@@ -64,7 +80,7 @@ trait HasSectionNotificationSettings
     }
 
     /**
-     * @return array{enabled: bool, expiry_alert: bool, whatsapp: bool, lead_time_days: int}
+     * @return array{enabled: bool, expiry_alert: bool, whatsapp: bool, lead_time_days: int, notify_on_create: bool, notify_on_update: bool, notify_on_delete: bool}
      */
     public static function sectionNotificationSettings(string $section): array
     {
@@ -75,8 +91,31 @@ trait HasSectionNotificationSettings
             'expiry_alert' => true,
             'whatsapp' => false,
             'lead_time_days' => $company?->about_to_expire_days ?: 1,
+            'notify_on_create' => true,
+            'notify_on_update' => true,
+            'notify_on_delete' => true,
         ];
 
         return array_merge($defaults, $company?->notification_settings[$section] ?? []);
+    }
+
+    /**
+     * Sends a database notification to every user in the company, but only
+     * if this section's settings have notifications (and this specific
+     * create/update/delete event) turned on.
+     */
+    protected static function notifyIfEnabled(string $section, string $event, string $messageAr, string $messageEn): void
+    {
+        $settings = static::sectionNotificationSettings($section);
+
+        if (! ($settings['enabled'] ?? true) || ! ($settings["notify_on_{$event}"] ?? true)) {
+            return;
+        }
+
+        foreach (Auth::user()->company->users ?? [] as $user) {
+            Notification::make()
+                ->title($user->locale === 'en' ? $messageEn : $messageAr)
+                ->sendToDatabase($user);
+        }
     }
 }

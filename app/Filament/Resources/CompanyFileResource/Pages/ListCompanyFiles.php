@@ -216,7 +216,7 @@ class ListCompanyFiles extends ListRecords
                         $file = static::stampLetterheadOnUploadedFile($file, $letterhead);
                     }
 
-                    return File::create([
+                    $record = File::create([
                         'company_id' => $companyId,
                         'created_by' => Auth::user()->id,
                         'parent_table' => $data['section'],
@@ -227,6 +227,15 @@ class ListCompanyFiles extends ListRecords
                         'file' => $file,
                         'is_active' => true,
                     ]);
+
+                    static::notifyIfEnabled(
+                        'documents',
+                        'create',
+                        'تمت إضافة مستند جديد "'.$record->name.'"',
+                        'New document "'.$record->name.'" was added',
+                    );
+
+                    return $record;
                 }),
         ];
     }

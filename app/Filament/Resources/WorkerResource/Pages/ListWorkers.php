@@ -249,13 +249,12 @@ class ListWorkers extends ListRecords
                     return $worker;
                 })
                 ->after(function (Worker $record) {
-                    foreach (Auth::user()->company->users ?? [] as $user) {
-                        $message = $user->locale === 'en'
-                            ? 'New worker "'.$record->name.'" added to the company records'
-                            : 'تمت اضافة عامل جديد "'.$record->name.'" الى سجل الشركة';
-
-                        Notification::make()->title($message)->sendToDatabase($user);
-                    }
+                    $this->notifyIfEnabled(
+                        'workers',
+                        'create',
+                        'تمت اضافة عامل جديد "'.$record->name.'" الى سجل الشركة',
+                        'New worker "'.$record->name.'" added to the company records',
+                    );
                 }),
         ];
     }
