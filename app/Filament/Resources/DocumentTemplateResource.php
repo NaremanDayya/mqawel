@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DocumentTemplateResource\Pages;
 use App\Filament\Resources\GeneratedDocumentResource;
 use App\Models\DocumentTemplate;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -39,12 +40,21 @@ class DocumentTemplateResource extends Resource
                     ->label(__('backend.document_section'))
                     ->options(GeneratedDocumentResource::categoryOptions())
                     ->required(),
+
+                FileUpload::make('file')
+                    ->label(__('backend.template_file'))
+                    ->helperText(__('backend.template_file_hint'))
+                    ->directory('document-templates')
+                    ->maxSize(10240)
+                    ->openable()
+                    ->downloadable(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
+            'create' => Pages\CreateDocumentTemplate::route('/create'),
             'edit' => Pages\EditDocumentTemplate::route('/{record}/edit'),
         ];
     }

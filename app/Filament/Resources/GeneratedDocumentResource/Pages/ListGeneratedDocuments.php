@@ -35,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ListGeneratedDocuments extends ListRecords
@@ -134,6 +135,7 @@ class ListGeneratedDocuments extends ListRecords
                         ->action(fn (DocumentTemplate $record) => $this->replaceMountedAction('create', [
                             'name' => $record->name,
                             'category' => $record->category,
+                            'file' => $record->file ? $this->copyTemplateFile($record->file) : null,
                         ])),
                     Tables\Actions\Action::make('edit_template')
                         ->label(__('backend.edit'))
@@ -329,6 +331,14 @@ class ListGeneratedDocuments extends ListRecords
                                 ->maxSize(10240)
                                 ->openable()
                                 ->default(fn () => Auth::user()->company->letterhead),
+
+                            FileUpload::make('file')
+                                ->label(__('backend.document'))
+                                ->helperText(__('backend.template_file_prefill_hint'))
+                                ->directory('documents')
+                                ->maxSize(10240)
+                                ->openable()
+                                ->downloadable(),
                         ]),
                 ])
                 ->using(function (array $data): GeneratedDocument {
@@ -345,14 +355,37 @@ class ListGeneratedDocuments extends ListRecords
                         'related_party' => $data['related_party'] ?? null,
                         'details' => $data['details'] ?? null,
                         'content' => $data['content'] ?? null,
+                        'file' => $data['file'] ?? null,
                         'status' => $data['status'] ?? 'draft',
                     ]);
                 });
 
+        $addTemplateAction = Actions\Action::make('addTemplate')
+            ->label(__('backend.add_template'))
+            ->icon('heroicon-o-folder-plus')
+            ->color('gray')
+            ->visible(fn (): bool => $this->activeTab === 'templates')
+            ->url(fn (): string => DocumentTemplateResource::getUrl('create'));
+
         return [
             $manageSectionsAction,
+            $addTemplateAction,
             $importAction,
             $createAction,
         ];
+    }
+
+    protected function copyTemplateFile(string $templatePath): ?string
+    {
+        $extension = pathinfo($templatePath, PATHINFO_EXTENSION);
+        $newPath = 'documents/'.Str::uuid().($extension ? ".{$extension}" : '');
+
+        if (! Storage::disk('public')->exists($templatePath)) {
+            return null;
+        }
+
+        Storage::disk('public')->copy($templatePath, $newPath);
+
+        return $newPath;
     }
 }

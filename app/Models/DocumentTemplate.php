@@ -15,6 +15,7 @@ class DocumentTemplate extends Model
         'company_id',
         'name',
         'category',
+        'file',
         'last_used_at',
         'created_by',
     ];
