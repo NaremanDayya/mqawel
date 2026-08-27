@@ -17,6 +17,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class GeneratedDocumentResource extends Resource
 {
@@ -26,15 +31,37 @@ class GeneratedDocumentResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    public static function categoryOptions(): array
+    /**
+     * @return array<int, array{key: string, label: string, icon: string}>
+     */
+    public static function defaultCategories(): array
     {
         return [
-            'contracts' => __('backend.documents_category_contracts'),
-            'quotes' => __('backend.documents_category_quotes'),
-            'letters' => __('backend.documents_category_letters'),
-            'correspondence' => __('backend.documents_category_correspondence'),
-            'minutes' => __('backend.documents_category_minutes'),
+            ['key' => 'contracts', 'label' => __('backend.documents_category_contracts'), 'icon' => 'heroicon-o-briefcase'],
+            ['key' => 'quotes', 'label' => __('backend.documents_category_quotes'), 'icon' => 'heroicon-o-currency-dollar'],
+            ['key' => 'letters', 'label' => __('backend.documents_category_letters'), 'icon' => 'heroicon-o-envelope'],
+            ['key' => 'correspondence', 'label' => __('backend.documents_category_correspondence'), 'icon' => 'heroicon-o-chat-bubble-left-right'],
         ];
+    }
+
+    /**
+     * Document sections are per-company and user-managed (see the "manage
+     * sections" action on the document generator list), since the sections
+     * a company needs vary with its size and business — falls back to a
+     * sensible default set for companies that haven't customized it yet.
+     *
+     * @return array<int, array{key: string, label: string, icon: string}>
+     */
+    public static function companyCategories(): array
+    {
+        $stored = Auth::user()?->company?->document_categories;
+
+        return filled($stored) ? $stored : static::defaultCategories();
+    }
+
+    public static function categoryOptions(): array
+    {
+        return collect(static::companyCategories())->pluck('label', 'key')->all();
     }
 
     public static function statusOptions(): array
@@ -134,6 +161,13 @@ class GeneratedDocumentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->iconButton(),
+                Tables\Actions\Action::make('download')
+                    ->label(__('backend.download'))
+                    ->tooltip(__('backend.download'))
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->iconButton()
+                    ->color('gray')
+                    ->action(fn (GeneratedDocument $record) => static::downloadDocument($record)),
                 Tables\Actions\EditAction::make()->iconButton(),
                 Tables\Actions\DeleteAction::make()->iconButton(),
             ])
@@ -210,5 +244,39 @@ class GeneratedDocumentResource extends Resource
         $Role = Auth::user()->role;
 
         return $Role->can_edit_document_creator;
+    }
+
+    public static function downloadDocument(GeneratedDocument $record): StreamedResponse
+    {
+        if ($record->file) {
+            $filePath = 'public/'.$record->file;
+
+            if (! Storage::exists($filePath)) {
+                abort(404, __('backend.file_not_found'));
+            }
+
+            $extension = pathinfo((string) $record->file, PATHINFO_EXTENSION);
+            $safeName = trim(preg_replace('/[\\\\\/:*?"<>|]+/u', ' ', (string) $record->name)) ?: 'document';
+
+            return Storage::download($filePath, $extension ? "{$safeName}.{$extension}" : $safeName);
+        }
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+            'tempDir' => storage_path('app/mpdf/tmp'),
+        ]);
+
+        if (session('current_lang') === 'ar') {
+            $mpdf->SetDirectionality('rtl');
+        }
+
+        $mpdf->WriteHTML(Str::markdown((string) $record->content));
+
+        return response()->streamDownload(function () use ($mpdf) {
+            echo $mpdf->Output('', Destination::STRING_RETURN);
+        }, $record->name.'.pdf');
     }
 }

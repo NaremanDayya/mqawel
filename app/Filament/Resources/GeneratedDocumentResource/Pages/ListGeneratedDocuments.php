@@ -13,8 +13,10 @@ use App\Services\Ai\DocumentDraftingService;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -33,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ListGeneratedDocuments extends ListRecords
 {
@@ -64,38 +67,34 @@ class ListGeneratedDocuments extends ListRecords
         $companyId = Auth::user()->company_id;
         $documentsQuery = fn () => GeneratedDocument::query()->where('company_id', $companyId);
 
-        return [
+        $tabs = [
             'mine' => Tab::make(__('backend.my_documents'))
                 ->icon('heroicon-o-document')
                 ->badge(fn () => $documentsQuery()->count())
                 ->badgeColor('gray'),
-            'contracts' => Tab::make(__('backend.documents_category_contracts'))
-                ->icon('heroicon-o-briefcase')
-                ->badge(fn () => $documentsQuery()->where('category', 'contracts')->count())
-                ->badgeColor('gray')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('category', 'contracts')),
-            'quotes' => Tab::make(__('backend.documents_category_quotes'))
-                ->icon('heroicon-o-currency-dollar')
-                ->badge(fn () => $documentsQuery()->where('category', 'quotes')->count())
-                ->badgeColor('gray')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('category', 'quotes')),
-            'letters' => Tab::make(__('backend.documents_category_letters'))
-                ->icon('heroicon-o-envelope')
-                ->badge(fn () => $documentsQuery()->where('category', 'letters')->count())
-                ->badgeColor('gray')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('category', 'letters')),
-            'correspondence' => Tab::make(__('backend.documents_category_correspondence'))
-                ->icon('heroicon-o-chat-bubble-left-right')
-                ->badge(fn () => $documentsQuery()->whereIn('category', ['correspondence', 'minutes'])->count())
-                ->badgeColor('gray')
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereIn('category', ['correspondence', 'minutes'])),
-            'templates' => Tab::make(__('backend.templates_library'))
-                ->icon('heroicon-o-folder')
-                ->badge(fn () => DocumentTemplate::query()
-                    ->where(fn (Builder $q) => $q->where('company_id', $companyId)->orWhereNull('company_id'))
-                    ->count())
-                ->badgeColor('gray'),
         ];
+
+        // Document sections are per-company and user-managed (see the
+        // "manage sections" header action below) — companies differ in
+        // what sections they need, so this isn't a fixed list.
+        foreach (GeneratedDocumentResource::companyCategories() as $category) {
+            $key = $category['key'];
+
+            $tabs[$key] = Tab::make($category['label'])
+                ->icon($category['icon'] ?? 'heroicon-o-tag')
+                ->badge(fn () => $documentsQuery()->where('category', $key)->count())
+                ->badgeColor('gray')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('category', $key));
+        }
+
+        $tabs['templates'] = Tab::make(__('backend.templates_library'))
+            ->icon('heroicon-o-folder')
+            ->badge(fn () => DocumentTemplate::query()
+                ->where(fn (Builder $q) => $q->where('company_id', $companyId)->orWhereNull('company_id'))
+                ->count())
+            ->badgeColor('gray');
+
+        return $tabs;
     }
 
     public function table(Table $table): Table
@@ -185,6 +184,44 @@ class ListGeneratedDocuments extends ListRecords
                     'category' => $data['category'],
                     'file' => $data['file'],
                     'status' => 'draft',
+                ]);
+
+                Notification::make()->title(__('backend.settings_saved'))->success()->send();
+            });
+
+        $manageSectionsAction = Actions\Action::make('manageDocumentSections')
+            ->label(__('backend.manage_sections'))
+            ->tooltip(__('backend.manage_sections'))
+            ->icon('heroicon-o-adjustments-horizontal')
+            ->iconButton()
+            ->color('gray')
+            ->modalHeading(__('backend.manage_sections'))
+            ->modalDescription(__('backend.manage_sections_description'))
+            ->modalSubmitActionLabel(__('backend.save_settings'))
+            ->fillForm(fn (): array => ['categories' => GeneratedDocumentResource::companyCategories()])
+            ->form([
+                Repeater::make('categories')
+                    ->label(__('backend.document_sections'))
+                    ->hiddenLabel()
+                    ->schema([
+                        Hidden::make('key')->default(fn () => (string) Str::uuid()),
+                        Hidden::make('icon')->default('heroicon-o-tag'),
+                        TextInput::make('label')->label(__('backend.name'))->required(),
+                    ])
+                    ->addActionLabel(__('backend.add_section'))
+                    ->reorderable(false)
+                    ->minItems(1)
+                    ->columns(1),
+            ])
+            ->action(function (array $data) {
+                Auth::user()->company->update([
+                    'document_categories' => collect($data['categories'])
+                        ->map(fn (array $row) => [
+                            'key' => filled($row['key'] ?? null) ? $row['key'] : (string) Str::uuid(),
+                            'label' => $row['label'],
+                            'icon' => $row['icon'] ?? 'heroicon-o-tag',
+                        ])
+                        ->all(),
                 ]);
 
                 Notification::make()->title(__('backend.settings_saved'))->success()->send();
@@ -300,6 +337,7 @@ class ListGeneratedDocuments extends ListRecords
                 });
 
         return [
+            $manageSectionsAction,
             $importAction,
             $createAction,
         ];
