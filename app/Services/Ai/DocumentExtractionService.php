@@ -34,7 +34,7 @@ class DocumentExtractionService
                     'full_name' => ['type' => 'string', 'description' => 'The document holder\'s full name, as printed.'],
                     'id_number' => ['type' => 'string', 'description' => 'The person\'s identifying number: for an Omani national ID or resident card, use the "Civil Number" (الرقم المدني) specifically, not any other number printed on the card. For a passport, use the passport number.'],
                     'nationality' => ['type' => 'string', 'description' => 'The document holder\'s nationality.'],
-                    'job_title' => ['type' => 'string', 'description' => 'The document holder\'s occupation/profession (المهنة), if printed on the card — commonly found on a resident/ID card, often on the back side.'],
+                    'job_title' => ['type' => 'string', 'description' => 'The document holder\'s occupation/profession (المهنة), if printed on the card. On an Omani resident card, the "المهنة" label sits on its own line, and the actual value is printed on the line directly below it (not beside the label like the other fields) — read that line below, not just next to the label.'],
                     'expiry_date' => ['type' => 'string', 'description' => 'The document expiry date, formatted as YYYY-MM-DD.'],
                 ],
                 'required' => ['document_type'],
