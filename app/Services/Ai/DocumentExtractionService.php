@@ -100,15 +100,20 @@ class DocumentExtractionService
                 'properties' => [
                     'document_title' => [
                         'type' => 'string',
-                        'description' => 'A short Arabic label naming what kind of document this is, based on its actual heading/title — e.g. "سجل تجاري" (commercial registration certificate), "رخصة" or "ترخيص" (license/permit), "شهادة" (certificate), "بطاقة ضريبية" (tax card), "عقد" (contract). Use the document\'s own title if there is one printed on it.',
+                        'description' => 'The Arabic name for what kind of document this is. These Omani government/business documents are common — use the exact label (verbatim, not paraphrased) whenever the document matches it: '
+                            .'"شهادة السجل التجاري" — a Commercial Registration Certificate: its main content is "Registration Details"/"بيانات السجل التجاري" (Registration Number, Registration Name, Legal Type) plus company-level info like Share Capital and Business Sector. '
+                            .'"شهادة الترخيص" — a License Certificate (e.g. "Economic Activities License Certificate" / "شهادة ترخيص الأنشطة الاقتصادية"): its main content is a "License Details"/"بيانات الترخيص" section with its own License Number and License Name — note it also nests basic commercial-registration info for context, but that nested info is NOT what makes the document a license. '
+                            .'"شهادة انتساب" — a Membership/Affiliation Certificate (e.g. chamber of commerce membership). '
+                            .'"عقد إيجار" — a rental/lease contract. '
+                            .'If the document clearly does not match any of these, use a short Arabic label matching its own printed title instead.',
                     ],
                     'issue_date' => [
                         'type' => 'string',
-                        'description' => 'The date this specific document/registration was issued (تاريخ التسجيل أو الإصدار), formatted as YYYY-MM-DD. If the document shows multiple dates (e.g. both a company "establishment date" and a certificate "registration date"), use the registration/issue date of the document itself, not the establishment/founding date of the underlying company.',
+                        'description' => 'The issue date of THIS document itself (تاريخ الإصدار), formatted as YYYY-MM-DD. Some documents nest a second entity\'s info with its own separate dates (a License Certificate nests the underlying company\'s commercial-registration dates alongside the license\'s own dates) — always use the date belonging to the document\'s PRIMARY subject, matching what you chose for document_title: for "شهادة الترخيص" use the license\'s own "Issuing Date" from the "License Details" section, NOT the nested company\'s "Registration Date"; for "شهادة السجل التجاري" use the "Registration Date" from "Registration Details"; for other types use whichever date is that document\'s own main issue date. Do not use a company\'s "Establishment Date" (تاريخ التأسيس) as the issue date of a certificate about that company — that is a different date describing when the company itself was founded, not when this document was issued.',
                     ],
                     'expiry_date' => [
                         'type' => 'string',
-                        'description' => 'The document\'s expiry / validity-end date (تاريخ الانتهاء أو الصلاحية), formatted as YYYY-MM-DD.',
+                        'description' => 'The expiry date of THIS document itself (تاريخ الانتهاء أو الصلاحية), formatted as YYYY-MM-DD — the same "primary subject" rule as issue_date applies: for a "شهادة الترخيص" use the license\'s own Expiry Date under "License Details", not a nested company\'s registration expiry date.',
                     ],
                 ],
                 'required' => [],
@@ -119,7 +124,7 @@ class DocumentExtractionService
 
         $content[] = [
             'type' => 'text',
-            'text' => 'Classify this document and extract its issue and expiry dates using the extract_document_info tool. If a field is not present on the document, omit it.',
+            'text' => 'Classify this document and extract its issue and expiry dates using the extract_document_info tool. Read the whole document first to identify its primary subject before picking dates — some of these documents show more than one date pair. If a field is genuinely not present anywhere on the document, omit it.',
         ];
 
         $response = $this->client->send(
