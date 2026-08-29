@@ -78,7 +78,7 @@ class ListCompanyFiles extends ListRecords
                 ->form([
                     FileUpload::make('scan')
                         ->label(__('backend.ai_scan_upload_label'))
-                        ->image()
+                        ->acceptedFileTypes(['application/pdf', 'image/png', 'image/jpeg', 'image/webp'])
                         ->directory('documents')
                         ->maxSize(10240)
                         ->required(),
@@ -86,10 +86,10 @@ class ListCompanyFiles extends ListRecords
                 ->action(function (array $data) {
                     $path = $data['scan'];
                     $absolutePath = Storage::disk('public')->path($path);
-                    $mime = Storage::disk('public')->mimeType($path) ?: 'image/jpeg';
+                    $mime = Storage::disk('public')->mimeType($path) ?: 'application/pdf';
 
                     try {
-                        $extracted = app(DocumentExtractionService::class)->extract([['path' => $absolutePath, 'mime' => $mime]]);
+                        $extracted = app(DocumentExtractionService::class)->extractDocumentInfo([['path' => $absolutePath, 'mime' => $mime]]);
                     } catch (AiRequestException $e) {
                         Notification::make()->title(__('backend.ai_scan_failed'))->danger()->send();
                         $this->replaceMountedAction('create', ['file' => $path]);
@@ -97,14 +97,9 @@ class ListCompanyFiles extends ListRecords
                         return;
                     }
 
-                    $typeLabel = match ($extracted['document_type']) {
-                        'national_id' => __('backend.document_type_national_id'),
-                        'passport' => __('backend.document_type_passport'),
-                        default => __('backend.document_type_other'),
-                    };
-
                     $this->replaceMountedAction('create', [
-                        'name' => $typeLabel,
+                        'name' => $extracted['document_title'],
+                        'issue_date' => $extracted['issue_date'],
                         'expiry_date' => $extracted['expiry_date'],
                         'file' => $path,
                     ]);

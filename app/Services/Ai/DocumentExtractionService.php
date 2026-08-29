@@ -77,7 +77,7 @@ class DocumentExtractionService
             'id_number' => $input['id_number'] ?? null,
             'nationality' => $input['nationality'] ?? null,
             'job_title' => $input['job_title'] ?? null,
-            'expiry_date' => $input['expiry_date'] ?? null,
+            'expiry_date' => $this->normalizeDate($input['expiry_date'] ?? null),
         ];
     }
 
@@ -101,19 +101,19 @@ class DocumentExtractionService
                     'document_title' => [
                         'type' => 'string',
                         'description' => 'The Arabic name for what kind of document this is. These Omani government/business documents are common — use the exact label (verbatim, not paraphrased) whenever the document matches it: '
-                            .'"شهادة السجل التجاري" — a Commercial Registration Certificate: its main content is "Registration Details"/"بيانات السجل التجاري" (Registration Number, Registration Name, Legal Type) plus company-level info like Share Capital and Business Sector. '
-                            .'"شهادة الترخيص" — a License Certificate (e.g. "Economic Activities License Certificate" / "شهادة ترخيص الأنشطة الاقتصادية"): its main content is a "License Details"/"بيانات الترخيص" section with its own License Number and License Name — note it also nests basic commercial-registration info for context, but that nested info is NOT what makes the document a license. '
-                            .'"شهادة انتساب" — a Membership/Affiliation Certificate (e.g. chamber of commerce membership). '
-                            .'"عقد إيجار" — a rental/lease contract. '
+                            .'"سجل تجاري" — a Commercial Registration Certificate: its main content is "Registration Details"/"بيانات السجل التجاري" (Registration Number, Registration Name, Legal Type) plus company-level info like Share Capital and Business Sector. '
+                            .'"الترخيص" — a License Certificate (e.g. "Economic Activities License Certificate" / "شهادة ترخيص الأنشطة الاقتصادية"): its main content is a "License Details"/"بيانات الترخيص" section with its own License Number and License Name — note it also nests basic commercial-registration info for context, but that nested info is NOT what makes the document a license. '
+                            .'"شهادة الانتساب" — a Membership/Affiliation Certificate (e.g. chamber of commerce membership). '
+                            .'"عقد الإيجار" — a rental/lease contract. '
                             .'If the document clearly does not match any of these, use a short Arabic label matching its own printed title instead.',
                     ],
                     'issue_date' => [
                         'type' => 'string',
-                        'description' => 'The issue date of THIS document itself (تاريخ الإصدار), formatted as YYYY-MM-DD. Some documents nest a second entity\'s info with its own separate dates (a License Certificate nests the underlying company\'s commercial-registration dates alongside the license\'s own dates) — always use the date belonging to the document\'s PRIMARY subject, matching what you chose for document_title: for "شهادة الترخيص" use the license\'s own "Issuing Date" from the "License Details" section, NOT the nested company\'s "Registration Date"; for "شهادة السجل التجاري" use the "Registration Date" from "Registration Details"; for other types use whichever date is that document\'s own main issue date. Do not use a company\'s "Establishment Date" (تاريخ التأسيس) as the issue date of a certificate about that company — that is a different date describing when the company itself was founded, not when this document was issued.',
+                        'description' => 'The issue date of THIS document itself (تاريخ الإصدار), formatted as YYYY-MM-DD. Some documents nest a second entity\'s info with its own separate dates (a License Certificate nests the underlying company\'s commercial-registration dates alongside the license\'s own dates) — always use the date belonging to the document\'s PRIMARY subject, matching what you chose for document_title: for "الترخيص" use the license\'s own "Issuing Date" from the "License Details" section, NOT the nested company\'s "Registration Date"; for "سجل تجاري" use the "Registration Date" from "Registration Details"; for other types use whichever date is that document\'s own main issue date. Do not use a company\'s "Establishment Date" (تاريخ التأسيس) as the issue date of a certificate about that company — that is a different date describing when the company itself was founded, not when this document was issued.',
                     ],
                     'expiry_date' => [
                         'type' => 'string',
-                        'description' => 'The expiry date of THIS document itself (تاريخ الانتهاء أو الصلاحية), formatted as YYYY-MM-DD — the same "primary subject" rule as issue_date applies: for a "شهادة الترخيص" use the license\'s own Expiry Date under "License Details", not a nested company\'s registration expiry date.',
+                        'description' => 'The expiry date of THIS document itself (تاريخ الانتهاء أو الصلاحية), formatted as YYYY-MM-DD — the same "primary subject" rule as issue_date applies: for "الترخيص" use the license\'s own Expiry Date under "License Details", not a nested company\'s registration expiry date.',
                     ],
                 ],
                 'required' => [],
@@ -142,9 +142,28 @@ class DocumentExtractionService
 
         return [
             'document_title' => $input['document_title'] ?? null,
-            'issue_date' => $input['issue_date'] ?? null,
-            'expiry_date' => $input['expiry_date'] ?? null,
+            'issue_date' => $this->normalizeDate($input['issue_date'] ?? null),
+            'expiry_date' => $this->normalizeDate($input['expiry_date'] ?? null),
         ];
+    }
+
+    /**
+     * The model doesn't always zero-pad the date it's asked for (e.g.
+     * "2026-3-9" instead of "2026-03-09"), which a date picker field can
+     * fail to parse — normalize in code instead of trusting formatting
+     * compliance.
+     */
+    protected function normalizeDate(?string $date): ?string
+    {
+        if (blank($date)) {
+            return null;
+        }
+
+        try {
+            return \Illuminate\Support\Carbon::parse($date)->format('Y-m-d');
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     /**
