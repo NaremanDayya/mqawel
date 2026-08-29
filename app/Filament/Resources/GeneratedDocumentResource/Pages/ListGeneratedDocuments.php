@@ -419,16 +419,8 @@ class ListGeneratedDocuments extends ListRecords
                     ]);
                 });
 
-        $addTemplateAction = Actions\Action::make('addTemplate')
-            ->label(__('backend.add_template'))
-            ->icon('heroicon-o-folder-plus')
-            ->color('gray')
-            ->visible(fn (): bool => $this->activeTab === 'templates')
-            ->url(fn (): string => DocumentTemplateResource::getUrl('create'));
-
         return [
             $manageSectionsAction,
-            $addTemplateAction,
             $importAction,
             $createAction,
         ];
