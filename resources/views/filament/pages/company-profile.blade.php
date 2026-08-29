@@ -183,7 +183,7 @@
             </div>
         </div>
     @elseif ($activeTab === 'files')
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             @forelse ($this->getCompanyFiles() as $file)
                 @php
                     $categoryLabel = match ($file->category) {
