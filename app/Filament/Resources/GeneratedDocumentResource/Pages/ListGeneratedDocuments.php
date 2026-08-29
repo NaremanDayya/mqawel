@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Services\Ai\AiRequestException;
 use App\Services\Ai\DocumentDraftingService;
 use App\Services\Ai\DocumentExtractionService;
+use App\Services\TemplateMergeService;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -134,11 +135,62 @@ class ListGeneratedDocuments extends ListRecords
                         ->label(__('backend.create'))
                         ->icon('heroicon-o-sparkles')
                         ->color('primary')
-                        ->action(fn (DocumentTemplate $record) => $this->replaceMountedAction('create', [
-                            'name' => $record->name,
-                            'category' => $record->category,
-                            'file' => $record->file ? $this->copyTemplateFile($record->file) : null,
-                        ])),
+                        ->modalHeading(__('backend.fill_template'))
+                        ->modalSubmitActionLabel(__('backend.create'))
+                        ->form(function (DocumentTemplate $record): array {
+                            $placeholders = app(TemplateMergeService::class)->getPlaceholders($record);
+
+                            if (empty($placeholders)) {
+                                return [];
+                            }
+
+                            return [
+                                TextInput::make('name')
+                                    ->label(__('backend.document_type'))
+                                    ->default($record->name)
+                                    ->required(),
+
+                                Select::make('category')
+                                    ->label(__('backend.document_section'))
+                                    ->options(GeneratedDocumentResource::categoryOptions())
+                                    ->default($record->category)
+                                    ->required(),
+
+                                ...array_map(
+                                    fn (string $placeholder) => TextInput::make("fields.{$placeholder}")
+                                        ->label(str($placeholder)->replace('_', ' ')->headline()),
+                                    $placeholders,
+                                ),
+                            ];
+                        })
+                        ->action(function (DocumentTemplate $record, array $data) {
+                            $placeholders = app(TemplateMergeService::class)->getPlaceholders($record);
+
+                            if (empty($placeholders)) {
+                                $this->replaceMountedAction('create', [
+                                    'name' => $record->name,
+                                    'category' => $record->category,
+                                    'file' => $record->file ? $this->copyTemplateFile($record->file) : null,
+                                ]);
+
+                                return;
+                            }
+
+                            $mergedFile = app(TemplateMergeService::class)->merge($record, $data['fields'] ?? []);
+                            $record->update(['last_used_at' => now()]);
+
+                            GeneratedDocument::create([
+                                'company_id' => Auth::user()->company_id,
+                                'created_by' => Auth::user()->id,
+                                'template_id' => $record->id,
+                                'name' => $data['name'],
+                                'category' => $data['category'],
+                                'file' => $mergedFile,
+                                'status' => 'draft',
+                            ]);
+
+                            Notification::make()->title(__('backend.settings_saved'))->success()->send();
+                        }),
                     Tables\Actions\Action::make('upload_template_file')
                         ->label(__('backend.upload_template_file'))
                         ->tooltip(__('backend.template_file_hint'))
