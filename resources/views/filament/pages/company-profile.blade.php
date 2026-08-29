@@ -11,20 +11,27 @@
     {{-- Tabs --}}
     <div class="flex items-center gap-6 border-b border-gray-200 dark:border-white/10">
         @foreach ([
-            'main' => __('backend.company_data_tab'),
-            'files' => __('backend.created_files'),
-            'log' => __('backend.edit_history'),
-        ] as $key => $label)
+            'main' => ['label' => __('backend.company_data_tab'), 'count' => null],
+            'files' => ['label' => __('backend.created_files'), 'count' => count($this->getCompanyFiles())],
+            'log' => ['label' => __('backend.edit_history'), 'count' => null],
+        ] as $key => $tab)
             <button
                 type="button"
                 wire:click="setActiveTab('{{ $key }}')"
                 @class([
-                    'relative pb-3 pt-1 text-sm font-medium transition',
+                    'relative flex items-center gap-2 pb-3 pt-1 text-sm font-medium transition',
                     'text-primary-600' => $activeTab === $key,
                     'text-gray-500 hover:text-gray-700 dark:text-gray-400' => $activeTab !== $key,
                 ])
             >
-                {{ $label }}
+                @if (filled($tab['count']))
+                    <span @class([
+                        'inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-xs font-semibold',
+                        'bg-primary-600 text-white' => $activeTab === $key,
+                        'bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300' => $activeTab !== $key,
+                    ])>{{ $tab['count'] }}</span>
+                @endif
+                {{ $tab['label'] }}
                 @if ($activeTab === $key)
                     <span class="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary-600"></span>
                 @endif
@@ -183,7 +190,7 @@
             </div>
         </div>
     @elseif ($activeTab === 'files')
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="mq-company-file-grid">
             @forelse ($this->getCompanyFiles() as $file)
                 @php
                     $categoryLabel = match ($file->category) {

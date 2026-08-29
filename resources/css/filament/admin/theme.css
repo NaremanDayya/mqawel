@@ -1,6 +1,6 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-@config 'tailwind.config.js';
+@config '../../../../tailwind.config.js';
 
 /* ==========================================================================
    Mqwel+ design tokens
@@ -531,6 +531,24 @@ div.fi-topbar nav {
     40% { transform: rotate(9deg); }
     60% { transform: rotate(-6deg); }
     80% { transform: rotate(3deg); }
+}
+
+/* Company profile's "created files" card grid — plain CSS (not Tailwind
+   responsive utilities) since this project's Tailwind build isn't
+   generating sm:/md:/lg: variants at all (a separate, deeper build config
+   issue — tracked to fix properly later; this sidesteps it for now). */
+.mq-company-file-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .mq-company-file-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+    .mq-company-file-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 /* ==========================================================================
