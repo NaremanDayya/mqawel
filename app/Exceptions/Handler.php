@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -26,5 +27,20 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Always respond with JSON for /api/* requests — there's no "login"
+     * route to redirect to (auth here is Filament's panel login), so an
+     * unauthenticated API request would otherwise crash instead of
+     * returning a clean 401 when the client doesn't set Accept: application/json.
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->is('api/*')) {
+            return response()->json(['message' => $exception->getMessage()], 401);
+        }
+
+        return parent::unauthenticated($request, $exception);
     }
 }

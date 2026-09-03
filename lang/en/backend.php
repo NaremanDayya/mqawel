@@ -2,6 +2,9 @@
 
 return [
     'app_name' => 'Muqawil+',
+    'login_failed' => 'These credentials do not match our records.',
+    'account_inactive' => 'This account is not active.',
+    'logged_out' => 'Logged out successfully.',
 
     'company_profile' => 'Company Profile',
     'company_profile_subtitle' => 'The company\'s permanent data, profile, and qualification files.',

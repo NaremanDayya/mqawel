@@ -2,6 +2,9 @@
 
 return [
     'app_name' => 'مقاول+',
+    'login_failed' => 'بيانات الدخول غير صحيحة.',
+    'account_inactive' => 'هذا الحساب غير مفعّل.',
+    'logged_out' => 'تم تسجيل الخروج بنجاح.',
 
     'company_profile' => 'ملف الشركة',
     'company_profile_subtitle' => 'البيانات الدائمة للشركة، وملفاتها التعريفية والتأهيلية.',
