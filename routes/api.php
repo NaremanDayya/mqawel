@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\WorkerController;
+use App\Http\Controllers\Api\WorkerPaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/company', [CompanyController::class, 'show']);
 
     Route::apiResource('workers', WorkerController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::apiResource('workers.payments', WorkerPaymentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('projects', ProjectController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('contractors', ContractorController::class)->only(['index', 'show']);
     Route::apiResource('storages', StorageController::class)->only(['index', 'show']);
