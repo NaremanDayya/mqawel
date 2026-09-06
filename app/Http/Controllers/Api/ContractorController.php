@@ -20,7 +20,9 @@ class ContractorController extends Controller
 
     public function show(Request $request, int $contractor)
     {
-        $record = Contractor::where('company_id', $request->user()->company_id)->findOrFail($contractor);
+        $record = Contractor::findOrFail($contractor);
+
+        abort_if($record->company_id !== $request->user()->company_id, 403);
 
         return new ContractorResource($record);
     }

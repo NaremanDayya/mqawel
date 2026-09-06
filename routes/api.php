@@ -34,10 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/company', [CompanyController::class, 'show']);
 
-    Route::apiResource('workers', WorkerController::class)->only(['index', 'show']);
-    Route::apiResource('projects', ProjectController::class)->only(['index', 'show']);
+    Route::apiResource('workers', WorkerController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::apiResource('projects', ProjectController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('contractors', ContractorController::class)->only(['index', 'show']);
     Route::apiResource('storages', StorageController::class)->only(['index', 'show']);
-    Route::apiResource('items', ItemController::class)->only(['index', 'show']);
-    Route::apiResource('files', FileController::class)->only(['index', 'show']);
+    Route::apiResource('items', ItemController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::get('/files/{file}/download', [FileController::class, 'download']);
+    Route::apiResource('files', FileController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 });

@@ -21,9 +21,9 @@ class StorageController extends Controller
 
     public function show(Request $request, int $storage)
     {
-        $record = Storage::where('company_id', $request->user()->company_id)
-            ->withCount('items')
-            ->findOrFail($storage);
+        $record = Storage::withCount('items')->findOrFail($storage);
+
+        abort_if($record->company_id !== $request->user()->company_id, 403);
 
         return new StorageResource($record);
     }
