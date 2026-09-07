@@ -5,6 +5,8 @@ return [
     'login_failed' => 'These credentials do not match our records.',
     'account_inactive' => 'This account is not active.',
     'logged_out' => 'Logged out successfully.',
+    'old_password_incorrect' => 'The current password is incorrect.',
+    'password_updated' => 'Password updated successfully.',
 
     'company_profile' => 'Company Profile',
     'company_profile_subtitle' => 'The company\'s permanent data, profile, and qualification files.',

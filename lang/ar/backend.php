@@ -5,6 +5,8 @@ return [
     'login_failed' => 'بيانات الدخول غير صحيحة.',
     'account_inactive' => 'هذا الحساب غير مفعّل.',
     'logged_out' => 'تم تسجيل الخروج بنجاح.',
+    'old_password_incorrect' => 'كلمة المرور الحالية غير صحيحة.',
+    'password_updated' => 'تم تحديث كلمة المرور بنجاح.',
 
     'company_profile' => 'ملف الشركة',
     'company_profile_subtitle' => 'البيانات الدائمة للشركة، وملفاتها التعريفية والتأهيلية.',

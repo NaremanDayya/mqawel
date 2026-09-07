@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\StorageController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WorkerController;
 use App\Http\Controllers\Api\WorkerPaymentController;
 use Illuminate\Http\Request;
@@ -31,10 +32,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me', [AuthController::class, 'updateMe']);
+    Route::post('/me/change-password', [AuthController::class, 'changePassword']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/company', [CompanyController::class, 'show']);
+    Route::put('/company', [CompanyController::class, 'update']);
 
+    Route::apiResource('users', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('workers', WorkerController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('workers.payments', WorkerPaymentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('projects', ProjectController::class)->only(['index', 'show', 'store', 'update', 'destroy']);

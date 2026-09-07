@@ -61,4 +61,24 @@ class CompanyRole extends Model
     public function createdBy(): BelongsTo {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    /**
+     * Resolve the can_read_ / can_write_ / can_edit_ columns into a
+     * module-to-read/write/edit map for API consumers.
+     */
+    public function permissionsMap(): array
+    {
+        $map = [];
+
+        foreach ($this->getFillable() as $column) {
+            foreach (['can_read_' => 'read', 'can_write_' => 'write', 'can_edit_' => 'edit'] as $prefix => $key) {
+                if (str_starts_with($column, $prefix)) {
+                    $module = substr($column, strlen($prefix));
+                    $map[$module][$key] = (bool) $this->{$column};
+                }
+            }
+        }
+
+        return $map;
+    }
 }
