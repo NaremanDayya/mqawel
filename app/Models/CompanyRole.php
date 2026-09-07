@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CompanyRole extends Model
 {
@@ -62,6 +63,10 @@ class CompanyRole extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function users(): HasMany {
+        return $this->hasMany(User::class, 'role_id');
+    }
+
     /**
      * Resolve the can_read_ / can_write_ / can_edit_ columns into a
      * module-to-read/write/edit map for API consumers.
@@ -80,5 +85,25 @@ class CompanyRole extends Model
         }
 
         return $map;
+    }
+
+    /**
+     * Reverse of permissionsMap(): turn a {module: {read, write, edit}}
+     * array back into can_read_{module}/can_write_{module}/can_edit_{module}
+     * column values, for API create/update requests.
+     */
+    public static function columnsFromPermissionsMap(array $permissions): array
+    {
+        $columns = [];
+
+        foreach ($permissions as $module => $flags) {
+            foreach (['read', 'write', 'edit'] as $key) {
+                if (array_key_exists($key, $flags)) {
+                    $columns['can_'.$key.'_'.$module] = (bool) $flags[$key];
+                }
+            }
+        }
+
+        return $columns;
     }
 }

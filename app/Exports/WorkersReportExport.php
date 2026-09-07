@@ -11,9 +11,16 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class WorkersReportExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $rows;
+
+    public function __construct($rows = null)
+    {
+        $this->rows = $rows ?? Worker::where('company_id', Auth::user()->company_id)->where('company_id', '<>', null)->get();
+    }
+
     public function collection()
     {
-        return Worker::where('company_id', Auth::user()->company_id)->where('company_id', '<>', null)->get();
+        return $this->rows;
     }
 
     public function map($row): array

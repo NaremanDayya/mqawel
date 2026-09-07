@@ -10,11 +10,18 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class ExpiredFilesReportExport implements FromCollection, WithHeadings, WithMapping
 {
-    public function collection()
+    protected $rows;
+
+    public function __construct($rows = null)
     {
-        return File::where('company_id', Auth::user()->company_id)
+        $this->rows = $rows ?? File::where('company_id', Auth::user()->company_id)
             ->where('expiry_date', '<', date('Y-m-d'))
             ->get();
+    }
+
+    public function collection()
+    {
+        return $this->rows;
     }
 
     public function map($row): array

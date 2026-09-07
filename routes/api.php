@@ -5,7 +5,10 @@ use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ContractorController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WorkerController;
@@ -38,8 +41,25 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/company', [CompanyController::class, 'show']);
     Route::put('/company', [CompanyController::class, 'update']);
+    Route::get('/company/notification-settings/{section}', [CompanyController::class, 'notificationSettings']);
+    Route::put('/company/notification-settings/{section}', [CompanyController::class, 'updateNotificationSettings']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
 
     Route::apiResource('users', UserController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::apiResource('roles', RoleController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+
+    Route::get('/reports/workers', [ReportController::class, 'workers']);
+    Route::get('/reports/workers/export', [ReportController::class, 'workersExport']);
+    Route::get('/reports/worker-payments', [ReportController::class, 'workerPayments']);
+    Route::get('/reports/worker-payments/export', [ReportController::class, 'workerPaymentsExport']);
+    Route::get('/reports/expired-files', [ReportController::class, 'expiredFiles']);
+    Route::get('/reports/expired-files/export', [ReportController::class, 'expiredFilesExport']);
+    Route::get('/reports/project-expenses', [ReportController::class, 'projectExpenses']);
+    Route::get('/reports/project-expenses/export', [ReportController::class, 'projectExpensesExport']);
     Route::apiResource('workers', WorkerController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('workers.payments', WorkerPaymentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('projects', ProjectController::class)->only(['index', 'show', 'store', 'update', 'destroy']);

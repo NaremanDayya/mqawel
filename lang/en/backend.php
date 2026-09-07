@@ -7,6 +7,7 @@ return [
     'logged_out' => 'Logged out successfully.',
     'old_password_incorrect' => 'The current password is incorrect.',
     'password_updated' => 'Password updated successfully.',
+    'role_in_use' => 'This role cannot be deleted because it is currently assigned to users.',
 
     'company_profile' => 'Company Profile',
     'company_profile_subtitle' => 'The company\'s permanent data, profile, and qualification files.',

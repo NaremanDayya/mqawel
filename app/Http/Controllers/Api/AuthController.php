@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\UserResource;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => new UserResource($user->load('role')),
+            'user' => $this->userPayload($user->load('role')),
         ]);
     }
 
@@ -52,7 +53,7 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return new UserResource($request->user()->load('role'));
+        return response()->json(['data' => $this->userPayload($request->user()->load('role'))]);
     }
 
     public function updateMe(Request $request)
@@ -77,7 +78,7 @@ class AuthController extends Controller
 
         $user->update($data);
 
-        return new UserResource($user->refresh()->load('role'));
+        return response()->json(['data' => $this->userPayload($user->refresh()->load('role'))]);
     }
 
     public function changePassword(Request $request)
@@ -98,5 +99,41 @@ class AuthController extends Controller
         $user->update(['password' => bcrypt($data['new_password'])]);
 
         return response()->json(['message' => __('backend.password_updated')]);
+    }
+
+    /**
+     * The user resource shape, plus the company's active subscription
+     * feature flags — used to bootstrap the mobile app's session.
+     */
+    private function userPayload(User $user): array
+    {
+        return array_merge(
+            (new UserResource($user))->resolve(),
+            ['subscription' => ['features' => $this->subscriptionFeatures($user->company_id)]],
+        );
+    }
+
+    private function subscriptionFeatures(?int $companyId): array
+    {
+        $featureColumns = [
+            'has_workers', 'has_projects', 'has_storages', 'has_items', 'has_item_categories',
+            'has_item_movements', 'has_workers_report', 'has_worker_expenses_report',
+            'has_expired_files_report', 'has_project_expenses_report',
+        ];
+
+        $subscription = Subscription::where('company_id', $companyId)
+            ->where('is_active', true)
+            ->orderByDesc('id')
+            ->with('package')
+            ->first();
+
+        $package = $subscription?->package;
+
+        $features = [];
+        foreach ($featureColumns as $column) {
+            $features[$column] = (bool) ($package?->{$column} ?? false);
+        }
+
+        return $features;
     }
 }
