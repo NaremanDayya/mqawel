@@ -4,15 +4,25 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ContractorController;
 use App\Http\Controllers\Api\FileController;
+use App\Http\Controllers\Api\ItemCategoryController;
 use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\ItemDamageController;
+use App\Http\Controllers\Api\ItemMovementController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ProjectExpenseController;
+use App\Http\Controllers\Api\ProjectItemController;
+use App\Http\Controllers\Api\ProjectWorkerController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WorkerController;
+use App\Http\Controllers\Api\WorkerDamageController;
+use App\Http\Controllers\Api\WorkerPauseDateController;
 use App\Http\Controllers\Api\WorkerPaymentController;
+use App\Http\Controllers\Api\WorkerProjectController;
+use App\Http\Controllers\Api\WorkerWorkDayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -62,10 +72,42 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/project-expenses/export', [ReportController::class, 'projectExpensesExport']);
     Route::apiResource('workers', WorkerController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('workers.payments', WorkerPaymentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::get('/workers/{worker}/damages', [WorkerDamageController::class, 'index']);
+    Route::post('/workers/{worker}/damages', [WorkerDamageController::class, 'store']);
+    Route::put('/workers/{worker}/damages/{damage}', [WorkerDamageController::class, 'update']);
+    Route::delete('/workers/{worker}/damages/{damage}', [WorkerDamageController::class, 'destroy']);
+    Route::get('/workers/{worker}/work-days', [WorkerWorkDayController::class, 'index']);
+    Route::post('/workers/{worker}/work-days', [WorkerWorkDayController::class, 'store']);
+    Route::delete('/workers/{worker}/work-days/{day}', [WorkerWorkDayController::class, 'destroy']);
+    Route::get('/workers/{worker}/pause-dates', [WorkerPauseDateController::class, 'index']);
+    Route::post('/workers/{worker}/pause-dates', [WorkerPauseDateController::class, 'store']);
+    Route::delete('/workers/{worker}/pause-dates/{pause}', [WorkerPauseDateController::class, 'destroy']);
+    Route::get('/workers/{worker}/projects', [WorkerProjectController::class, 'index']);
+
     Route::apiResource('projects', ProjectController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
-    Route::apiResource('contractors', ContractorController::class)->only(['index', 'show']);
-    Route::apiResource('storages', StorageController::class)->only(['index', 'show']);
+    Route::get('/projects/{project}/expenses', [ProjectExpenseController::class, 'index']);
+    Route::post('/projects/{project}/expenses', [ProjectExpenseController::class, 'store']);
+    Route::put('/projects/{project}/expenses/{expense}', [ProjectExpenseController::class, 'update']);
+    Route::delete('/projects/{project}/expenses/{expense}', [ProjectExpenseController::class, 'destroy']);
+    Route::get('/projects/{project}/workers', [ProjectWorkerController::class, 'index']);
+    Route::post('/projects/{project}/workers', [ProjectWorkerController::class, 'store']);
+    Route::delete('/projects/{project}/workers/{worker}', [ProjectWorkerController::class, 'destroy']);
+    Route::get('/projects/{project}/items', [ProjectItemController::class, 'index']);
+    Route::post('/projects/{project}/items', [ProjectItemController::class, 'store']);
+    Route::delete('/projects/{project}/items/{item}', [ProjectItemController::class, 'destroy']);
+
+    Route::apiResource('contractors', ContractorController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::apiResource('storages', StorageController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+
     Route::apiResource('items', ItemController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::get('/items/{item}/damages', [ItemDamageController::class, 'index']);
+    Route::post('/items/{item}/damages', [ItemDamageController::class, 'store']);
+    Route::put('/items/{item}/damages/{damage}', [ItemDamageController::class, 'update']);
+    Route::delete('/items/{item}/damages/{damage}', [ItemDamageController::class, 'destroy']);
+
+    Route::apiResource('item-categories', ItemCategoryController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::apiResource('item-movements', ItemMovementController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+
     Route::get('/files/{file}/download', [FileController::class, 'download']);
     Route::apiResource('files', FileController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 });

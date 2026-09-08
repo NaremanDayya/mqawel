@@ -13,7 +13,7 @@ class ProjectItem extends Model
     protected $fillable= [
         'company_id',
         'project_id',
-        'storage_item_id',
+        'item_id',
         'quantity',
         'date',
         'created_by',
