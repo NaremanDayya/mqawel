@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ContractorController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ItemCategoryController;
 use App\Http\Controllers\Api\ItemController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Api\ProjectItemController;
 use App\Http\Controllers\Api\ProjectWorkerController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WorkerController;
@@ -47,12 +49,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/me', [AuthController::class, 'updateMe']);
     Route::post('/me/change-password', [AuthController::class, 'changePassword']);
+    Route::get('/me/dashboard-preferences', [AuthController::class, 'dashboardPreferences']);
+    Route::put('/me/dashboard-preferences', [AuthController::class, 'updateDashboardPreferences']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/search', [SearchController::class, 'index']);
 
     Route::get('/company', [CompanyController::class, 'show']);
     Route::put('/company', [CompanyController::class, 'update']);
     Route::get('/company/notification-settings/{section}', [CompanyController::class, 'notificationSettings']);
     Route::put('/company/notification-settings/{section}', [CompanyController::class, 'updateNotificationSettings']);
+    Route::get('/company/dashboard-widgets', [CompanyController::class, 'dashboardWidgets']);
+    Route::put('/company/dashboard-widgets', [CompanyController::class, 'updateDashboardWidgets']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);

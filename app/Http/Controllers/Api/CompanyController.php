@@ -78,6 +78,23 @@ class CompanyController extends Controller
         return response()->json(['data' => $settings[$section]]);
     }
 
+    public function dashboardWidgets(Request $request)
+    {
+        return response()->json(['data' => $request->user()->company->dashboard_widgets ?? []]);
+    }
+
+    public function updateDashboardWidgets(Request $request)
+    {
+        $data = $request->validate([
+            'widgets' => ['required', 'array'],
+        ]);
+
+        $company = $request->user()->company;
+        $company->update(['dashboard_widgets' => $data['widgets']]);
+
+        return response()->json(['data' => $company->dashboard_widgets]);
+    }
+
     private function validateSection(string $section): void
     {
         abort_unless(in_array($section, self::NOTIFICATION_SECTIONS, true), 404, __('backend.not_found'));

@@ -101,6 +101,23 @@ class AuthController extends Controller
         return response()->json(['message' => __('backend.password_updated')]);
     }
 
+    public function dashboardPreferences(Request $request)
+    {
+        return response()->json(['data' => $request->user()->dashboard_preferences ?? []]);
+    }
+
+    public function updateDashboardPreferences(Request $request)
+    {
+        $data = $request->validate([
+            'preferences' => ['required', 'array'],
+        ]);
+
+        $user = $request->user();
+        $user->update(['dashboard_preferences' => $data['preferences']]);
+
+        return response()->json(['data' => $user->dashboard_preferences]);
+    }
+
     /**
      * The user resource shape, plus the company's active subscription
      * feature flags — used to bootstrap the mobile app's session.
