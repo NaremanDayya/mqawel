@@ -2,17 +2,34 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filament\Concerns\AppliesCompanyLetterhead;
 use App\Filament\Concerns\HasSectionNotificationSettings;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CompanyResource;
+use App\Models\CompanyActivityLog;
+use App\Services\CompanyProfileInsights;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Validation\Rule;
+use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
 
 class CompanyController extends Controller
 {
+    use AppliesCompanyLetterhead;
     use HasSectionNotificationSettings;
 
     private const NOTIFICATION_SECTIONS = ['workers', 'users', 'projects', 'documents', 'expired_files', 'contractors', 'items'];
+
+    private function defaultDocumentCategories(): array
+    {
+        return [
+            ['key' => 'contracts', 'label' => __('backend.documents_category_contracts'), 'icon' => 'heroicon-o-briefcase'],
+            ['key' => 'quotes', 'label' => __('backend.documents_category_quotes'), 'icon' => 'heroicon-o-currency-dollar'],
+            ['key' => 'letters', 'label' => __('backend.documents_category_letters'), 'icon' => 'heroicon-o-envelope'],
+            ['key' => 'correspondence', 'label' => __('backend.documents_category_correspondence'), 'icon' => 'heroicon-o-chat-bubble-left-right'],
+        ];
+    }
 
     public function show(Request $request)
     {
@@ -93,6 +110,70 @@ class CompanyController extends Controller
         $company->update(['dashboard_widgets' => $data['widgets']]);
 
         return response()->json(['data' => $company->dashboard_widgets]);
+    }
+
+    public function documentCategories(Request $request)
+    {
+        $stored = $request->user()->company->document_categories;
+
+        return response()->json(['data' => filled($stored) ? $stored : $this->defaultDocumentCategories()]);
+    }
+
+    public function updateDocumentCategories(Request $request)
+    {
+        $data = $request->validate([
+            'categories' => ['required', 'array', 'min:1'],
+            'categories.*.key' => ['required', 'string', 'max:100'],
+            'categories.*.label' => ['required', 'string', 'max:255'],
+            'categories.*.icon' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $company = $request->user()->company;
+        $company->update(['document_categories' => $data['categories']]);
+
+        return response()->json(['data' => $company->document_categories]);
+    }
+
+    public function activityLog(Request $request)
+    {
+        $logs = CompanyActivityLog::where('company_id', $request->user()->company_id)
+            ->latest('created_at')
+            ->paginate($request->integer('per_page', 20));
+
+        return response()->json($logs->toArray());
+    }
+
+    public function exportPdf(Request $request, CompanyProfileInsights $insights)
+    {
+        $company = $request->user()->company;
+
+        $html = Blade::render('exports.company_profile', [
+            'company' => $company,
+            'completion' => $insights->completionBreakdown($company),
+            'overall' => $insights->overallCompletion($company),
+            'featuredProjects' => $insights->featuredProjects($company),
+            'staffCounts' => $insights->staffCounts($company),
+        ]);
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+            'tempDir' => storage_path('app/mpdf/tmp'),
+        ]);
+
+        if (session('current_lang') === 'ar') {
+            $mpdf->SetDirectionality('rtl');
+        }
+
+        static::applyLetterhead($mpdf, $company->letterhead);
+
+        $mpdf->WriteHTML($html);
+
+        return response()->streamDownload(function () use ($mpdf) {
+            echo $mpdf->Output('', Destination::STRING_RETURN);
+        }, __('backend.company_profile').'-'.date('Y-m-d H-i').'.pdf', ['Content-Type' => 'application/pdf']);
     }
 
     private function validateSection(string $section): void

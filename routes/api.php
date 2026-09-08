@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AiController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ContractorController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\DocumentTemplateController;
 use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ItemCategoryController;
 use App\Http\Controllers\Api\ItemController;
@@ -62,6 +65,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/company/notification-settings/{section}', [CompanyController::class, 'updateNotificationSettings']);
     Route::get('/company/dashboard-widgets', [CompanyController::class, 'dashboardWidgets']);
     Route::put('/company/dashboard-widgets', [CompanyController::class, 'updateDashboardWidgets']);
+    Route::get('/company/document-categories', [CompanyController::class, 'documentCategories']);
+    Route::put('/company/document-categories', [CompanyController::class, 'updateDocumentCategories']);
+    Route::get('/company/activity-log', [CompanyController::class, 'activityLog']);
+    Route::get('/company/export-pdf', [CompanyController::class, 'exportPdf']);
+    Route::post('/company/ai-improve-about', [AiController::class, 'improveCompanyAbout']);
+
+    Route::post('/ai/chat', [AiController::class, 'chat']);
+    Route::post('/workers/ai-scan', [AiController::class, 'workerScan']);
+    Route::post('/files/ai-scan', [AiController::class, 'fileScan']);
+
+    Route::apiResource('document-templates', DocumentTemplateController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::post('/documents/draft', [DocumentController::class, 'draft']);
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
+    Route::apiResource('documents', DocumentController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
