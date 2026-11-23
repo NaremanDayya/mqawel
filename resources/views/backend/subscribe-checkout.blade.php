@@ -90,7 +90,7 @@
 
                             <div class="mb-4">
                                 <label for="months" class="form-label fw-bold">{{ __('frontend.select_months_count') }}</label>
-                                <select name="months" id="months" class="form-select" data-monthly-price="{{ $Package->price / $Package->period }}">
+                                <select name="months" id="months" class="form-select" data-monthly-price="{{ $Package->price / $Package->period }}" data-yearly-price="{{ $Package->yearlyPrice() }}">
                                     @foreach ([1, 3, 6, 12] as $option)
                                         <option value="{{ $option }}">{{ $option }} {{ __('frontend.months') }}</option>
                                     @endforeach
@@ -126,7 +126,7 @@
             function updateTotal() {
                 var monthlyPrice = parseFloat(monthsSelect.dataset.monthlyPrice);
                 var months = parseInt(monthsSelect.value, 10);
-                var total = monthlyPrice * months;
+                var total = months === 12 ? parseFloat(monthsSelect.dataset.yearlyPrice) : monthlyPrice * months;
 
                 totalEl.textContent = total.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + ' ' + currency;
             }

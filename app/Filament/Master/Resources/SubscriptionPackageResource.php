@@ -60,6 +60,8 @@ class SubscriptionPackageResource extends Resource
                             ->label(__('trial.trial_days')),
                         TextInput::make('period')->numeric()->hidden(fn (Get $get): bool => (bool) $get('is_trial'))->label(__('backend.period_in_months')),
                         TextInput::make('price')->numeric()->hidden(fn (Get $get): bool => (bool) $get('is_trial'))->label(__('backend.price')),
+                        TextInput::make('yearly_price')->numeric()->minValue(0)->hidden(fn (Get $get): bool => (bool) $get('is_trial'))
+                            ->label(__('trial.yearly_price'))->helperText(__('trial.yearly_price_hint')),
                         //TextInput::make('currency')->label(__('backend.currency')),
                     ])->columns(2),
                     Section::make()->schema([
@@ -117,6 +119,7 @@ class SubscriptionPackageResource extends Resource
                 IconColumn::make('is_trial')->boolean()->label(__('trial.trial_badge')),
                 TextColumn::make('period')->label(__('backend.period_in_months'))->formatStateUsing(fn ($state, $record) => $record->is_trial ? $record->trial_days.' '.__('trial.days_short') : $state),
                 TextColumn::make('price')->numeric()->label(__('backend.price')),
+                TextColumn::make('yearly_price')->label(__('trial.yearly_price'))->formatStateUsing(fn ($state, $record) => $record->is_trial ? '—' : number_format($record->yearlyPrice(), 2).(filled($state) ? '' : ' *')),
                 //TextColumn::make('currency')->label(__('backend.currency')),
                 TextColumn::make('max_projects')->label(__('backend.max_projects'))->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('max_workers')->label(__('backend.max_workers'))->toggleable(isToggledHiddenByDefault: true),

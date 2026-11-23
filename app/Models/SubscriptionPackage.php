@@ -34,6 +34,7 @@ class SubscriptionPackage extends Model
         'feature_bullets',
         'cta_label',
         'is_active',
+        'yearly_price',
         'is_trial',
         'trial_days',
         'master_id',
@@ -44,6 +45,7 @@ class SubscriptionPackage extends Model
         'feature_bullets' => 'array',
         'is_trial' => 'boolean',
         'trial_days' => 'integer',
+        'yearly_price' => 'decimal:2',
     ];
 
     protected static function booted(): void
@@ -54,6 +56,7 @@ class SubscriptionPackage extends Model
             if ($package->is_trial) {
                 $package->trial_days = max(1, (int) ($package->trial_days ?: 14));
                 $package->price = 0;
+                $package->yearly_price = null;
                 $package->period = max(1, (int) ceil($package->trial_days / 30));
             }
         });
@@ -63,6 +66,34 @@ class SubscriptionPackage extends Model
      * The last day a subscription to this package covers when it starts on $start: a trial runs
      * for its number of days (the last day counts), any other package for its months.
      */
+    /**
+     * What one month costs on this package.
+     */
+    public function monthlyRate(): float
+    {
+        return $this->period > 0 ? (float) $this->price / $this->period : (float) $this->price;
+    }
+
+    /**
+     * What a 12-month subscription costs: the admin's yearly price when one is set, otherwise
+     * 10 months' worth (two months free).
+     */
+    public function yearlyPrice(): float
+    {
+        $yearly = $this->getAttribute('yearly_price');
+
+        return filled($yearly) ? (float) $yearly : round($this->monthlyRate() * 10, 2);
+    }
+
+    /**
+     * The price of a subscription of $months months: 12 months use the yearly price, any other
+     * length is the monthly rate times the months.
+     */
+    public function priceForMonths(int $months): float
+    {
+        return $months === 12 ? $this->yearlyPrice() : round($this->monthlyRate() * $months, 3);
+    }
+
     public function endingDateFrom(string $start): string
     {
         if ($this->is_trial) {

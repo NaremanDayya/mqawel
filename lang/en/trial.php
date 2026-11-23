@@ -6,6 +6,8 @@ return [
     'trial_package_hint' => 'Given to a company once, with no payment. Its length is in days and its price is zero.',
     'trial_days' => 'Trial length (days)',
     'days_short' => 'days',
+    'yearly_price' => 'Yearly price (12 months)',
+    'yearly_price_hint' => 'Leave empty for 10 months\' price (two months free). Shown when "Yearly" is chosen and charged for 12 months.',
     'trial_badge' => 'Trial',
 
     // The website (packages and checkout pages)

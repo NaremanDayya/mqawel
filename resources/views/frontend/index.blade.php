@@ -4,7 +4,7 @@
     @php
         $Setting = App\Models\Setting::find(1);
 
-        $Packages = App\Models\SubscriptionPackage::where(['is_active' => true])->orderBy('price', 'asc')->limit(10)->get();
+        $Packages = App\Models\SubscriptionPackage::where(['is_active' => true])->orderBy('price', 'asc')->limit(10)->get()->reject(fn ($package) => (bool) $package->is_trial)->values();
         $packagesCount = $Packages->count();
         $popularIndex = $packagesCount >= 3 ? intdiv($packagesCount - 1, 2) : -1;
         $featureFlags = [
@@ -211,13 +211,15 @@
               @php
                 $monthlyRate = $Package->period > 0 ? $Package->price / $Package->period : $Package->price;
                 $monthlyDisplay = $monthlyRate == floor($monthlyRate) ? number_format($monthlyRate) : number_format($monthlyRate, 2);
+                $yearlyPrice = $Package->yearlyPrice();
+                $yearlyDisplay = $yearlyPrice == floor($yearlyPrice) ? number_format($yearlyPrice) : number_format($yearlyPrice, 2);
               @endphp
               <div class="pricing-price">
-                <span class="price-amount" data-monthly="{{ $monthlyDisplay }}" data-yearly="{{ number_format($Package->price) }}">{{ $monthlyDisplay }}</span>
+                <span class="price-amount" data-monthly="{{ $monthlyDisplay }}" data-yearly="{{ $yearlyDisplay }}">{{ $monthlyDisplay }}</span>
                 <span class="price-currency">{{ __('backend.omani_riyal_code') }}</span>
-                <span class="price-period" data-monthly="/ {{ __('frontend.months_singular') }}" data-yearly="/ {{ $Package->period }} {{ __('frontend.months') }}">/ {{ __('frontend.months_singular') }}</span>
+                <span class="price-period" data-monthly="/ {{ __('frontend.months_singular') }}" data-yearly="/ 12 {{ __('frontend.months') }}">/ {{ __('frontend.months_singular') }}</span>
               </div>
-              <p class="price-term" data-monthly="{{ __('frontend.renews_every_30_days') }}" data-yearly="{{ $Package->period }} {{ __('frontend.months') }} — {{ __('frontend.paid_upfront') }}">{{ __('frontend.renews_every_30_days') }}</p>
+              <p class="price-term" data-monthly="{{ __('frontend.renews_every_30_days') }}" data-yearly="12 {{ __('frontend.months') }} — {{ __('frontend.paid_upfront') }}">{{ __('frontend.renews_every_30_days') }}</p>
 
               @if(!empty($Package->description))
                 <p class="pricing-desc">{{ $Package->description }}</p>

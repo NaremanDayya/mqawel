@@ -37,8 +37,7 @@ class ThawaniController extends Controller
         $Package = SubscriptionPackage::where('is_active', true)->findOrFail($request->package_id);
 
         $months = max(1, (int) $request->input('months', 1));
-        $monthlyPrice = $Package->price / $Package->period;
-        $amount = round($monthlyPrice * $months, 3);
+        $amount = round($Package->priceForMonths($months), 3);
 
         $unit_amount_in_baisa = (int) round($amount * 1000);
 
