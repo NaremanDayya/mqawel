@@ -5,140 +5,133 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\SubscriptionPackage;
+use App\Services\Thawani;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Ixudra\Curl\Facades\Curl;
+use Illuminate\Support\Facades\DB;
 
+/**
+ * Pays for a subscription package through Thawani. The keys and the test/live switch live in
+ * .env (THAWANI_*), and a subscription is only created after Thawani itself reports the payment
+ * as paid — never just because the customer's browser came back to the success page.
+ */
 class ThawaniController extends Controller
 {
-    public function payment(Request $request){
+    private const SESSION_KEY = 'thawani_payment';
+
+    public function __construct(private Thawani $thawani) {}
+
+    public function payment(Request $request): RedirectResponse
+    {
+        if (! Auth::check()) {
+            return redirect()->route('sign-up');
+        }
+
+        if (! $this->thawani->isConfigured()) {
+            report(new \RuntimeException('Thawani is not configured: set THAWANI_SECRET_KEY and THAWANI_PUBLISHABLE_KEY.'));
+
+            return $this->failed();
+        }
+
         $Package = SubscriptionPackage::where('is_active', true)->findOrFail($request->package_id);
 
         $months = max(1, (int) $request->input('months', 1));
         $monthlyPrice = $Package->price / $Package->period;
         $amount = round($monthlyPrice * $months, 3);
 
-        $unit_amount_in_baisa = (int)($amount * 1000);
+        $unit_amount_in_baisa = (int) round($amount * 1000);
 
-        $data['client_reference_id']= time();
-        $data['mode']= 'payment';
-        $data['products'][0]['name']= $Package->title.' - '.$months.' '.__('frontend.months');
-        $data['products'][0]['quantity']= 1;
-        $data['products'][0]['unit_amount']= $unit_amount_in_baisa;
-        $data['success_url']= route('payment-success');
-        $data['cancel_url']= route('payment-fail');
-        $data['metadata']= [
-            'customer_name'  => 'Mqwel',
+        $data['client_reference_id'] = time();
+        $data['mode'] = 'payment';
+        $data['products'][0]['name'] = $Package->title.' - '.$months.' '.__('frontend.months');
+        $data['products'][0]['quantity'] = 1;
+        $data['products'][0]['unit_amount'] = $unit_amount_in_baisa;
+        $data['success_url'] = route('payment-success');
+        $data['cancel_url'] = route('payment-fail');
+        $data['metadata'] = [
+            'customer_name' => 'Mqwel',
             'customer_email' => 'no-reply@mqwel.com',
-            'order_id'       => (string)time(),
+            'order_id' => (string) time(),
         ];
 
-        $response = Curl::to('https://uatcheckout.thawani.om/api/v1/checkout/session')
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->withData($data)
-            ->asJson()
-            ->post();
+        $sessionId = $this->thawani->createSession($data);
 
-        \Session::put('pay_session_id', $response->data->session_id);
-        \Session::put('package_id', $Package->id);
-        \Session::put('subscription_months', $months);
-        \Session::put('subscription_amount', $amount);
+        if (! $sessionId) {
+            return $this->failed();
+        }
 
-        $to = 'https://uatcheckout.thawani.om/pay/'.$response->data->session_id.'?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy';
+        // What we asked for, kept on the server: the success page checks Thawani against this.
+        session()->put(self::SESSION_KEY, [
+            'session_id' => $sessionId,
+            'company_id' => Auth::user()->company_id,
+            'package_id' => $Package->id,
+            'months' => $months,
+            'amount' => $amount,
+            'baisa' => $unit_amount_in_baisa,
+        ]);
 
-        return redirect()->to($to);
+        return redirect()->to($this->thawani->paymentUrl($sessionId));
     }
 
-    public function success(){
-        $sessionId = \Session::get('pay_session_id');
-        $package_id= \Session::get('package_id');
-        $months= \Session::get('subscription_months');
-        $amount= \Session::get('subscription_amount');
+    public function success(): RedirectResponse
+    {
+        $user = Auth::user();
+        $pending = session()->get(self::SESSION_KEY);
 
-        $urls = 'https://uatcheckout.thawani.om/api/v1/checkout/session/'.$sessionId;
+        if (! $user || ! $pending || $pending['company_id'] !== $user->company_id) {
+            return $this->failed();
+        }
 
-        $response = Curl::to($urls)
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->asJson()
-            ->get();
+        // Only Thawani's own word that it was paid counts.
+        if (! $this->thawani->isPaid($this->thawani->session($pending['session_id']), $pending['baisa'])) {
+            return $this->failed();
+        }
 
-        //dd($response);
+        $Package = SubscriptionPackage::find($pending['package_id']);
 
-        $Package= SubscriptionPackage::find($package_id);
+        if (! $Package) {
+            report(new \RuntimeException('Thawani payment '.$pending['session_id'].' was paid for a package that no longer exists.'));
 
-        //If package is null then refund.
+            return $this->failed();
+        }
 
-        $months= $months ?: $Package->period;
-        $amount= $amount ?: $Package->price;
+        // Reloading the success page must not hand out a second subscription for one payment.
+        DB::transaction(function () use ($user, $Package, $pending) {
+            if (Subscription::where('payment_transaction_id', $pending['session_id'])->exists()) {
+                return;
+            }
 
-        $Subscription= new Subscription();
-        $Subscription->company_id= Auth::user()->company_id;
-        $Subscription->package_id= $Package->id;
-        $Subscription->period= $months;
-        $Subscription->starting_date= date('Y-m-d');
-        $Subscription->ending_date= date('Y-m-d', strtotime('+ '.$months.' month', strtotime(date('Y-m-d'))));
-        $Subscription->price= $amount;
-        $Subscription->currency= $Package->currency;
-        $Subscription->payment_method= 'payment-gateway';
-        $Subscription->payment_transaction_id= null;
-        $Subscription->payment_date= date('Y-m-d');
-        $Subscription->is_active= true;
-        $Subscription->master_id= null;
-        $Subscription->save();
+            $Subscription = new Subscription();
+            $Subscription->company_id = $user->company_id;
+            $Subscription->package_id = $Package->id;
+            $Subscription->period = $pending['months'];
+            $Subscription->starting_date = date('Y-m-d');
+            $Subscription->ending_date = date('Y-m-d', strtotime('+ '.$pending['months'].' month', strtotime(date('Y-m-d'))));
+            $Subscription->price = $pending['amount'];
+            $Subscription->currency = $Package->currency;
+            $Subscription->payment_method = 'payment-gateway';
+            $Subscription->payment_transaction_id = $pending['session_id'];
+            $Subscription->payment_date = date('Y-m-d');
+            $Subscription->is_active = true;
+            $Subscription->master_id = null;
+            $Subscription->save();
+        });
+
+        session()->forget(self::SESSION_KEY);
 
         return redirect()->to(url('company'));
     }
 
-    public function fail(){
-        $sessionId = \Session::get('pay_session_id');
+    public function fail(): RedirectResponse
+    {
+        session()->forget(self::SESSION_KEY);
 
-        $urls = 'https://uatcheckout.thawani.om/api/v1/checkout/session/'.$sessionId;
-
-        $response = Curl::to($urls)
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->asJson()
-            ->get();
-
-        //dd($response);
-
-        return redirect()->route('subscribe', ['failed_payment' => true]);
+        return $this->failed();
     }
 
-    public function refund(){
-        $sessionId = \Session::get('pay_session_id');
-
-        $urls = 'https://uatcheckout.thawani.om/api/v1/checkout/session/'.$sessionId;
-
-        $response = Curl::to($urls)
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->asJson()
-            ->get();
-
-        $paymentObject = Curl::to('https://uatcheckout.thawani.om/api/v1/payments?checkout_invoice='.$response->data->invoice)
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->asJson()
-            ->get();
-
-        $card = current($paymentObject->data);
-
-        $refund = Curl::to('https://uatcheckout.thawani.om/api/v1/refunds')
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->withData(['payment_id' => $card->payment_id,'reason' => 'refund'])
-            ->asJson()
-            ->post();
-                
-        $refundStatus = Curl::to('https://uatcheckout.thawani.om/api/v1/refunds/'.$refund->data->refund_id)
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('thawani-api-key: rRQ26GcsZzoEhbrP2HZvLYDbn9C9et')
-            ->asJson()
-            ->get();
-
-        dd($refundStatus);
+    private function failed(): RedirectResponse
+    {
+        return redirect()->route('subscribe', ['failed_payment' => true]);
     }
 }
