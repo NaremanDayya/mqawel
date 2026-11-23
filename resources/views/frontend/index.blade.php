@@ -4,7 +4,7 @@
     @php
         $Setting = App\Models\Setting::find(1);
 
-        $Packages = App\Models\SubscriptionPackage::where(['is_active' => true])->orderBy('price', 'asc')->limit(10)->get()->reject(fn ($package) => (bool) $package->is_trial)->values();
+        $Packages = App\Models\SubscriptionPackage::where(['is_active' => true])->orderBy('price', 'asc')->limit(10)->get();
         $packagesCount = $Packages->count();
         $popularIndex = $packagesCount >= 3 ? intdiv($packagesCount - 1, 2) : -1;
         $featureFlags = [
@@ -214,12 +214,20 @@
                 $yearlyPrice = $Package->yearlyPrice();
                 $yearlyDisplay = $yearlyPrice == floor($yearlyPrice) ? number_format($yearlyPrice) : number_format($yearlyPrice, 2);
               @endphp
+              @if ($Package->is_trial)
+                <div class="pricing-price">
+                  <span class="price-amount">{{ __('trial.free') }}</span>
+                  <span class="price-period">{{ __('trial.for_days', ['days' => $Package->trial_days]) }}</span>
+                </div>
+                <p class="price-term">{{ __('trial.no_payment') }}</p>
+              @else
               <div class="pricing-price">
                 <span class="price-amount" data-monthly="{{ $monthlyDisplay }}" data-yearly="{{ $yearlyDisplay }}">{{ $monthlyDisplay }}</span>
                 <span class="price-currency">{{ __('backend.omani_riyal_code') }}</span>
                 <span class="price-period" data-monthly="/ {{ __('frontend.months_singular') }}" data-yearly="/ 12 {{ __('frontend.months') }}">/ {{ __('frontend.months_singular') }}</span>
               </div>
               <p class="price-term" data-monthly="{{ __('frontend.renews_every_30_days') }}" data-yearly="12 {{ __('frontend.months') }} — {{ __('frontend.paid_upfront') }}">{{ __('frontend.renews_every_30_days') }}</p>
+              @endif
 
               @if(!empty($Package->description))
                 <p class="pricing-desc">{{ $Package->description }}</p>

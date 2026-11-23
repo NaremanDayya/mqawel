@@ -3,11 +3,12 @@
 return [
     // Admin dashboard (package form and list)
     'trial_package' => 'Free trial package',
-    'trial_package_hint' => 'Given to a company once, with no payment. Its length is in days and its price is zero.',
+    'trial_package_hint' => 'Warning: switching this on turns THIS package itself into the free trial (price zero, shown as "Free"). To keep a paid package such as Gold, leave it as it is and create a separate trial package.',
     'trial_days' => 'Trial length (days)',
     'days_short' => 'days',
     'yearly_price' => 'Yearly price (12 months)',
     'yearly_price_hint' => 'Leave empty for 10 months\' price (two months free). Shown when "Yearly" is chosen and charged for 12 months.',
+    'no_payment' => 'No payment',
     'trial_badge' => 'Trial',
 
     // The website (packages and checkout pages)
