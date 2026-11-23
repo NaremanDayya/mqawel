@@ -257,6 +257,17 @@ class ThawaniPaymentTest extends TestCase
         $this->assertFalse(method_exists(ThawaniController::class, 'refund'));
     }
 
+    public function test_a_package_with_no_price_never_opens_an_empty_payment(): void
+    {
+        $free = SubscriptionPackage::create(['title' => 'No price', 'period' => 1, 'price' => 0, 'currency' => 'OMR', 'is_active' => true, 'master_id' => 1]);
+        Http::fake();
+
+        $this->actingAs($this->user)->get(route('payment', ['package_id' => $free->id]))
+            ->assertRedirect(route('subscribe', ['failed_payment' => true]));
+
+        Http::assertNothingSent();
+    }
+
     public function test_no_gateway_key_is_written_in_the_code(): void
     {
         $code = file_get_contents(app_path('Http/Controllers/Frontend/ThawaniController.php')).file_get_contents(app_path('Services/Thawani.php'));

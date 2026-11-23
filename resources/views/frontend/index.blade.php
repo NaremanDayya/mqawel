@@ -215,18 +215,16 @@
                 $yearlyDisplay = $yearlyPrice == floor($yearlyPrice) ? number_format($yearlyPrice) : number_format($yearlyPrice, 2);
               @endphp
               @if ($Package->is_trial)
-                <div class="pricing-price">
-                  <span class="price-amount">{{ __('trial.free') }}</span>
-                  <span class="price-period">{{ __('trial.for_days', ['days' => $Package->trial_days]) }}</span>
-                </div>
-                <p class="price-term">{{ __('trial.no_payment') }}</p>
-              @else
+                <p class="pricing-trial" style="margin:0 0 6px;font-weight:700;color:#2f7a57;">🎁 {{ __('trial.free_for_days', ['days' => $Package->trial_days]) }}</p>
+              @endif
               <div class="pricing-price">
                 <span class="price-amount" data-monthly="{{ $monthlyDisplay }}" data-yearly="{{ $yearlyDisplay }}">{{ $monthlyDisplay }}</span>
                 <span class="price-currency">{{ __('backend.omani_riyal_code') }}</span>
                 <span class="price-period" data-monthly="/ {{ __('frontend.months_singular') }}" data-yearly="/ 12 {{ __('frontend.months') }}">/ {{ __('frontend.months_singular') }}</span>
               </div>
               <p class="price-term" data-monthly="{{ __('frontend.renews_every_30_days') }}" data-yearly="12 {{ __('frontend.months') }} — {{ __('frontend.paid_upfront') }}">{{ __('frontend.renews_every_30_days') }}</p>
+              @if ($Package->is_trial)
+                <p class="price-term trial-then" style="color:#2f7a57;font-weight:600;" data-monthly="{{ __('trial.then') }} {{ $monthlyDisplay }} {{ __('backend.omani_riyal_code') }} / {{ __('frontend.months_singular') }}" data-yearly="{{ __('trial.then') }} {{ $yearlyDisplay }} {{ __('backend.omani_riyal_code') }} / 12 {{ __('frontend.months') }}">{{ __('trial.then') }} {{ $monthlyDisplay }} {{ __('backend.omani_riyal_code') }} / {{ __('frontend.months_singular') }}</p>
               @endif
 
               @if(!empty($Package->description))

@@ -55,7 +55,7 @@ class SubscriptionsController extends Controller
             $Subscription->package_id = $Package->id;
             $Subscription->period = $Package->period;
             $Subscription->starting_date = date('Y-m-d');
-            $Subscription->ending_date = $Package->endingDateFrom(date('Y-m-d'));
+            $Subscription->ending_date = $Package->trialEndingDate(date('Y-m-d'));
             $Subscription->price = 0;
             $Subscription->currency = $Package->currency;
             $Subscription->payment_method = 'free-trial';

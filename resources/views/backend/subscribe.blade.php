@@ -116,20 +116,14 @@
                                 class="card-body d-flex flex-column">
                                 <h3 class="plan-title" style="font-size: 17px;">{{ $Package->title }}</h3>
                                 @if ($Package->is_trial)
-                                    <div class="d-flex align-items-baseline mt-2 mb-0">
-                                        <span class="price-display">{{ __('trial.free') }}</span>
-                                    </div>
-                                    <div class="billed-monthly mt-1 mb-3">
-                                        {{ __('trial.for_days', ['days' => $Package->trial_days]) }}
-                                    </div>
-                                @else
+                                    <div class="mt-2"><span class="badge bg-success">{{ __('trial.free_for_days', ['days' => $Package->trial_days]) }}</span></div>
+                                @endif
                                     <div class="d-flex align-items-baseline mt-2 mb-0">
                                         <span class="price-display">{{ number_format($Package->price) }} <small style="font-size: 25px;">{{__('backend.omani_riyal_code')}}</small></span>
                                     </div>
                                     <div class="billed-monthly mt-1 mb-3">
                                         {{ $Package->period }} {{ __('frontend.months') }}
                                     </div>
-                                @endif
 
                                 <ul class="list-group list-group-flush feature-list" style="text-align: {{ session('current_lang') == 'ar' ? 'right' : 'left' }};">
                                     <li class="list-group-item">

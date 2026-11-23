@@ -50,22 +50,15 @@ class SubscriptionPackage extends Model
 
     protected static function booted(): void
     {
-        // A trial package is free and counted in days; the month-based period is still a required
-        // column, so it is kept consistent here rather than asked of the admin.
+        // The trial is a free period BEFORE the normal subscription: it only needs a length, and
+        // never changes the package's prices.
         static::saving(function (SubscriptionPackage $package) {
             if ($package->is_trial) {
                 $package->trial_days = max(1, (int) ($package->trial_days ?: 14));
-                $package->price = 0;
-                $package->yearly_price = null;
-                $package->period = max(1, (int) ceil($package->trial_days / 30));
             }
         });
     }
 
-    /**
-     * The last day a subscription to this package covers when it starts on $start: a trial runs
-     * for its number of days (the last day counts), any other package for its months.
-     */
     /**
      * What one month costs on this package.
      */
@@ -94,13 +87,20 @@ class SubscriptionPackage extends Model
         return $months === 12 ? $this->yearlyPrice() : round($this->monthlyRate() * $months, 3);
     }
 
+    /**
+     * The last day a paid subscription to this package covers when it starts on $start.
+     */
     public function endingDateFrom(string $start): string
     {
-        if ($this->is_trial) {
-            return date('Y-m-d', strtotime('+ '.(max(1, (int) $this->trial_days) - 1).' day', strtotime($start)));
-        }
-
         return date('Y-m-d', strtotime('+ '.$this->period.' month', strtotime($start)));
+    }
+
+    /**
+     * The last day of the free trial when it starts on $start (the last day counts).
+     */
+    public function trialEndingDate(string $start): string
+    {
+        return date('Y-m-d', strtotime('+ '.(max(1, (int) $this->trial_days) - 1).' day', strtotime($start)));
     }
 
     public function subscriptions() : HasMany {

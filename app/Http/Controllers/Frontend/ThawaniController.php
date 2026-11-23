@@ -41,6 +41,11 @@ class ThawaniController extends Controller
 
         $unit_amount_in_baisa = (int) round($amount * 1000);
 
+        // Nothing to charge (a package with no price): never open an empty payment.
+        if ($unit_amount_in_baisa <= 0) {
+            return $this->failed();
+        }
+
         $data['client_reference_id'] = time();
         $data['mode'] = 'payment';
         $data['products'][0]['name'] = $Package->title.' - '.$months.' '.__('frontend.months');
