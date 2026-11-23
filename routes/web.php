@@ -19,6 +19,7 @@ Route::group(['middleware' => 'lang'], function(){
 	Route::get('subscribe', [SubscriptionsController::class, 'subscribe'])->name('subscribe');
 
 	Route::get('subscribe/checkout', [SubscriptionsController::class, 'checkout'])->name('subscribe.checkout');
+	Route::post('subscribe/trial', [SubscriptionsController::class, 'startTrial'])->name('subscribe.trial');
 
 	Route::get('sign-up', [AuthController::class, 'sign_up'])->name('sign-up');
 });

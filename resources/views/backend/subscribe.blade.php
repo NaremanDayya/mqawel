@@ -69,6 +69,16 @@
     <section id="pricing" class="ud-pricing bg-light">
         <div class="container">
             <div class="row">
+                @if (session('trial_unavailable'))
+                    <div class="col-lg-12 mb-5">
+                        <div class="ud-404-wrapper p-4" style="background: #fff8e6; box-shadow: none; border: 1px solid #eeeeee;">
+                            <div class="ud-404-content">
+                                <h2 class="ud-404-title mb-0" style="font-size: 18px; color: #9a650e">{{ __('trial.unavailable') }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 @if (isset($failed_payment) && $failed_payment)
                     <div class="col-lg-12 mb-5">
                         <div class="ud-404-wrapper p-5"
@@ -105,12 +115,21 @@
                             <a href="{{ route('subscribe.checkout', ['package_id' => $Package->id]) }}"
                                 class="card-body d-flex flex-column">
                                 <h3 class="plan-title" style="font-size: 17px;">{{ $Package->title }}</h3>
-                                <div class="d-flex align-items-baseline mt-2 mb-0">
-                                    <span class="price-display">{{ number_format($Package->price) }} <small style="font-size: 25px;">{{__('backend.omani_riyal_code')}}</small></span>
-                                </div>
-                                <div class="billed-monthly mt-1 mb-3">
-                                    {{ $Package->period }} {{ __('frontend.months') }}
-                                </div>
+                                @if ($Package->is_trial)
+                                    <div class="d-flex align-items-baseline mt-2 mb-0">
+                                        <span class="price-display">{{ __('trial.free') }}</span>
+                                    </div>
+                                    <div class="billed-monthly mt-1 mb-3">
+                                        {{ __('trial.for_days', ['days' => $Package->trial_days]) }}
+                                    </div>
+                                @else
+                                    <div class="d-flex align-items-baseline mt-2 mb-0">
+                                        <span class="price-display">{{ number_format($Package->price) }} <small style="font-size: 25px;">{{__('backend.omani_riyal_code')}}</small></span>
+                                    </div>
+                                    <div class="billed-monthly mt-1 mb-3">
+                                        {{ $Package->period }} {{ __('frontend.months') }}
+                                    </div>
+                                @endif
 
                                 <ul class="list-group list-group-flush feature-list" style="text-align: {{ session('current_lang') == 'ar' ? 'right' : 'left' }};">
                                     <li class="list-group-item">

@@ -21,7 +21,7 @@ class ListSubscriptions extends ListRecords
 
                 if($Package){
                     $record->period= $Package->period;
-                    $record->ending_date= date('Y-m-d', strtotime('+ '.$Package->period.' month', strtotime($record->starting_date)));
+                    $record->ending_date= $Package->endingDateFrom($record->starting_date);
                     $record->price= $Package->price;
                     $record->currency= $Package->currency;
                     $record->save();

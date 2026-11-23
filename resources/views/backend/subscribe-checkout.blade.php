@@ -58,6 +58,24 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-8">
                     <div class="card p-4 p-md-5" style="border: 1px solid #eee;">
+                        @if ($Package->is_trial)
+                            <div class="text-center">
+                                <span class="price-display">{{ __('trial.free') }}</span>
+                                <p class="text-muted mt-2 mb-4">{{ __('trial.for_days', ['days' => $Package->trial_days]) }}</p>
+
+                                @if ($canTrial)
+                                    <form action="{{ route('subscribe.trial') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="package_id" value="{{ $Package->id }}">
+                                        <button type="submit" class="ud-main-btn ud-login-btn w-100 text-center justify-content-center">
+                                            {{ __('trial.start') }}
+                                        </button>
+                                    </form>
+                                @else
+                                    <p class="text-danger mb-0">{{ __('trial.once_only') }}</p>
+                                @endif
+                            </div>
+                        @else
                         <form action="{{ route('payment') }}" method="GET">
                             <input type="hidden" name="package_id" value="{{ $Package->id }}">
 
@@ -91,12 +109,14 @@
                                 {{ __('frontend.proceed_to_payment') }}
                             </button>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    @unless ($Package->is_trial)
     <script>
         (function () {
             var monthsSelect = document.getElementById('months');
@@ -115,4 +135,5 @@
             updateTotal();
         })();
     </script>
+    @endunless
 @endsection

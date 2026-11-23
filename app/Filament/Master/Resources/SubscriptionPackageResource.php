@@ -14,6 +14,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -52,8 +53,13 @@ class SubscriptionPackageResource extends Resource
                         MarkdownEditor::make('description')->label(__('backend.description')),
                     ]),
                     Section::make()->schema([
-                        TextInput::make('period')->numeric()->label(__('backend.period_in_months')),
-                        TextInput::make('price')->numeric()->label(__('backend.price')),
+                        Toggle::make('is_trial')->live()->label(__('trial.trial_package'))->helperText(__('trial.trial_package_hint'))->columnSpanFull(),
+                        TextInput::make('trial_days')->numeric()->minValue(1)->maxValue(365)->default(14)
+                            ->required(fn (Get $get): bool => (bool) $get('is_trial'))
+                            ->visible(fn (Get $get): bool => (bool) $get('is_trial'))
+                            ->label(__('trial.trial_days')),
+                        TextInput::make('period')->numeric()->hidden(fn (Get $get): bool => (bool) $get('is_trial'))->label(__('backend.period_in_months')),
+                        TextInput::make('price')->numeric()->hidden(fn (Get $get): bool => (bool) $get('is_trial'))->label(__('backend.price')),
                         //TextInput::make('currency')->label(__('backend.currency')),
                     ])->columns(2),
                     Section::make()->schema([
@@ -108,7 +114,8 @@ class SubscriptionPackageResource extends Resource
                 TextColumn::make('index')->rowIndex()->label(__('backend.row_number')),
                 ImageColumn::make('picture')->defaultImageUrl(asset('images/no_profile_picture.png'))->circular()->label(''),
                 TextColumn::make('title')->label(__('backend.title')),
-                TextColumn::make('period')->label(__('backend.period_in_months')),
+                IconColumn::make('is_trial')->boolean()->label(__('trial.trial_badge')),
+                TextColumn::make('period')->label(__('backend.period_in_months'))->formatStateUsing(fn ($state, $record) => $record->is_trial ? $record->trial_days.' '.__('trial.days_short') : $state),
                 TextColumn::make('price')->numeric()->label(__('backend.price')),
                 //TextColumn::make('currency')->label(__('backend.currency')),
                 TextColumn::make('max_projects')->label(__('backend.max_projects'))->toggleable(isToggledHiddenByDefault: true),
