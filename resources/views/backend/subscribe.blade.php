@@ -114,7 +114,7 @@
                         <div class="card pricing-card h-100" style="border: 1px solid #eee;">
                             <a href="{{ route('subscribe.checkout', ['package_id' => $Package->id]) }}"
                                 class="card-body d-flex flex-column">
-                                <h3 class="plan-title" style="font-size: 17px;">{{ $Package->title }}</h3>
+                                <h3 class="plan-title" style="font-size: 17px;">{{ $Package->localized('title') }}</h3>
                                 @if ($Package->is_trial)
                                     <div class="mt-2"><span class="badge bg-success">{{ __('trial.free_for_days', ['days' => $Package->trial_days]) }}</span></div>
                                 @endif

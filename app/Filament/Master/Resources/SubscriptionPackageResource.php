@@ -52,6 +52,12 @@ class SubscriptionPackageResource extends Resource
                         TextInput::make('title')->required()->label(__('backend.title')),
                         MarkdownEditor::make('description')->label(__('backend.description')),
                     ]),
+                    Section::make(__('trial.english_version'))->description(__('trial.english_version_hint'))->icon('heroicon-o-language')->collapsible()->schema([
+                        TextInput::make('title_en')->label(__('trial.title_en')),
+                        MarkdownEditor::make('description_en')->label(__('trial.description_en')),
+                        TextInput::make('savings_note_en')->label(__('trial.savings_note_en')),
+                        TextInput::make('cta_label_en')->label(__('trial.cta_label_en')),
+                    ]),
                     Section::make()->schema([
                         Toggle::make('is_trial')->live()->label(__('trial.trial_package'))->helperText(__('trial.trial_package_hint'))->columnSpanFull(),
                         TextInput::make('trial_days')->numeric()->minValue(1)->maxValue(365)->default(14)
@@ -72,9 +78,10 @@ class SubscriptionPackageResource extends Resource
                         Repeater::make('traditional_cost_items')
                             ->schema([
                                 TextInput::make('label')->required()->label(__('backend.title')),
+                                TextInput::make('label_en')->label(__('trial.label_en')),
                                 TextInput::make('value')->numeric()->required()->label(__('backend.amount')),
                             ])
-                            ->columns(2)
+                            ->columns(3)
                             ->addActionLabel(__('backend.add_more'))
                             ->label(__('backend.cost_comparison_items')),
                         TextInput::make('savings_note')->label(__('backend.savings_note')),
@@ -83,7 +90,9 @@ class SubscriptionPackageResource extends Resource
                         Repeater::make('feature_bullets')
                             ->schema([
                                 TextInput::make('text')->required()->label(__('backend.title')),
+                                TextInput::make('text_en')->label(__('trial.text_en')),
                             ])
+                            ->columns(2)
                             ->addActionLabel(__('backend.add_more'))
                             ->label(__('backend.feature_bullets')),
                         TextInput::make('cta_label')->label(__('backend.cta_label'))->helperText(__('backend.cta_label_helper')),

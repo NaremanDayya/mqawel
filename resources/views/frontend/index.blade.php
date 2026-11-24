@@ -207,7 +207,7 @@
                 <div class="popular-badge">⭐ {{__('frontend.most_popular')}}</div>
               @endif
 
-              <p class="pricing-plan">{{ $Package->title }}</p>
+              <p class="pricing-plan">{{ $Package->localized('title') }}</p>
               @php
                 $monthlyRate = $Package->period > 0 ? $Package->price / $Package->period : $Package->price;
                 $monthlyDisplay = $monthlyRate == floor($monthlyRate) ? number_format($monthlyRate) : number_format($monthlyRate, 2);
@@ -227,8 +227,8 @@
                 <p class="price-term trial-then" style="color:#2f7a57;font-weight:600;" data-monthly="{{ __('trial.then') }} {{ $monthlyDisplay }} {{ __('backend.omani_riyal_code') }} / {{ __('frontend.months_singular') }}" data-yearly="{{ __('trial.then') }} {{ $yearlyDisplay }} {{ __('backend.omani_riyal_code') }} / 12 {{ __('frontend.months') }}">{{ __('trial.then') }} {{ $monthlyDisplay }} {{ __('backend.omani_riyal_code') }} / {{ __('frontend.months_singular') }}</p>
               @endif
 
-              @if(!empty($Package->description))
-                <p class="pricing-desc">{{ $Package->description }}</p>
+              @if(filled($Package->localized('description')))
+                <p class="pricing-desc">{{ $Package->localized('description') }}</p>
               @endif
 
               @if(!empty($Package->traditional_cost_items))
@@ -239,13 +239,13 @@
                 <div class="plan-value">
                   <p class="plan-value-title">{{ __('frontend.instead_of_traditional_management') }}</p>
                   @foreach($Package->traditional_cost_items as $costItem)
-                    <div class="plan-value-row"><span>{{ $costItem['label'] }}</span><span>{{ number_format($costItem['value']) }} {{ __('backend.omani_riyal_code') }}</span></div>
+                    <div class="plan-value-row"><span>{{ \App\Models\SubscriptionPackage::localizedItem($costItem, 'label') }}</span><span>{{ number_format($costItem['value']) }} {{ __('backend.omani_riyal_code') }}</span></div>
                   @endforeach
                   <div class="plan-value-total"><span>{{ __('frontend.traditional_cost_total') }}</span><span>{{ number_format($costTotal) }} {{ __('backend.omani_riyal_code') }} / {{ __('frontend.months_singular') }}</span></div>
                   <p class="plan-value-save">
                     {{ __('frontend.you_save', ['amount' => number_format($savings), 'currency' => __('backend.omani_riyal_code')]) }}
-                    @if(!empty($Package->savings_note))
-                      — {{ $Package->savings_note }}
+                    @if(filled($Package->localized('savings_note')))
+                      — {{ $Package->localized('savings_note') }}
                     @endif
                   </p>
                 </div>
@@ -273,7 +273,7 @@
                   @foreach($Package->feature_bullets as $bullet)
                     <li>
                       <div class="feat-check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
-                      {{ $bullet['text'] }}
+                      {{ \App\Models\SubscriptionPackage::localizedItem($bullet, 'text') }}
                     </li>
                   @endforeach
                 @else
@@ -293,7 +293,7 @@
               </ul>
 
               <a href="{{url('company/register')}}" class="btn-pricing @if($index === $popularIndex) btn-pricing--white @else btn-pricing--outline @endif">
-                {{ !empty($Package->cta_label) ? $Package->cta_label : __('frontend.purchase_now') }}
+                {{ $Package->localized('cta_label') ?: __('frontend.purchase_now') }}
               </a>
             </div>
           @endforeach

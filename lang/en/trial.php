@@ -12,6 +12,14 @@ return [
     'free_for_days' => 'Try free for :days days',
     'then' => 'then',
     'no_charge' => 'nothing is charged automatically; subscribe after the trial to keep using it',
+    'english_version' => 'English version',
+    'english_version_hint' => 'Shown when the website is read in English. Anything left empty stays in Arabic (title and description) or uses the page\'s default wording (the button and the savings note).',
+    'title_en' => 'Title (English)',
+    'description_en' => 'Description (English)',
+    'savings_note_en' => 'Savings note (English)',
+    'cta_label_en' => 'Button text (English)',
+    'label_en' => 'Name (English)',
+    'text_en' => 'Text (English)',
     'trial_badge' => 'Trial',
 
     // The website (packages and checkout pages)

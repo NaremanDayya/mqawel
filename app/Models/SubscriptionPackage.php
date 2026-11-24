@@ -35,6 +35,10 @@ class SubscriptionPackage extends Model
         'cta_label',
         'is_active',
         'yearly_price',
+        'title_en',
+        'description_en',
+        'savings_note_en',
+        'cta_label_en',
         'is_trial',
         'trial_days',
         'master_id',
@@ -57,6 +61,47 @@ class SubscriptionPackage extends Model
                 $package->trial_days = max(1, (int) ($package->trial_days ?: 14));
             }
         });
+    }
+
+    /**
+     * A text the admin typed on the package, in the language the website is being read in. In English the
+     * Arabic title and description are the fallback (there is nothing better to show), while the button and
+     * the savings note fall back to nothing so the page's own default wording is used instead of Arabic.
+     *
+     * @param  'title'|'description'|'savings_note'|'cta_label'  $field
+     */
+    public function localized(string $field): ?string
+    {
+        $arabic = $this->getAttribute($field);
+
+        if (app()->getLocale() !== 'en') {
+            return $arabic;
+        }
+
+        $english = $this->getAttribute($field.'_en');
+
+        if (filled($english)) {
+            return $english;
+        }
+
+        return in_array($field, ['title', 'description'], true) ? $arabic : null;
+    }
+
+    /**
+     * The text of one cost item or feature bullet ($field is 'label' or 'text') in the current language,
+     * using its English version when the website is in English and one was entered.
+     *
+     * @param  array<string, mixed>  $item
+     */
+    public static function localizedItem(array $item, string $field): ?string
+    {
+        $arabic = $item[$field] ?? null;
+
+        if (app()->getLocale() === 'en' && filled($item[$field.'_en'] ?? null)) {
+            return $item[$field.'_en'];
+        }
+
+        return $arabic;
     }
 
     /**

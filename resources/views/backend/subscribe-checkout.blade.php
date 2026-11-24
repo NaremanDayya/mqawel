@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ud-banner-content">
-                        <h1>{{ $Package->title }}</h1>
+                        <h1>{{ $Package->localized('title') }}</h1>
                     </div>
                 </div>
             </div>
