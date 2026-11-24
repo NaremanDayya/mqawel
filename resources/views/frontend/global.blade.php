@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="{!! session()->has('current_lang') && session('current_lang') == 'ar' ? 'rtl' : 'ltr' !!}">
+<html lang="{{ app()->getLocale() }}" dir="{!! session()->has('current_lang') && session('current_lang') == 'ar' ? 'rtl' : 'ltr' !!}">
 
 <head>
     @include('frontend.includes.head')

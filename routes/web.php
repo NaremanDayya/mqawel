@@ -28,7 +28,7 @@ Route::get('lang/{lang}', function ($lang) {
 	session()->put('current_lang', $lang);
 
 	return redirect(url()->previousPath());
-});
+})->whereIn('lang', ['ar', 'en']);
 
 Route::post('sign-up-submit', [AuthController::class, 'sign_up_submit'])->name('sign-up-submit');
 
